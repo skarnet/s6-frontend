@@ -1,0 +1,25 @@
+s6-frontend - a s6-based init system with a friendly UI
+-------------------------------------------------------
+
+ s6-frontend is a set of programs providing interfaces
+to the s6 family of programs (s6, s6-rc, s6-linux-init)
+for users who are used to different systems. It also
+comes with a full set of init scripts and can be used as
+a turnkey init system.
+
+ See https://skarnet.org/software/s6-frontend/ for details.
+
+
+* Installation
+  ------------
+
+ See the INSTALL file.
+
+
+* Contact information
+  -------------------
+
+ Laurent Bercot <ska-skaware at skarnet.org>
+
+ Please use the <supervision at list.skarnet.org> mailing-list for
+questions about s6-frontend.

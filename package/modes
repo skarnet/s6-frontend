@@ -1,0 +1,4 @@
+s6-frontend-config-preprocess	0755
+s6-frontend-alias		0755
+s6-frontend-alias-sv		0755
+s6-frontend-alias-chpst		0755

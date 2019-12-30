@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6-frontend-config-preprocess program</title>
+    <meta name="Description" content="s6-frontend: the s6-frontend-config-preprocess program" />
+    <meta name="Keywords" content="s6-frontend command s6 configuration unit file s6-frontend-config preprocess preprocessor" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The s6-frontend-config-preprocess program </h1>
+
+<p>
+ <tt>s6-frontend-config-preprocess</tt> reads a s6-frontend configuration
+file and executes all its inclusion directives, also preprocessing the
+included files. It streams the result to stdout, which is a complete
+configuration file without inclusions.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     s6-frontend-config-preprocess <em>file</em>
+</pre>
+
+<p>
+ <tt>s6-frontend-config-preprocess reads <em>file</em> and prints it
+to stdout. It removes lines starting with <tt>!!</tt>.
+</p>
+
+<p>
+ When it finds a <tt>!include</tt> or <tt>!includeonce</tt> directive
+in <em>file</em>, it replaces it with the contents of the included
+file - recursively preprocessed.
+</p>
+
+<p>
+ When it finds a <tt>!includedir</tt> or <tt>!includedironce</tt>
+directive in <em>file</em>, it replaces it with the recursively
+preprocessed contents of every file present in the included
+directory. The files are sorted alphabetically according to the
+C locale.
+</p>
+
+<p>
+ <tt>!includeonce</tt> and <tt>!includedironce</tt> only print
+a file (resp. a directory) the first time they encounter it, and
+silently ignore subsequent instances. <tt>!include</tt> and
+<tt>!includedir</tt> directives will happily include the same
+files several times.
+</p>
+
+<p>
+ To avoid loops, a nesting limit exists. <tt>s6-frontend-config-preprocess</tt>
+will fail if there are too many nested inclusions.
+</p>
+
+<h2> Exit codes </h2>
+
+<ul>
+ <li> 0: success </li>
+ <li> 1: syntax error in a configuration file </li>
+ <li> 2: other error in a configuration file </li>
+ <li> 3: too many nested inclusions </li>
+ <li> 100: usage error </li>
+ <li> 111: system call failed </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>s6-frontend-config-preprocess</tt> is not meant to be
+called directly by the user. It is normally invoked by
+<a href="s6-frontend-config-parse.html">s6-frontend-config-parse</a>.
+However, the binary is made available for debugging purposes. </li>
+</ul>
+
+</body>
+</html>
