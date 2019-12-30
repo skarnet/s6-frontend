@@ -1,6 +1,11 @@
 s6-frontend - a s6-based init system with a friendly UI
 -------------------------------------------------------
 
+!
+! s6-frontend is IN DEVELOPMENT, do not expect anything
+! magical from it for some time!
+!
+
  s6-frontend is a set of programs providing interfaces
 to the s6 family of programs (s6, s6-rc, s6-linux-init)
 for users who are used to different systems. It also
