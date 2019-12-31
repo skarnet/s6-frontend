@@ -16,25 +16,112 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The s6-frontend-alias program </h1>
+<h1> The <tt>s6-frontend-alias</tt> program </h1>
 
 <p>
-s6-frontend-alias
+<tt>s6-frontend-alias</tt> is a multicall binary that implements
+functionality from the
+<a href="https://cr.yp.to/daemontools.html">daemontools</a> package,
+and/or from the
+<a href="http://smarden.org/runit/">runit</a> package, whenever
+possible, via 
+<a href="//skarnet.org/software/s6/">s6</a> commands.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     s6-frontend-alias
+     s6-frontend-alias [ -v ] <em>daemontools_command</em> <em>args...</em>
+     s6-frontend-alias [ -v ] <em>runit_command</em> <em>args...</em>
+     <em>daemontools_command</em> <em>args...</em>
+     <em>runit_command</em> <em>args...</em>
 </pre>
 
 <p>
+<tt>s6-frontend-alias</tt> can be called as is: then it takes the command
+name as its argument. Or, it can be called directly as the wanted command.
+It finds the closest approximation of the command in the s6 world, and
+executes into it. When it cannot find a suitable idiomatic s6 version of
+the wanted command, it prints an explanatory message to stderr, then
+exits 100.
+</p>
+
+<p>
+<tt>s6-frontend-alias</tt> is only built when at least one of the
+<tt>--enable-alias-daemontools</tt> and <tt>--enable-alias-runit</tt>
+options have been given to configure at build time.
+</p>
+
+<p>
+When the <tt>--enable-alias-daemontools</tt> option has been given,
+the following commands are created at installation time as symbolic
+links to <tt>s6-frontend-alias</tt>, which recognizes them:
+</p>
+
+<ul>
+ <li> envdir </li>
+ <li> envuidgid </li>
+ <li> fghack </li>
+ <li> multilog </li>
+ <li> pgrphack </li>
+ <li> readproctitle </li>
+ <li> setlock </li>
+ <li> setuidgid </li>
+ <li> softlimit </li>
+ <li> supervise </li>
+ <li> svc </li>
+ <li> svok </li>
+ <li> svscan </li>
+ <li> svscanboot </li>
+ <li> svstat </li>
+ <li> tai64n </li>
+ <li> tai64nlocal </li>
+</ul>
+
+<p>
+When the <tt>--enable-alias-runit</tt> option has been given,
+the following commands are created at installation time as symbolic
+links to <tt>s6-frontend-alias</tt>, which recognizes them:
+</p>
+
+<ul>
+ <li> runit </li>
+ <li> runit-init </li>
+ <li> runsvdir </li>
+ <li> runsvchdir </li>
+ <li> runsv </li>
+ <li> svlogd </li>
+ <li> utmpset </li>
+</ul>
+
+<p>
+(The <tt>chpst</tt> and <tt>sv</tt> runit commands are recognized
+by <tt>s6-frontend-alias</tt>, but handled by specific programs,
+<a href="s6-frontend-alias-chpst.html">s6-frontend-alias-chpst</a> and
+<a href="s6-frontend-alias-sv.html">s6-frontend-alias-sv</a>, and the
+<tt>chpst</tt> and <tt>sv</tt> symbolic links point directly to those
+programs.)
 </p>
 
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-v</tt>&nbsp;: verbose. </li>
+ <li> <tt>-v</tt>&nbsp;: verbose. When <tt>s6-frontend-alias</tt>
+is called under its own name and this option is given, it prints
+an explanatory message to stderr before executing into the
+corresponding idiomatic s6 command. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>s6-frontend-alias</tt> is a convenience program, written
+so that daemontools and runit users can keep using their habits while
+transitioning to s6. However, it is not an "official" interface,
+because s6 is strictly more powerful than daemontools, and has a few
+significant fundamental differences with runit. Daemontools and runit
+users are still encouraged to learn and get used to the native
+s6 commands. </li>
 </ul>
 
 </body>
