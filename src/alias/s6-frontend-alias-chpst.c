@@ -14,7 +14,6 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
 
 #include <execline/config.h>
@@ -139,8 +138,8 @@ static inline size_t parseuggsym (char const *s, uint32_t *flags, uid_t *uid, gi
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   static char const *valopt[6] = { "-m", "-d", "-o", "-p", "-f", "-c" } ;
-  stralloc newroot = STRALLOC_ZERO ;
   unsigned int newargc = 0 ;
+  char const *newroot = 0 ;
   char const *edir = 0 ;
   char const *argv0 = 0 ;
   char const *lockfile = 0 ;
@@ -195,11 +194,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
           if (strchr(envug, ':')) { flags |= 8192 ; newargc++ ; } else flags &= ~8192 ;
           break ;
         case 'e' : edir = l.arg ; newargc += 3 ; break ;
-        case '/' :
-          newroot.len = 0 ;
-          if (sarealpath(&newroot, l.arg) < 0 || !stralloc_0(&newroot)) dienomem() ;
-          newargc += 2 ;
-          break ;
+        case '/' : newroot = l.arg ; newargc += 2 ; break ;
         case 'n' :
           if (!int0_scan(l.arg, &niceval)) dieusage() ;
           newargc += 3 ;
@@ -227,6 +222,11 @@ int main (int argc, char const *const *argv, char const *const *envp)
     argc -= l.ind ; argv += l.ind ;
   }
 
+  if (newroot)
+  {
+    newroot = realpath(newroot, 0) ;
+    if (!newroot) dienomem() ;
+  }
   if (flags & 32) newargc += 2 ;
   newargc += argc ;
 
@@ -317,7 +317,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       newargv[m++] = "2" ;
     }
 
-    if (argv0 && newroot.s)
+    if (argv0 && newroot)
     {
       argv0 = 0 ;
       strerr_warnw1x("the -b option is ineffective when the -/ option is also given") ;
@@ -331,10 +331,10 @@ int main (int argc, char const *const *argv, char const *const *envp)
       newargv[m++] = "--" ;
     }
 
-    if (newroot.s)
+    if (newroot)
     {
       newargv[m++] = "chroot" ;
-      newargv[m++] = newroot.s ;
+      newargv[m++] = newroot ;
     }
 
     for (int i = 0 ; i < argc+1 ; i++) newargv[m++] = argv[i] ;
