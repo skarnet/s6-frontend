@@ -15,8 +15,6 @@
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
-#include <skalibs/genalloc.h>
-#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 
 #include <execline/config.h>
@@ -141,9 +139,9 @@ static inline size_t parseuggsym (char const *s, uint32_t *flags, uid_t *uid, gi
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   static char const *valopt[6] = { "-m", "-d", "-o", "-p", "-f", "-c" } ;
-  genalloc envdirs = GENALLOC_ZERO ; /* char const * */
   stralloc newroot = STRALLOC_ZERO ;
   unsigned int newargc = 0 ;
+  char const *edir = 0 ;
   char const *argv0 = 0 ;
   char const *lockfile = 0 ;
   char const *envug = 0 ;
@@ -196,10 +194,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
           if (envug[0] == ':') { flags |= 4096 ; envug++ ; newargc++ ; } else flags &= ~4096 ;
           if (strchr(envug, ':')) { flags |= 8192 ; newargc++ ; } else flags &= ~8192 ;
           break ;
-        case 'e' :
-          if (!genalloc_append(char const *, &envdirs, &l.arg)) dienomem() ;
-          newargc += 3 ;
-          break ;
+        case 'e' : edir = l.arg ; newargc += 3 ; break ;
         case '/' :
           newroot.len = 0 ;
           if (sarealpath(&newroot, l.arg) < 0 || !stralloc_0(&newroot)) dienomem() ;
@@ -254,14 +249,11 @@ int main (int argc, char const *const *argv, char const *const *envp)
       newargv[m++] = "--" ;
     }
 
-    if (genalloc_len(char const *, &envdirs))
+    if (edir)
     {
-      for (size_t i = 0 ; i < genalloc_len(char const *, &envdirs) ; i++)
-      {
-        newargv[m++] = S6_EXTBINPREFIX "s6-envdir" ;
-        newargv[m++] = "--" ;
-        newargv[m++] = genalloc_s(char const *, &envdirs)[i] ;
-      }
+      newargv[m++] = S6_EXTBINPREFIX "s6-envdir" ;
+      newargv[m++] = "--" ;
+      newargv[m++] = edir ;
     }
 
     if (lockfile)
@@ -325,6 +317,12 @@ int main (int argc, char const *const *argv, char const *const *envp)
       newargv[m++] = "2" ;
     }
 
+    if (argv0 && newroot.s)
+    {
+      argv0 = 0 ;
+      strerr_warnw1x("the -b option is ineffective when the -/ option is also given") ;
+    }
+
     if (argv0)
     {
       newargv[m++] = EXECLINE_BINPREFIX "exec" ;
@@ -337,7 +335,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
     {
       newargv[m++] = "chroot" ;
       newargv[m++] = newroot.s ;
-      if (argv0) strerr_warnw1x("the -b option is ineffective when the -/ option is also given") ;
     }
 
     for (int i = 0 ; i < argc+1 ; i++) newargv[m++] = argv[i] ;
