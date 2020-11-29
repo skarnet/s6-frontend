@@ -14,7 +14,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #include <execline/config.h>
 
@@ -135,7 +135,7 @@ static inline size_t parseuggsym (char const *s, uint32_t *flags, uid_t *uid, gi
   return n ;
 }
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   static char const *valopt[6] = { "-m", "-d", "-o", "-p", "-f", "-c" } ;
   unsigned int newargc = 0 ;
@@ -339,6 +339,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
 
     for (int i = 0 ; i < argc+1 ; i++) newargv[m++] = argv[i] ;
     if (verbosity) printit(newargv) ;
-    xpathexec0_run(newargv, envp) ;
+    xexec0(newargv) ;
   }
 }

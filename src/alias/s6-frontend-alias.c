@@ -10,6 +10,7 @@
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
+#include <skalibs/exec.h>
 
 #include <s6/config.h>
 
@@ -21,7 +22,7 @@
 
 static unsigned int verbosity = 0 ;
 
-typedef void execfunc_t (int, char const *const *, char const *const *) ;
+typedef void execfunc_t (int, char const *const *) ;
 typedef execfunc_t *execfunc_t_ref ;
 
 typedef struct info_s info_t, *info_t_ref ;
@@ -48,19 +49,17 @@ static void noboot (char const *name)
 
 #ifdef S6_FRONTEND_WRAP_DAEMONTOOLS
 
-static void readproctitle (int argc, char const *const *argv, char const *const *envp)
+static void readproctitle (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   noboot("readproctitle") ;
 }
 
-static void svscanboot (int argc, char const *const *argv, char const *const *envp)
+static void svscanboot (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   noboot("svscanboot") ;
 }
 
@@ -68,33 +67,30 @@ static void svscanboot (int argc, char const *const *argv, char const *const *en
 
 #ifdef S6_FRONTEND_WRAP_RUNIT
 
-static void runit (int argc, char const *const *argv, char const *const *envp)
+static void runit (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   noboot("runit") ;
 }
 
-static void runit_init (int argc, char const *const *argv, char const *const *envp)
+static void runit_init (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   noboot("runit-init") ;
 }
 
-static void runsvchdir (int argc, char const *const *argv, char const *const *envp)
+static void runsvchdir (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   strerr_dief1x(100, "s6 does not provide a runsvchdir emulation. To handle several different sets of services, please consider the s6-rc package.") ;
 }
 
-static void runsvdir (int argc, char const *const *argv, char const *const *envp)
+static void runsvdir (int argc, char const *const *argv)
 {
-  char const *newargv[4] = { S6_EXTBINPREFIX "s6-svscan", "-St14000", 0, 0 } ;
+  char const *newargv[4] = { S6_EXTBINPREFIX "s6-svscan", "-t14000", 0, 0 } ;
   int dosetsid = 0 ;
   subgetopt_t l = SUBGETOPT_ZERO ;
   for (;;)
@@ -124,22 +120,20 @@ static void runsvdir (int argc, char const *const *argv, char const *const *envp
     }
     buffer_putsflush(buffer_2, "\n") ;
   }
-  xpathexec_run(newargv[0], newargv, envp) ;
+  xexec(newargv) ;
 }
 
-static void svlogd (int argc, char const *const *argv, char const *const *envp)
+static void svlogd (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   strerr_dief1x(100, "the s6-log program is similar to svlogd, but uses a different filtering syntax and does not use a config file in the logdir. Please see https://skarnet.org/software/s6/s6-log.html") ;
 }
 
-static void utmpset (int argc, char const *const *argv, char const *const *envp)
+static void utmpset (int argc, char const *const *argv)
 {
   (void)argc ;
   (void)argv ;
-  (void)envp ;
   strerr_dief1x(100, "s6 does not provide a utmpset emulation. To handle utmp records, please consider the s6-linux-init package, along with the utmps package if necessary.") ;
 }
 
@@ -193,7 +187,7 @@ static info_t const aliases[] =
 #endif
 } ;
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
   char const *name = argv[0] ;
   stralloc sa = STRALLOC_ZERO ;
@@ -228,8 +222,8 @@ int main (int argc, char const **argv, char const *const *envp)
     argv[0] = p->cmd ;
     if (verbosity)
       strerr_warni4x("the s6 version of ", name, " is ", p->cmd) ;
-    xpathexec_run(argv[0], argv, envp) ;
+    xexec(argv) ;
   }
-  else (*p->f)(argc, argv, envp) ;
+  else (*p->f)(argc, argv) ;
   strerr_dief1x(101, "can't happen: incorrect alias handler. Please submit a bug-report.") ;
 }
