@@ -7,9 +7,9 @@ WRAP_ANY :=
 
 ifdef WRAP_DAEMONTOOLS
 
-ifdef WRAP_SYMLINKS
-
 WRAP_ANY := 1
+
+ifdef WRAP_SYMLINKS
 
 DAEMONTOOLS_TARGETS := \
 envdir \
@@ -46,9 +46,9 @@ endif
 
 ifdef WRAP_RUNIT
 
-ifdef WRAP_SYMLINKS
-
 WRAP_ANY := 1
+
+ifdef WRAP_SYMLINKS
 
 RUNIT_TARGETS := \
 runit \
@@ -58,14 +58,15 @@ runsvchdir \
 runsvdir \
 svlogd \
 utmpset
+RUNIT_SPECIAL_TARGETS := chpst sv
 
 else
 
 RUNIT_TARGETS :=
+RUNIT_SPECIAL_TARGETS :=
 
 endif
 
-RUNIT_SPECIAL_TARGETS := chpst sv
 BIN_TARGETS += s6-frontend-alias-sv s6-frontend-alias-chpst
 
 install-bin: $(RUNIT_TARGETS:%=$(DESTDIR)$(bindir)/%) $(RUNIT_SPECIAL_TARGETS:%=$(DESTDIR)$(bindir)/%)
