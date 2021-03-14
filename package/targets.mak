@@ -7,6 +7,10 @@ WRAP_ANY :=
 
 ifdef WRAP_DAEMONTOOLS
 
+ifdef WRAP_SYMLINKS
+
+WRAP_ANY := 1
+
 DAEMONTOOLS_TARGETS := \
 envdir \
 envuidgid \
@@ -26,17 +30,25 @@ svstat \
 tai64n \
 tai64nlocal
 
+else
+
+DAEMONTOOLS_TARGETS :=
+
+endif
+
 install-bin: $(DAEMONTOOLS_TARGETS:%=$(DESTDIR)$(bindir)/%)
 
 ifneq ($(exthome),)
 global-links: $(DAEMONTOOLS_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
 endif
 
-WRAP_ANY := 1
-
 endif
 
 ifdef WRAP_RUNIT
+
+ifdef WRAP_SYMLINKS
+
+WRAP_ANY := 1
 
 RUNIT_TARGETS := \
 runit \
@@ -47,6 +59,12 @@ runsvdir \
 svlogd \
 utmpset
 
+else
+
+RUNIT_TARGETS :=
+
+endif
+
 RUNIT_SPECIAL_TARGETS := chpst sv
 BIN_TARGETS += s6-frontend-alias-sv s6-frontend-alias-chpst
 
@@ -55,8 +73,6 @@ install-bin: $(RUNIT_TARGETS:%=$(DESTDIR)$(bindir)/%) $(RUNIT_SPECIAL_TARGETS:%=
 ifneq ($(exthome),)
 global-links: $(RUNIT_TARGETS:%=$(DESTDIR)$(sproot)/command/%) $(RUNIT_SPECIAL_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
 endif
-
-WRAP_ANY := 1
 
 $(DESTDIR)$(bindir)/chpst: $(DESTDIR)$(bindir)/s6-frontend-alias-chpst
 	 exec $(INSTALL) -D -l s6-frontend-alias-chpst $@
