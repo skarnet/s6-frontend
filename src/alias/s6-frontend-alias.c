@@ -22,15 +22,15 @@
 
 static unsigned int verbosity = 0 ;
 
-typedef void execfunc_t (int, char const *const *) ;
-typedef execfunc_t *execfunc_t_ref ;
+typedef void exec_func (int, char const *const *) ;
+typedef exec_func *exec_func_ref ;
 
 typedef struct info_s info_t, *info_t_ref ;
 struct info_s
 {
   char const *name ;
   char const *cmd ;
-  execfunc_t_ref f ;
+  exec_func_ref f ;
 } ;
 
 static int info_cmp (void const *a, void const *b)
@@ -92,7 +92,7 @@ static void runsvdir (int argc, char const *const *argv)
 {
   char const *newargv[4] = { S6_EXTBINPREFIX "s6-svscan", "-t14000", 0, 0 } ;
   int dosetsid = 0 ;
-  subgetopt_t l = SUBGETOPT_ZERO ;
+  subgetopt l = SUBGETOPT_ZERO ;
   for (;;)
   {
     int opt = subgetopt_r(argc, argv, "P", &l) ;
@@ -197,7 +197,7 @@ int main (int argc, char const **argv)
   if (!sabasename(&sa, name, strlen(name)) || !stralloc_0(&sa)) dienomem() ;
   if (!strcmp(sa.s, PROG))
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "v", &l) ;

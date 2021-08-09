@@ -154,7 +154,7 @@ int main (int argc, char const *const *argv)
   PROG = "s6-frontend-alias-chpst" ;
 
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "vP012u:U:b:e:/:n:l:L:m:d:o:p:f:c:", &l) ;

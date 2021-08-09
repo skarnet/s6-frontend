@@ -20,14 +20,14 @@
 #define dieusage() strerr_dieusage(100, USAGE)
 #define dienomem() strerr_diefu1sys(111, "stralloc_catb")
 
-typedef int execfunc_t (char const *, char const *const *) ;
-typedef execfunc_t *execfunc_t_ref ;
+typedef int exec_func (char const *, char const *const *) ;
+typedef exec_func *exec_func_ref ;
 
 typedef struct info_s info_t, *info_t_ref ;
 struct info_s
 {
   char const *name ;
-  execfunc_t_ref f ;
+  exec_func_ref f ;
 } ;
 
 static int dowait = 0 ;
@@ -374,7 +374,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   }
 
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "vw:", &l) ;
