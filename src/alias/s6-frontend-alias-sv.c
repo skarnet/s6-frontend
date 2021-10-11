@@ -305,6 +305,7 @@ static info_t const commands[] =
   { .name = "1", .f = &usr1_h },
   { .name = "2", .f = &usr2_h },
   { .name = "D", .f = &forcedown },
+  { .name = "E", .f = &forcebail },
   { .name = "T", .f = &lsb_forcetryrestart },
   { .name = "X", .f = &forcebail },
   { .name = "a", .f = &alarm_h },
