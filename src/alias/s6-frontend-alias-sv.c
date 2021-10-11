@@ -153,6 +153,12 @@ static int down (char const *dir, char const *const *envp)
   return action(dir, "-d", "-d", 'D', envp) ;
 }
 
+static int forcedown (char const *dir, char const *const *envp)
+{
+  warnnokill() ;
+  return down(dir, envp) ;
+}
+
 static int bail (char const *dir, char const *const *envp)
 {
   int e ;
@@ -160,6 +166,12 @@ static int bail (char const *dir, char const *const *envp)
   e = action(dir, "-xd", "-d", 'D', envp) ;
   if (dowait) e |= simple_svc(dir, "-x", envp) ;
   return e ;
+}
+
+static int forcebail (char const *dir, char const *const *envp)
+{
+  warnnokill() ;
+  return bail(dir, envp) ;
 }
 
 static int hup_h (char const *dir, char const *const *envp)
@@ -282,10 +294,19 @@ static int lsb_tryrestart (char const *dir, char const *const *envp)
   return e | status(dir, envp) ;
 }
 
+static int lsb_forcetryrestart (char const *dir, char const *const *envp)
+{
+  warnnokill() ;
+  return lsb_tryrestart(dir, envp) ;
+}
+
 static info_t const commands[] =
 {
   { .name = "1", .f = &usr1_h },
   { .name = "2", .f = &usr2_h },
+  { .name = "D", .f = &forcedown },
+  { .name = "T", .f = &lsb_forcetryrestart },
+  { .name = "X", .f = &forcebail },
   { .name = "a", .f = &alarm_h },
   { .name = "al", .f = &alarm_h },
   { .name = "ala", .f = &alarm_h },
@@ -354,7 +375,8 @@ static info_t const commands[] =
   { .name = "term", .f = &term_h },
   { .name = "try-restart", .f = &lsb_tryrestart },
   { .name = "u", .f = &up },
-  { .name = "up", .f = &up }
+  { .name = "up", .f = &up },
+  { .name = "x", .f = &bail }
 } ;
 
 int main (int argc, char const *const *argv, char const *const *envp)
