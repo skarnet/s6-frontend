@@ -156,7 +156,7 @@ static int includefromhere (char const *file, int once)
   {
     static unsigned char const table[8][5] =
     {
-      { 0x08, 0x10, 0x02, 0x10, 0x10 },
+      { 0x08, 0x10, 0x02, 0x11, 0x11 },
       { 0x08, 0x10, 0x11, 0x11, 0x11 },
       { 0x08, 0x00, 0x03, 0x04, 0x25 },
       { 0x08, 0x00, 0x03, 0x03, 0x03 },
@@ -208,7 +208,7 @@ static int includefromhere (char const *file, int once)
       }
       if (what & 0x0080)
       {
-        int fdhere = open(".", O_RDONLY | O_DIRECTORY) ;
+        int fdhere = open2(".", O_RDONLY | O_DIRECTORY) ;
         if (fdhere < 0)
           strerr_dief3sys(111, "in ", sa.s + sabase, ": unable to open base directory: ") ;
         if (!stralloc_0(&localsa)) dienomem() ;
