@@ -11,6 +11,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr.h>
+#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <s6/config.h>
@@ -54,7 +55,7 @@ static int spawnit (char const *const *argv, char const *const *envp)
 {
   int wstat ;
   pid_t r ;
-  pid_t pid = child_spawn0(argv[0], argv, envp) ;
+  pid_t pid = cspawn(argv[0], argv, envp, 0, 0, 0) ;
   if (!pid)
   {
     strerr_warnwu2sys("spawn ", argv[0]) ;
