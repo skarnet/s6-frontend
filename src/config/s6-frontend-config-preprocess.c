@@ -208,7 +208,7 @@ static int includefromhere (char const *file, int once)
       }
       if (what & 0x0080)
       {
-        int fdhere = open2(".", O_RDONLY | O_DIRECTORY) ;
+        int fdhere = open2(".", O_RDONLY) ;
         if (fdhere < 0)
           strerr_dief3sys(111, "in ", sa.s + sabase, ": unable to open base directory: ") ;
         if (!stralloc_0(&localsa)) dienomem() ;
