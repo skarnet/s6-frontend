@@ -6,11 +6,11 @@ Build Instructions
 
   - A POSIX compatible system with a standard C development environment
   - GNU make version 3.81 or later
-  - skalibs version 2.14.3.0 or later: https://skarnet.org/software/skalibs/
-  - execline version 2.9.6.1 or later: https://skarnet.org/software/execline/
-  - s6 version 2.13.1.0 or later: https://skarnet.org/software/s6/
-  - s6-rc version 0.5.5.0 or later: https://skarnet.org/software/s6-rc/
-  - s6-linux-init version 1.1.2.1 or later: https://skarnet.org/software/s6-linux-init/
+  - skalibs version 2.14.4.0 or later: https://skarnet.org/software/skalibs/
+  - execline version 2.9.7.0 or later: https://skarnet.org/software/execline/
+  - s6 version 2.13.1.1 or later: https://skarnet.org/software/s6/
+  - s6-rc version 0.5.5.1 or later: https://skarnet.org/software/s6-rc/
+  - s6-linux-init version 1.1.2.2 or later: https://skarnet.org/software/s6-linux-init/
 
 
 * Standard usage
