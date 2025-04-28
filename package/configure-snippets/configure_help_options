@@ -1,0 +1,5 @@
+  --enable-nsss                 use the nsss library for user information [disabled]
+  --enable-aliases-daemontools  build emulation of daemontools programs [disabled]
+  --enable-aliases-runit        build emulation of runit programs [disabled]
+  --disable-aliases-symlinks    do not create daemontools/runit multicall symlinks [enabled]
+

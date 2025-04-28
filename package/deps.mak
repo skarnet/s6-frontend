@@ -7,11 +7,12 @@ src/alias/s6-frontend-alias-sv.o src/alias/s6-frontend-alias-sv.lo: src/alias/s6
 src/alias/s6-frontend-alias.o src/alias/s6-frontend-alias.lo: src/alias/s6-frontend-alias.c src/include/s6-frontend/config.h
 src/config/s6-frontend-config-preprocess.o src/config/s6-frontend-config-preprocess.lo: src/config/s6-frontend-config-preprocess.c
 
-s6-frontend-alias: EXTRA_LIBS := -lskarnet
-s6-frontend-alias: src/alias/s6-frontend-alias.o
-s6-frontend-alias-chpst: EXTRA_LIBS := -lskarnet
-s6-frontend-alias-chpst: src/alias/s6-frontend-alias-chpst.o
-s6-frontend-alias-sv: EXTRA_LIBS := -ls6 -lskarnet ${SPAWN_LIB}
-s6-frontend-alias-sv: src/alias/s6-frontend-alias-sv.o
-s6-frontend-config-preprocess: EXTRA_LIBS := -lskarnet
-s6-frontend-config-preprocess: src/config/s6-frontend-config-preprocess.o
+s6-frontend-alias: EXTRA_LIBS :=
+s6-frontend-alias: src/alias/s6-frontend-alias.o -lskarnet
+s6-frontend-alias-chpst: EXTRA_LIBS := ${MAYBEPTHREAD_LIB}
+s6-frontend-alias-chpst: src/alias/s6-frontend-alias-chpst.o ${LIBNSSS} -lskarnet
+s6-frontend-alias-sv: EXTRA_LIBS := ${SPAWN_LIB}
+s6-frontend-alias-sv: src/alias/s6-frontend-alias-sv.o -ls6 -lskarnet
+s6-frontend-config-preprocess: EXTRA_LIBS :=
+s6-frontend-config-preprocess: src/config/s6-frontend-config-preprocess.o -lskarnet
+INTERNAL_LIBS :=

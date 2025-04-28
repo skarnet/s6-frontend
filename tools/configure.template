@@ -25,7 +25,7 @@ Fine tuning of the installation directories:
   --includedir=DIR              C header files [PREFIX/include]
   --sysconfdir=DIR              global configuration files [PREFIX/etc]
   --pkgconfdir=DIR              pkg-config .pc files [PREFIX/lib/pkgconfig]
-
+${configure_help_install}
  If no --prefix option is given, by default libdir (but not dynlibdir) will be
  /usr/lib, and includedir will be /usr/include.
 
@@ -35,7 +35,7 @@ Dependencies:
   --with-lib=DIR                add DIR to the list of searched directories for static libraries
   --with-dynlib=DIR             add DIR to the list of searched directories for shared libraries
   --with-pkgconfig[=PROG]       use pkg-config to look for dependencies
-
+${configure_help_dependencies}
  If no --prefix option is given, by default sysdeps will be fetched from
  /usr/lib/skalibs/sysdeps.
 
@@ -48,11 +48,7 @@ Optional features:
   --enable-pkgconfig            Build and install .pc files for pkg-config [disabled]
   --enable-slashpackage[=ROOT]  assume /package installation at ROOT [disabled]
   --enable-absolute-paths       hardcode absolute BINDIR/foobar paths in binaries [disabled]
-  --enable-nsss                 use the nsss library for user information [disabled]
-  --enable-aliases-daemontools  build emulation of daemontools programs [disabled]
-  --enable-aliases-runit        build emulation of runit programs [disabled]
-  --disable-aliases-symlinks    do not create daemontools/runit multicall symlinks [enabled]
-
+${configure_help_options}
 EOF
 exit 0
 }
@@ -171,10 +167,7 @@ deplibpath=''
 vpaths=''
 vpathd=''
 build=
-usensss=false
-adaemontools=false
-arunit=false
-asymlinks=true
+${configure_init_vars}
 
 for arg ; do
   case "$arg" in
@@ -212,14 +205,7 @@ for arg ; do
     --disable-slashpackage) sproot= ; slashpackage=false ;;
     --enable-absolute-paths|--enable-absolute-paths=yes) abspath=true ;;
     --disable-absolute-paths|--enable-absolute-paths=no) abspath=false ;;
-    --enable-nsss|--enable-nsss=yes) usensss=true ;;
-    --disable-nsss|--enable-nsss=no) usensss=false ;;
-    --enable-aliases-daemontools|--enable-aliases-daemontools=yes) adaemontools=true ;;
-    --disable-aliases-daemontools|--enable-aliases-daemontools=no) adaemontools=false ;;
-    --enable-aliases-runit|--enable-aliases-runit=yes) arunit=true ;;
-    --disable-aliases-runit|--enable-aliases-runit=no) arunit=false ;;
-    --enable-aliases-symlinks|--enable-aliases-symlinks=yes) asymlinks=true ;;
-    --disable-aliases-symlinks|--enable-aliases-symlinks=no) asymlinks=false ;;
+${configure_case_lines}
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --host=*|--target=*) target=${arg#*=} ;;
@@ -248,7 +234,7 @@ fi
 
 # Expand installation directories
 stripdir prefix
-for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot  ; do
+for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot ${configure_expand_dirs} ; do
   eval tmp=\${$i}
   eval $i=$tmp
   stripdir $i
@@ -317,7 +303,7 @@ if $slashpackage ; then
   libexecdir=$bindir
   includedir=${home}/include
   pkgconfdir=${home}/pkgconfig
-
+${configure_slashpackage_other}
 fi
 
 # Get usable temp filenames
@@ -435,7 +421,7 @@ else
   LDFLAGS_NOSHARED="${LDFLAGS_NOSHARED}${addlibdpath}"
 fi
 
-
+${configure_extra_checks}
 
 echo "Creating config.mak..."
 cmdline=$(quote "$0")
@@ -513,28 +499,7 @@ if $allpic ; then
 else
   echo "STATIC_LIBS_ARE_PIC :="
 fi
-if $usensss ; then
-  echo "LIBNSSS := -lnsss"
-  echo "MAYBEPTHREAD_LIB := -lpthread"
-else
-  echo "LIBNSSS :="
-  echo "MAYBEPTHREAD_LIB :="
-fi
-if $adaemontools ; then
-  echo "WRAP_DAEMONTOOLS := 1"
-else
-  echo "WRAP_DAEMONTOOLS :="
-fi
-if $arunit ; then
-  echo "WRAP_RUNIT := 1"
-else
-  echo "WRAP_RUNIT :="
-fi
-if $asymlinks ; then
-  echo "WRAP_SYMLINKS := 1"
-else
-  echo "WRAP_SYMLINKS :="
-fi
+${configure_generate_make}
 exec 1>&3 3>&-
 echo "  ... done."
 
@@ -566,14 +531,7 @@ else
 fi
 echo "#define ${package_macro_name}_LIBEXECPREFIX \"$libexecdir/\""
 echo "#define ${package_macro_name}_SYSCONFPREFIX \"$sysconfdir/\""
-echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
-if $adaemontools ; then
-  echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"
-fi
-echo "#undef ${package_macro_name}_WRAP_RUNIT"
-if $arunit ; then
-  echo "#define ${package_macro_name}_WRAP_RUNIT"
-fi
+${configure_generate_configh}
 echo
 echo "#endif"
 exec 1>&3 3>&-
