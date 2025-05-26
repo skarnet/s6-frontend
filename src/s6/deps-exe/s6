@@ -1,0 +1,4 @@
+help.o
+util.o
+version.o
+-lskarnet
