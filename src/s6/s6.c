@@ -17,34 +17,34 @@
 #define USAGE "s6 [ generic options ] subcommand [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-enum s6_gb_e
+enum main_golb_e
 {
-  S6_GB_HELP,
-  S6_GB_VERSION,
-  S6_GB_N
+  MAIN_GOLB_HELP,
+  MAIN_GOLB_VERSION,
+  MAIN_GOLB_N
 } ;
 
-enum s6_ga_e
+enum main_gola_e
 {
-  S6_GA_SCANDIR,
-  S6_GA_LIVEDIR,
-  S6_GA_REPODIR,
-  S6_GA_VERBOSITY,
-  S6_GA_N
+  MAIN_GOLA_SCANDIR,
+  MAIN_GOLA_LIVEDIR,
+  MAIN_GOLA_REPODIR,
+  MAIN_GOLA_VERBOSITY,
+  MAIN_GOLA_N
 } ;
 
-static gol_bool const s6_gb[S6_GB_N] =
+static gol_bool const main_golb[MAIN_GOLB_N] =
 {
-  { .so = 'h', .lo = "help", .set = 1, .mask = 1 << S6_GB_HELP },
-  { .so = 'V', .lo = "version", .set = 1, .mask = 1 << S6_GB_VERSION }
+  { .so = 'h', .lo = "help", .set = 1, .mask = 1 << MAIN_GOLB_HELP },
+  { .so = 'V', .lo = "version", .set = 1, .mask = 1 << MAIN_GOLB_VERSION }
 } ;
 
-static gol_arg const s6_ga[S6_GA_N] =
+static gol_arg const main_gola[MAIN_GOLA_N] =
 {
-  { .so = 's', .lo = "scandir", .i = S6_GA_SCANDIR },
-  { .so = 'l', .lo = "livedir", .i = S6_GA_LIVEDIR },
-  { .so = 'r', .lo = "repodir", .i = S6_GA_REPODIR },
-  { .so = 'v', .lo = "verbosity", .i = S6_GA_VERBOSITY }
+  { .so = 's', .lo = "scandir", .i = MAIN_GOLA_SCANDIR },
+  { .so = 'l', .lo = "livedir", .i = MAIN_GOLA_LIVEDIR },
+  { .so = 'r', .lo = "repodir", .i = MAIN_GOLA_REPODIR },
+  { .so = 'v', .lo = "verbosity", .i = MAIN_GOLA_VERBOSITY }
 } ;
 
 struct global_s *g ;
@@ -57,30 +57,30 @@ static struct command_s const main_commands[] =
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  struct global_s global = GLOBAL_ZERO ;
-  char const *gola[S6_GA_N] = { 0 } ;
+  struct global_s globals_in_the_stack = GLOBAL_ZERO ;
+  char const *gola[MAIN_GOLA_N] = { 0 } ;
   uint64_t golb = 0 ;
-  struct command_s *cmd ;
   unsigned int golc ;
+  struct command_s *cmd ;
   PROG = "s6" ;
-  g = &global ;
+  g = &globals_in_the_stack ;
 
-  golc = gol_main(argc, argv, s6_gb, S6_GB_N, s6_ga, S6_GA_N, &golb, gola) ;
+  golc = gol_main(argc, argv, main_golb, MAIN_GOLB_N, main_gola, MAIN_GOLA_N, &golb, gola) ;
   argc -= golc ; argv += golc ;
 
-  if (gola[S6_GA_VERBOSITY] && !uint0_scan(gola[S6_GA_VERBOSITY], &g->verbosity))
+  if (gola[MAIN_GOLA_VERBOSITY] && !uint0_scan(gola[MAIN_GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (golb & (1 << S6_GB_VERSION)) version(argv) ;
-  if (golb & (1 << S6_GB_HELP)) help(argv) ;
-  if (golb & ((1 << S6_GB_VERSION) | (1 << S6_GB_HELP))) return 0 ;
+  if (golb & (1 << MAIN_GOLB_VERSION)) version(argv) ;
+  if (golb & (1 << MAIN_GOLB_HELP)) help(argv) ;
+  if (golb & ((1 << MAIN_GOLB_VERSION) | (1 << MAIN_GOLB_HELP))) return 0 ;
 
-  if (gola[S6_GA_SCANDIR]) strerr_warni("scandir is ", gola[S6_GA_SCANDIR]) ;
-  if (gola[S6_GA_LIVEDIR]) strerr_warni("livedir is ", gola[S6_GA_LIVEDIR]) ;
-  if (gola[S6_GA_REPODIR]) strerr_warni("repodir is ", gola[S6_GA_REPODIR]) ;
+  if (gola[MAIN_GOLA_SCANDIR]) strerr_warni("scandir is ", gola[MAIN_GOLA_SCANDIR]) ;
+  if (gola[MAIN_GOLA_LIVEDIR]) strerr_warni("livedir is ", gola[MAIN_GOLA_LIVEDIR]) ;
+  if (gola[MAIN_GOLA_REPODIR]) strerr_warni("repodir is ", gola[MAIN_GOLA_REPODIR]) ;
 
   if (!*argv) dieusage() ;
   cmd = BSEARCH(struct command_s, *argv, main_commands) ;
   if (!cmd) dieusage() ;
-  return (*cmd->f)(argv+1) ;
+  return (*cmd->f)(++argv) ;
 }
