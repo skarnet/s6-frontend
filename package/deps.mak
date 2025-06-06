@@ -8,6 +8,14 @@ src/alias/s6-frontend-alias-sv.o src/alias/s6-frontend-alias-sv.lo: src/alias/s6
 src/alias/s6-frontend-alias.o src/alias/s6-frontend-alias.lo: src/alias/s6-frontend-alias.c src/include/s6-frontend/config.h
 src/config/s6-frontend-config-preprocess.o src/config/s6-frontend-config-preprocess.lo: src/config/s6-frontend-config-preprocess.c
 src/s6/help.o src/s6/help.lo: src/s6/help.c src/s6/s6-internal.h
+src/s6/process.o src/s6/process.lo: src/s6/process.c src/s6/s6-internal.h
+src/s6/process_help.o src/s6/process_help.lo: src/s6/process_help.c src/s6/s6-internal.h
+src/s6/process_kill.o src/s6/process_kill.lo: src/s6/process_kill.c src/s6/s6-internal.h
+src/s6/process_restart.o src/s6/process_restart.lo: src/s6/process_restart.c src/s6/s6-internal.h
+src/s6/process_start.o src/s6/process_start.lo: src/s6/process_start.c src/s6/s6-internal.h
+src/s6/process_status.o src/s6/process_status.lo: src/s6/process_status.c src/s6/s6-internal.h
+src/s6/process_stop.o src/s6/process_stop.lo: src/s6/process_stop.c src/s6/s6-internal.h
+src/s6/process_util.o src/s6/process_util.lo: src/s6/process_util.c src/s6/s6-internal.h
 src/s6/s6.o src/s6/s6.lo: src/s6/s6.c src/include/s6-frontend/config.h src/s6/s6-internal.h
 src/s6/util.o src/s6/util.lo: src/s6/util.c src/s6/s6-internal.h
 src/s6/version.o src/s6/version.lo: src/s6/version.c src/s6/s6-internal.h
@@ -21,5 +29,5 @@ s6-frontend-alias-sv: src/alias/s6-frontend-alias-sv.o -ls6 -lskarnet
 s6-frontend-config-preprocess: EXTRA_LIBS :=
 s6-frontend-config-preprocess: src/config/s6-frontend-config-preprocess.o -lskarnet
 s6: EXTRA_LIBS :=
-s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/version.o -lskarnet
+s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_help.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_start.o src/s6/process_status.o src/s6/process_stop.o src/s6/process_util.o src/s6/version.o -ls6 -lskarnet
 INTERNAL_LIBS :=
