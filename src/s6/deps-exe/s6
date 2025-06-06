@@ -1,13 +1,14 @@
 help.o
 util.o
 process.o
-process_help.o
 process_kill.o
 process_restart.o
 process_start.o
 process_status.o
 process_stop.o
-process_util.o
-version.o
+service.o
+service_start.o
+service_status.o
+service_stop.o
 -ls6
 -lskarnet

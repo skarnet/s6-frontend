@@ -1,10 +1,12 @@
 /* ISC license. */
 
+#include <string.h>
 #include <unistd.h>
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/buffer.h>
+#include <skalibs/prog.h>
 #include <skalibs/strerr.h>
 #include <skalibs/gol.h>
 
@@ -16,6 +18,15 @@
 
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
+
+
+int version (char const *const *argv)
+{
+  (void)argv ;
+  if (!buffer_putsflush(buffer_1, "s6-frontend v" S6_FRONTEND_VERSION "\n"))
+    strerr_diefu1sys(111, "write to stdout") ;
+  return 0 ;
+}
 
 enum main_golb_e
 {
