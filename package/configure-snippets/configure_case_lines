@@ -1,5 +1,9 @@
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
+    --enable-s6li|--enable-s6li=yes) uses6li=true ;;
+    --disable-s6li|--enable-s6li=no) uses6li=false ;;
+    --enable-util-linux|--enable-util-linux=yes) useutillinux=true ;;
+    --disable-util-linux|--enable-util-linux=no) useutillinux=false ;;
     --enable-aliases-daemontools|--enable-aliases-daemontools=yes) adaemontools=true ;;
     --disable-aliases-daemontools|--enable-aliases-daemontools=no) adaemontools=false ;;
     --enable-aliases-runit|--enable-aliases-runit=yes) arunit=true ;;

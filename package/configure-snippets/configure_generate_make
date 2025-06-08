@@ -5,6 +5,7 @@ else
   echo "LIBNSSS :="
   echo "MAYBEPTHREAD_LIB :="
 fi
+
 if $adaemontools ; then
   echo "WRAP_DAEMONTOOLS := 1"
 else

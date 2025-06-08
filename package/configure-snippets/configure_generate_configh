@@ -1,3 +1,13 @@
+echo "#undef ${package_macro_name}_USE_S6LI"
+if $uses6li ; then
+  echo "#define ${package_macro_name}_USE_S6LI"
+  echo "#include <s6-linux-init/config.h>"
+fi
+echo "#undef ${package_macro_name}_USE_UTIL_LINUX"
+if $useutillinux ; then
+  echo "#define ${package_macro_name}_USE_UTIL_LINUX"
+fi
+
 echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
 if $adaemontools ; then
   echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"

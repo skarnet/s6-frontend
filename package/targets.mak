@@ -1,6 +1,5 @@
 BIN_TARGETS := \
-s6 \
-s6-frontend-config-preprocess
+s6
 
 LIBEXEC_TARGETS :=
 

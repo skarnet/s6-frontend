@@ -49,6 +49,8 @@ Optional features:
   --enable-slashpackage[=ROOT]  assume /package installation at ROOT [disabled]
   --enable-absolute-paths       hardcode absolute BINDIR/foobar paths in binaries [disabled]
   --enable-nsss                 use the nsss library for user information [disabled]
+  --disable-s6li                do not use s6-linux-init functionality [enabled]
+  --enable-util-linux           use util-linux functionality [disabled]
   --enable-aliases-daemontools  build emulation of daemontools programs [disabled]
   --enable-aliases-runit        build emulation of runit programs [disabled]
   --disable-aliases-symlinks    do not create daemontools/runit multicall symlinks [enabled]
@@ -173,6 +175,8 @@ vpaths=''
 vpathd=''
 build=
 usensss=false
+uses6li=true
+useutillinux=false
 adaemontools=false
 arunit=false
 asymlinks=true
@@ -215,6 +219,10 @@ for arg ; do
     --disable-absolute-paths|--enable-absolute-paths=no) abspath=false ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
+    --enable-s6li|--enable-s6li=yes) uses6li=true ;;
+    --disable-s6li|--enable-s6li=no) uses6li=false ;;
+    --enable-util-linux|--enable-util-linux=yes) useutillinux=true ;;
+    --disable-util-linux|--enable-util-linux=no) useutillinux=false ;;
     --enable-aliases-daemontools|--enable-aliases-daemontools=yes) adaemontools=true ;;
     --disable-aliases-daemontools|--enable-aliases-daemontools=no) adaemontools=false ;;
     --enable-aliases-runit|--enable-aliases-runit=yes) arunit=true ;;
@@ -533,6 +541,7 @@ else
   echo "LIBNSSS :="
   echo "MAYBEPTHREAD_LIB :="
 fi
+
 if $adaemontools ; then
   echo "WRAP_DAEMONTOOLS := 1"
 else
@@ -579,6 +588,16 @@ else
 fi
 echo "#define ${package_macro_name}_LIBEXECPREFIX \"$libexecdir/\""
 echo "#define ${package_macro_name}_SYSCONFPREFIX \"$sysconfdir/\""
+echo "#undef ${package_macro_name}_USE_S6LI"
+if $uses6li ; then
+  echo "#define ${package_macro_name}_USE_S6LI"
+  echo "#include <s6-linux-init/config.h>"
+fi
+echo "#undef ${package_macro_name}_USE_UTIL_LINUX"
+if $useutillinux ; then
+  echo "#define ${package_macro_name}_USE_UTIL_LINUX"
+fi
+
 echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
 if $adaemontools ; then
   echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"

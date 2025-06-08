@@ -66,6 +66,7 @@ static struct command_s const main_commands[] =
 {
   { .s = "help", .f = &help },
   { .s = "process", .f = &process },
+  { .s = "service", .f = &service },
   { .s = "version", .f = &version },
 } ;
 
