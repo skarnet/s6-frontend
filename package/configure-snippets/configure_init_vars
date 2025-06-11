@@ -1,3 +1,9 @@
+scandir=
+livedir=
+repodir=/var/lib/s6-frontend/s6-rc/repository
+bootdir=/etc/s6-rc
+syspkgdir=/usr/lib/s6-frontend/s6-rc/source
+localpkgdir=/etc/s6-frontend/s6-rc/source
 usensss=false
 uses6li=true
 useutillinux=false

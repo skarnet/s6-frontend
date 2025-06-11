@@ -54,12 +54,18 @@ struct global_s
 {
   unsigned int verbosity ;
   char const *scandir ;
+  char const *livedir ;
+  char const *repodir ;
+  uint8_t istty : 1 ;
   uint8_t color : 1 ;
 } ;
 #define GLOBAL_ZERO \
 { \
   .verbosity = 1, \
-  .scandir = "/run/service", \
+  .scandir = S6_FRONTEND_SCANDIR, \
+  .livedir = S6_FRONTEND_LIVEDIR, \
+  .repodir = S6_FRONTEND_REPODIR, \
+  .istty = 0, \
   .color = 0 \
 }
 

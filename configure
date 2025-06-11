@@ -25,7 +25,12 @@ Fine tuning of the installation directories:
   --includedir=DIR              C header files [PREFIX/include]
   --sysconfdir=DIR              global configuration files [PREFIX/etc]
   --pkgconfdir=DIR              pkg-config .pc files [PREFIX/lib/pkgconfig]
-
+  --scandir=DIR                 assume s6-svscan is running on DIR [s6li default|/run/service]
+  --livedir=DIR                 run s6-rc live directory in DIR [s6-rc default|/run/s6-rc]
+  --repodir=DIR                 s6-frontend working base [/var/lib/s6-frontend/repository]
+  --bootdir=DIR                 location of the bootable s6-rc compiled db [/etc/s6-rc]
+  --syspkgdir=DIR               location of service files for distro packages [/usr/lib/s6-frontend/s6-rc/source]
+  --localpkgdir=DIR             location of service files for local packages [/etc/s6-frontend/s6-rc/source]
  If no --prefix option is given, by default libdir (but not dynlibdir) will be
  /usr/lib, and includedir will be /usr/include.
 
@@ -174,6 +179,12 @@ deplibpath=''
 vpaths=''
 vpathd=''
 build=
+scandir=
+livedir=
+repodir=/var/lib/s6-frontend/s6-rc/repository
+bootdir=/etc/s6-rc
+syspkgdir=/usr/lib/s6-frontend/s6-rc/source
+localpkgdir=/etc/s6-frontend/s6-rc/source
 usensss=false
 uses6li=true
 useutillinux=false
@@ -217,6 +228,12 @@ for arg ; do
     --disable-slashpackage) sproot= ; slashpackage=false ;;
     --enable-absolute-paths|--enable-absolute-paths=yes) abspath=true ;;
     --disable-absolute-paths|--enable-absolute-paths=no) abspath=false ;;
+    --scandir=*) scandir=${arg#*=} ;;
+    --livedir=*) livedir=${arg#*=} ;;
+    --repodir=*) repodir=${arg#*=} ;;
+    --bootdir=*) bootdir=${arg#*=} ;;
+    --syspkgdir=*) syspkgdir=${arg#*=} ;;
+    --localpkgdir=*) localpkgdir=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
@@ -542,6 +559,13 @@ else
   echo "MAYBEPTHREAD_LIB :="
 fi
 
+echo "SCANDIR := $scandir"
+echo "LIVEDIR := $livedir"
+echo "REPODIR := $repodir"
+echo "BOOTDIR := $bootdir"
+echo "SYSPKGDIR := $syspkgdir"
+echo "LOCALPKGDIR := $localpkgdir"
+
 if $adaemontools ; then
   echo "WRAP_DAEMONTOOLS := 1"
 else
@@ -588,20 +612,52 @@ else
 fi
 echo "#define ${package_macro_name}_LIBEXECPREFIX \"$libexecdir/\""
 echo "#define ${package_macro_name}_SYSCONFPREFIX \"$sysconfdir/\""
-echo "#undef ${package_macro_name}_USE_S6LI"
-if $uses6li ; then
-  echo "#define ${package_macro_name}_USE_S6LI"
-  echo "#include <s6-linux-init/config.h>"
-fi
 echo "#undef ${package_macro_name}_USE_UTIL_LINUX"
 if $useutillinux ; then
   echo "#define ${package_macro_name}_USE_UTIL_LINUX"
 fi
 
+echo "#undef ${package_macro_name}_USE_S6LI"
+if $uses6li ; then
+  echo "#define ${package_macro_name}_USE_S6LI"
+  echo '#include <s6-linux-init/config.h>'
+  scandirdefault='S6_LINUX_INIT_TMPFS "/" S6_LINUX_INIT_SCANDIR'
+else
+  scandirdefault='"/run/service"'
+fi
+
+echo "#undef ${package_macro_name}_SCANDIR"
+if test -n "$scandir" ; then
+  echo "#define ${package_macro_name}_SCANDIR \"$scandir\""
+else
+  echo "#define ${package_macro_name}_SCANDIR $scandirdefault"
+fi
+
+echo "#undef ${package_macro_name}_LIVEDIR"
+if test -n "$livedir" ; then
+  echo "#define ${package_macro_name}_LIVEDIR \"$livedir\""
+else
+  echo "#include <s6-rc/config.h>"
+  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVE_BASE"
+fi
+
+echo "#undef ${package_macro_name}_REPODIR"
+echo "#define ${package_macro_name}_REPODIR \"$repodir\""
+
+echo "#undef ${package_macro_name}_BOOTDIR"
+echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
+
+echo "#undef ${package_macro_name}_SYSPKGDIR"
+echo "#define ${package_macro_name}_SYSPKGDIR \"$syspkgdir\""
+
+echo "#undef ${package_macro_name}_LOCALPKGDIR"
+echo "#define ${package_macro_name}_LOCALPKGDIR \"$localpkgdir\""
+
 echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
 if $adaemontools ; then
   echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"
 fi
+
 echo "#undef ${package_macro_name}_WRAP_RUNIT"
 if $arunit ; then
   echo "#define ${package_macro_name}_WRAP_RUNIT"

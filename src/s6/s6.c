@@ -90,12 +90,13 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (golb & (1 << MAIN_GOLB_HELP)) help(argv) ;
   if (golb & ((1 << MAIN_GOLB_VERSION) | (1 << MAIN_GOLB_HELP))) return 0 ;
 
-  if (gola[MAIN_GOLA_SCANDIR]) strerr_warni("scandir is ", gola[MAIN_GOLA_SCANDIR]) ;
-  if (gola[MAIN_GOLA_LIVEDIR]) strerr_warni("livedir is ", gola[MAIN_GOLA_LIVEDIR]) ;
-  if (gola[MAIN_GOLA_REPODIR]) strerr_warni("repodir is ", gola[MAIN_GOLA_REPODIR]) ;
+  if (gola[MAIN_GOLA_SCANDIR]) g->scandir = gola[MAIN_GOLA_SCANDIR] ;
+  if (gola[MAIN_GOLA_LIVEDIR]) g->livedir = gola[MAIN_GOLA_LIVEDIR] ;
+  if (gola[MAIN_GOLA_REPODIR]) g->repodir = gola[MAIN_GOLA_REPODIR] ;
 
   {
     int force_color = 0 ;
+    g->istty = isatty(1) ;
     if (gola[MAIN_GOLA_COLOR])
     {
       if (!strcmp(gola[MAIN_GOLA_COLOR], "yes"))
@@ -111,7 +112,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       else if (strcmp(gola[MAIN_GOLA_COLOR], "auto"))
         strerr_dief1x(100, "--color value must be yes, no, or auto") ;
     }
-    if (!force_color) g->color = isatty(1) ;
+    if (!force_color) g->color = g->istty ;
   }
 
   if (!*argv) dieusage() ;

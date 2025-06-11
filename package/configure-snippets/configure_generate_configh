@@ -1,17 +1,49 @@
-echo "#undef ${package_macro_name}_USE_S6LI"
-if $uses6li ; then
-  echo "#define ${package_macro_name}_USE_S6LI"
-  echo "#include <s6-linux-init/config.h>"
-fi
 echo "#undef ${package_macro_name}_USE_UTIL_LINUX"
 if $useutillinux ; then
   echo "#define ${package_macro_name}_USE_UTIL_LINUX"
 fi
 
+echo "#undef ${package_macro_name}_USE_S6LI"
+if $uses6li ; then
+  echo "#define ${package_macro_name}_USE_S6LI"
+  echo '#include <s6-linux-init/config.h>'
+  scandirdefault='S6_LINUX_INIT_TMPFS "/" S6_LINUX_INIT_SCANDIR'
+else
+  scandirdefault='"/run/service"'
+fi
+
+echo "#undef ${package_macro_name}_SCANDIR"
+if test -n "$scandir" ; then
+  echo "#define ${package_macro_name}_SCANDIR \"$scandir\""
+else
+  echo "#define ${package_macro_name}_SCANDIR $scandirdefault"
+fi
+
+echo "#undef ${package_macro_name}_LIVEDIR"
+if test -n "$livedir" ; then
+  echo "#define ${package_macro_name}_LIVEDIR \"$livedir\""
+else
+  echo "#include <s6-rc/config.h>"
+  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVE_BASE"
+fi
+
+echo "#undef ${package_macro_name}_REPODIR"
+echo "#define ${package_macro_name}_REPODIR \"$repodir\""
+
+echo "#undef ${package_macro_name}_BOOTDIR"
+echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
+
+echo "#undef ${package_macro_name}_SYSPKGDIR"
+echo "#define ${package_macro_name}_SYSPKGDIR \"$syspkgdir\""
+
+echo "#undef ${package_macro_name}_LOCALPKGDIR"
+echo "#define ${package_macro_name}_LOCALPKGDIR \"$localpkgdir\""
+
 echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
 if $adaemontools ; then
   echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"
 fi
+
 echo "#undef ${package_macro_name}_WRAP_RUNIT"
 if $arunit ; then
   echo "#define ${package_macro_name}_WRAP_RUNIT"
