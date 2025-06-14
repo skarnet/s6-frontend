@@ -21,7 +21,7 @@
 
 static int process_kill_hack_kill (int sig, char const *const *argv)
 {
-  size_t scandirlen = strlen(g->scandir) ;
+  size_t scandirlen = strlen(g->dirs.scan) ;
   if (g->verbosity)
   {
     char fmt[INT_FMT] ;
@@ -34,7 +34,7 @@ static int process_kill_hack_kill (int sig, char const *const *argv)
     s6_svstatus_t status ;
     size_t arglen = strlen(*argv) ;
     char path[scandirlen + arglen + 2] ;
-    memcpy(path, g->scandir, scandirlen) ;
+    memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, *argv, arglen) ;
     path[scandirlen + 1 + arglen] = 0 ;

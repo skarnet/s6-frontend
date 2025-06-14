@@ -49,6 +49,7 @@ int service_start (char const *const *argv)
       newargv[m++] = "-n" ;
       newargv[m++] = "1" ;
     }
+    newargv[m++] = "--" ;
   }
   return 0 ;
 }

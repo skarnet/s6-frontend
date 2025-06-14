@@ -32,6 +32,7 @@ enum main_golb_e
 {
   MAIN_GOLB_HELP,
   MAIN_GOLB_VERSION,
+  MAIN_GOLB_USER,
   MAIN_GOLB_N
 } ;
 
@@ -40,6 +41,7 @@ enum main_gola_e
   MAIN_GOLA_SCANDIR,
   MAIN_GOLA_LIVEDIR,
   MAIN_GOLA_REPODIR,
+  MAIN_GOLA_BOOTDIR,
   MAIN_GOLA_VERBOSITY,
   MAIN_GOLA_COLOR,
   MAIN_GOLA_N
@@ -48,7 +50,8 @@ enum main_gola_e
 static gol_bool const main_golb[MAIN_GOLB_N] =
 {
   { .so = 'h', .lo = "help", .set = 1, .mask = 1 << MAIN_GOLB_HELP },
-  { .so = 'V', .lo = "version", .set = 1, .mask = 1 << MAIN_GOLB_VERSION }
+  { .so = 'V', .lo = "version", .set = 1, .mask = 1 << MAIN_GOLB_VERSION },
+  { .so = 0, .lo = "user", .set = 1, .mask = 1 << MAIN_GOLB_USER }
 } ;
 
 static gol_arg const main_gola[MAIN_GOLA_N] =
@@ -56,6 +59,7 @@ static gol_arg const main_gola[MAIN_GOLA_N] =
   { .so = 's', .lo = "scandir", .i = MAIN_GOLA_SCANDIR },
   { .so = 'l', .lo = "livedir", .i = MAIN_GOLA_LIVEDIR },
   { .so = 'r', .lo = "repodir", .i = MAIN_GOLA_REPODIR },
+  { .so = 'b', .lo = "bootdir", .i = MAIN_GOLA_BOOTDIR },
   { .so = 'v', .lo = "verbosity", .i = MAIN_GOLA_VERBOSITY },
   { .so = 0,   .lo = "color", .i = MAIN_GOLA_COLOR }
 } ;
@@ -86,13 +90,14 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (gola[MAIN_GOLA_VERBOSITY] && !uint0_scan(gola[MAIN_GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (golb & (1 << MAIN_GOLB_VERSION)) version(argv) ;
-  if (golb & (1 << MAIN_GOLB_HELP)) help(argv) ;
-  if (golb & ((1 << MAIN_GOLB_VERSION) | (1 << MAIN_GOLB_HELP))) return 0 ;
+  if (golb & 1 << MAIN_GOLB_VERSION) version(argv) ;
+  if (golb & 1 << MAIN_GOLB_HELP) help(argv) ;
+  if (golb & (1 << MAIN_GOLB_VERSION | 1 << MAIN_GOLB_HELP)) return 0 ;
 
-  if (gola[MAIN_GOLA_SCANDIR]) g->scandir = gola[MAIN_GOLA_SCANDIR] ;
-  if (gola[MAIN_GOLA_LIVEDIR]) g->livedir = gola[MAIN_GOLA_LIVEDIR] ;
-  if (gola[MAIN_GOLA_REPODIR]) g->repodir = gola[MAIN_GOLA_REPODIR] ;
+  if (gola[MAIN_GOLA_SCANDIR]) g->dirs.scan = gola[MAIN_GOLA_SCANDIR] ;
+  if (gola[MAIN_GOLA_LIVEDIR]) g->dirs.live = gola[MAIN_GOLA_LIVEDIR] ;
+  if (gola[MAIN_GOLA_REPODIR]) g->dirs.repo = gola[MAIN_GOLA_REPODIR] ;
+  if (gola[MAIN_GOLA_BOOTDIR]) g->dirs.boot = gola[MAIN_GOLA_BOOTDIR] ;
 
   {
     int force_color = 0 ;
@@ -114,6 +119,9 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     if (!force_color) g->color = g->istty ;
   }
+
+  g->isuser = !!(golb & 1 << MAIN_GOLB_USER) ;
+  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (!*argv) dieusage() ;
   cmd = BSEARCH(struct command_s, *argv, main_commands) ;

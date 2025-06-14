@@ -87,7 +87,7 @@ static gol_bool const process_status_golb[1] =
 
 int process_status (char const *const *argv)
 {
-  size_t scandirlen = strlen(g->scandir) ;
+  size_t scandirlen = strlen(g->dirs.scan) ;
   uint64_t golb = 0 ;
   int e = 0 ;
   PROG = "s6 process status" ;
@@ -99,7 +99,7 @@ int process_status (char const *const *argv)
   {
     size_t len = strlen(*argv) ;
     char path[scandirlen + len + 2] ;
-    memcpy(path, g->scandir, scandirlen) ;
+    memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, *argv, len+1) ;
     if (do_status(path, !!(golb & 1 << PROCESS_STATUS_GOLB_WITHLOGS))) e = 1 ;

@@ -33,11 +33,8 @@ echo "#define ${package_macro_name}_REPODIR \"$repodir\""
 echo "#undef ${package_macro_name}_BOOTDIR"
 echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
 
-echo "#undef ${package_macro_name}_SYSPKGDIR"
-echo "#define ${package_macro_name}_SYSPKGDIR \"$syspkgdir\""
-
-echo "#undef ${package_macro_name}_LOCALPKGDIR"
-echo "#define ${package_macro_name}_LOCALPKGDIR \"$localpkgdir\""
+echo "#undef ${package_macro_name}_DEFPATH"
+echo "#define ${package_macro_name}_DEFPATH \"$defpath\""
 
 echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
 if $adaemontools ; then

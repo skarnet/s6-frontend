@@ -8,8 +8,10 @@
 #include <stdlib.h>
 
 #include <skalibs/functypes.h>
-#include <s6-frontend/config.h>
+#include <skalibs/stralloc.h>
 
+#include <s6-frontend/config.h>
+#include "s6f.h"
 
  /* util */
 
@@ -53,18 +55,24 @@ extern int service (char const *const *) ;
 struct global_s
 {
   unsigned int verbosity ;
-  char const *scandir ;
-  char const *livedir ;
-  char const *repodir ;
+  s6f_confdirs dirs ;
+  stralloc userstorage ;
+  uint8_t isuser : 1 ;
   uint8_t istty : 1 ;
   uint8_t color : 1 ;
 } ;
 #define GLOBAL_ZERO \
 { \
   .verbosity = 1, \
-  .scandir = S6_FRONTEND_SCANDIR, \
-  .livedir = S6_FRONTEND_LIVEDIR, \
-  .repodir = S6_FRONTEND_REPODIR, \
+  .dirs = \
+  { \
+    .scan = S6_FRONTEND_SCANDIR, \
+    .live = S6_FRONTEND_LIVEDIR, \
+    .repo = S6_FRONTEND_REPODIR, \
+    .boot = S6_FRONTEND_BOOTDIR, \
+  }, \
+  .userstorage = STRALLOC_ZERO, \
+  .isuser = 0, \
   .istty = 0, \
   .color = 0 \
 }

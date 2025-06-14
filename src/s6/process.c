@@ -22,7 +22,7 @@ static int check_service (char const *name, size_t scandirlen)
   struct stat st ;
   size_t namelen = strlen(name) ;
   char path[scandirlen + namelen + 2] ;
-  memcpy(path, g->scandir, scandirlen) ;
+  memcpy(path, g->dirs.scan, scandirlen) ;
   path[scandirlen] = '/' ;
   memcpy(path + scandirlen + 1, name, namelen) ;
   path[scandirlen + 1 + namelen] = 0 ;
@@ -31,21 +31,21 @@ static int check_service (char const *name, size_t scandirlen)
 
 void process_check_services (char const *const *argv, size_t argc)
 {
-  size_t scandirlen = strlen(g->scandir) ;
+  size_t scandirlen = strlen(g->dirs.scan) ;
   for (size_t i = 0 ; i < argc ; i++)
   {
     int r = check_service(argv[i], scandirlen) ;
     if (r == -1)
-      strerr_diefu4sys(111, "stat ", g->scandir, "/", argv[i]) ;
+      strerr_diefu4sys(111, "stat ", g->dirs.scan, "/", argv[i]) ;
     else if (!r)
-      strerr_dief3x(100, argv[i], "is not registered as a supervised service in ", g->scandir) ;
+      strerr_dief3x(100, argv[i], "is not registered as a supervised service in ", g->dirs.scan) ;
   }
 }
 
 int process_send_svc (char const *svcopt, char const *const *argv, size_t argc)
 {
   char const *newargv[5] = { S6_EXTBINPREFIX "s6-svc", svcopt, "--", 0, 0 } ;
-  size_t scandirlen = strlen(g->scandir) ;
+  size_t scandirlen = strlen(g->dirs.scan) ;
   int wstat ;
   pid_t pids[argc] ;
 
@@ -53,7 +53,7 @@ int process_send_svc (char const *svcopt, char const *const *argv, size_t argc)
   {
     size_t arglen = strlen(argv[i]) ;
     char path[scandirlen + arglen + 2] ;
-    memcpy(path, g->scandir, scandirlen) ;
+    memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, argv[i], arglen) ;
     path[scandirlen + 1 + arglen] = 0 ;

@@ -6,12 +6,9 @@ else
   echo "MAYBEPTHREAD_LIB :="
 fi
 
-echo "SCANDIR := $scandir"
-echo "LIVEDIR := $livedir"
 echo "REPODIR := $repodir"
 echo "BOOTDIR := $bootdir"
-echo "SYSPKGDIR := $syspkgdir"
-echo "LOCALPKGDIR := $localpkgdir"
+echo "DEFPATH := $defpath"
 
 if $adaemontools ; then
   echo "WRAP_DAEMONTOOLS := 1"

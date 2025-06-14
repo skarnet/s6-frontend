@@ -2,5 +2,4 @@
   --livedir=DIR                 run s6-rc live directory in DIR [s6-rc default|/run/s6-rc]
   --repodir=DIR                 s6-frontend working base [/var/lib/s6-frontend/repository]
   --bootdir=DIR                 location of the bootable s6-rc compiled db [/etc/s6-rc]
-  --syspkgdir=DIR               location of service files for distro packages [/usr/lib/s6-frontend/s6-rc/source]
-  --localpkgdir=DIR             location of service files for local packages [/etc/s6-frontend/s6-rc/source]
+  --with-def-path=PATH          path to service files [LIBDIR/s6-frontend/s6-rc/source:SYSCONFDIR/s6-frontend/s6-rc/source]

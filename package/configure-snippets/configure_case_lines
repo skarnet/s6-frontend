@@ -2,8 +2,7 @@
     --livedir=*) livedir=${arg#*=} ;;
     --repodir=*) repodir=${arg#*=} ;;
     --bootdir=*) bootdir=${arg#*=} ;;
-    --syspkgdir=*) syspkgdir=${arg#*=} ;;
-    --localpkgdir=*) localpkgdir=${arg#*=} ;;
+    --with-def-path=*) defpath=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
