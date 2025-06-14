@@ -1,0 +1,4 @@
+s6f_user_get_confdirs.o
+${LIBNSSS}
+-lskarnet
+${MAYBEPTHREAD_LIB}

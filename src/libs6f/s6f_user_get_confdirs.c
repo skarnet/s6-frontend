@@ -10,7 +10,7 @@
 #include <skalibs/strerr.h>
 #include <skalibs/stralloc.h>
 
-#include "s6-internal.h"
+#include "s6f.h"
 
 #define dienomem() strerr_diefu1sys(111, "allocate memory")
 
@@ -27,9 +27,10 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
 
   if (!datahome || !confighome)
   {
-    *home = getenv("HOME") ;
+    home = getenv("HOME") ;
     if (!home)
     {
+      uid_t uid = getuid() ;
       errno = 0 ;
       pw = getpwuid(uid) ;
       if (!pw)
@@ -46,7 +47,7 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
   if (homelen)
   {
     memcpy(homeinstack, pw->pw_dir, homelen) ;
-    homestack[homelen] = 0 ;
+    homeinstack[homelen] = 0 ;
     home = homeinstack ;
   }
   
@@ -60,18 +61,20 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
    || !stralloc_cats(storage, "/s6-rc")
    || !stralloc_0(storage)) dienomem() ;
 
-  repopos = storage.len ;
+  repopos = storage->len ;
   if (!(datahome ? stralloc_cats(storage, datahome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.local/share"))
    || !stralloc_cats(storage, "/s6-frontend/repository")
-   || !stralloc_0(storage)) dienomem ;
+   || !stralloc_0(storage)) dienomem() ;
   
-  bootpos = storage.len ;
+  bootpos = storage->len ;
   if (!(confighome ? stralloc_cats(storage, confighome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.config"))
    || !stralloc_cats(storage, "/s6-rc")
-   || !stralloc_0(storage)) dienomem ;
+   || !stralloc_0(storage)) dienomem() ;
 
  /* Don't add to storage past this point */
 
-  dirs->scan = storage.s + scanpos ;
-
+  dirs->scan = storage->s + scanpos ;
+  dirs->live = storage->s + livepos ;
+  dirs->repo = storage->s + repopos ;
+  dirs->boot = storage->s + bootpos ;
 }

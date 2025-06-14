@@ -10,5 +10,6 @@ service.o
 service_start.o
 service_status.o
 service_stop.o
+libs6f.a.xyzzy
 -ls6
 -lskarnet
