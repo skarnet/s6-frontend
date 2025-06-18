@@ -42,6 +42,7 @@ enum main_gola_e
   MAIN_GOLA_LIVEDIR,
   MAIN_GOLA_REPODIR,
   MAIN_GOLA_BOOTDIR,
+  MAIN_GOLA_STMPDIR,
   MAIN_GOLA_VERBOSITY,
   MAIN_GOLA_COLOR,
   MAIN_GOLA_N
@@ -60,6 +61,7 @@ static gol_arg const main_gola[MAIN_GOLA_N] =
   { .so = 'l', .lo = "livedir", .i = MAIN_GOLA_LIVEDIR },
   { .so = 'r', .lo = "repodir", .i = MAIN_GOLA_REPODIR },
   { .so = 'b', .lo = "bootdir", .i = MAIN_GOLA_BOOTDIR },
+  { .so = 0,   .lo = "stmpdir", .i = MAIN_GOLA_STMPDIR },
   { .so = 'v', .lo = "verbosity", .i = MAIN_GOLA_VERBOSITY },
   { .so = 0,   .lo = "color", .i = MAIN_GOLA_COLOR }
 } ;
@@ -98,6 +100,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (gola[MAIN_GOLA_LIVEDIR]) g->dirs.live = gola[MAIN_GOLA_LIVEDIR] ;
   if (gola[MAIN_GOLA_REPODIR]) g->dirs.repo = gola[MAIN_GOLA_REPODIR] ;
   if (gola[MAIN_GOLA_BOOTDIR]) g->dirs.boot = gola[MAIN_GOLA_BOOTDIR] ;
+  if (gola[MAIN_GOLA_STMPDIR]) g->dirs.stmp = gola[MAIN_GOLA_STMPDIR] ;
 
   {
     int force_color = 0 ;

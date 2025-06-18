@@ -70,6 +70,7 @@ struct global_s
     .live = S6_FRONTEND_LIVEDIR, \
     .repo = S6_FRONTEND_REPODIR, \
     .boot = S6_FRONTEND_BOOTDIR, \
+    .stmp = S6_FRONTEND_STMPDIR, \
   }, \
   .userstorage = STRALLOC_ZERO, \
   .isuser = 0, \

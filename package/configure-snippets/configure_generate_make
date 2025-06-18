@@ -8,6 +8,7 @@ fi
 
 echo "REPODIR := $repodir"
 echo "BOOTDIR := $bootdir"
+echo "STMPDIR := $stmpdir"
 echo "DEFPATH := $defpath"
 
 if $adaemontools ; then

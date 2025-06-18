@@ -16,7 +16,7 @@
 
 void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
 {
-  size_t scanpos, livepos, repopos, bootpos ;
+  size_t scanpos, livepos, repopos, bootpos, stmppos ;
   size_t homelen = 0 ;
   struct passwd *pw = 0 ;
   char const *home = 0 ;
@@ -71,10 +71,16 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
    || !stralloc_cats(storage, "/s6-rc")
    || !stralloc_0(storage)) dienomem() ;
 
+  stmppos = storage->len ;
+  if (!stralloc_cats(storage, runtime)
+   || !stralloc_cats(storage, "/s6-frontend")
+   || !stralloc_0(storage)) dienomem() ;
+
  /* Don't add to storage past this point */
 
   dirs->scan = storage->s + scanpos ;
   dirs->live = storage->s + livepos ;
   dirs->repo = storage->s + repopos ;
   dirs->boot = storage->s + bootpos ;
+  dirs->stmp = storage->s + stmppos ;
 }

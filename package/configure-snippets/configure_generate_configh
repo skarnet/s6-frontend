@@ -33,6 +33,9 @@ echo "#define ${package_macro_name}_REPODIR \"$repodir\""
 echo "#undef ${package_macro_name}_BOOTDIR"
 echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
 
+echo "#undef ${package_macro_name}_STMPDIR"
+echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
+
 echo "#undef ${package_macro_name}_DEFPATH"
 echo "#define ${package_macro_name}_DEFPATH \"$defpath\""
 

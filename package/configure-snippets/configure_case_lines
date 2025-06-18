@@ -2,6 +2,7 @@
     --livedir=*) livedir=${arg#*=} ;;
     --repodir=*) repodir=${arg#*=} ;;
     --bootdir=*) bootdir=${arg#*=} ;;
+    --stmpdir=*) stmpdir=${arg#*=} ;;
     --with-def-path=*) defpath=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
