@@ -9,7 +9,6 @@ src/alias/s6-frontend-alias.o src/alias/s6-frontend-alias.lo: src/alias/s6-front
 src/config/s6-frontend-config-preprocess.o src/config/s6-frontend-config-preprocess.lo: src/config/s6-frontend-config-preprocess.c
 src/libs6f/s6f_confdir_open.o src/libs6f/s6f_confdir_open.lo: src/libs6f/s6f_confdir_open.c src/include-local/s6f.h
 src/libs6f/s6f_lock.o src/libs6f/s6f_lock.lo: src/libs6f/s6f_lock.c src/include-local/s6f.h
-src/libs6f/s6f_mkdirp.o src/libs6f/s6f_mkdirp.lo: src/libs6f/s6f_mkdirp.c src/include-local/s6f.h
 src/libs6f/s6f_report_state_change.o src/libs6f/s6f_report_state_change.lo: src/libs6f/s6f_report_state_change.c src/include-local/s6f.h
 src/libs6f/s6f_user_get_confdirs.o src/libs6f/s6f_user_get_confdirs.lo: src/libs6f/s6f_user_get_confdirs.c src/include-local/s6f.h
 src/s6/help.o src/s6/help.lo: src/s6/help.c src/s6/s6-internal.h
@@ -33,9 +32,9 @@ s6-frontend-alias-sv: src/alias/s6-frontend-alias-sv.o -ls6 -lskarnet
 s6-frontend-config-preprocess: EXTRA_LIBS :=
 s6-frontend-config-preprocess: src/config/s6-frontend-config-preprocess.o -lskarnet
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
-libs6f.a.xyzzy: src/libs6f/s6f_confdir_open.o src/libs6f/s6f_lock.o src/libs6f/s6f_mkdirp.o src/libs6f/s6f_report_state_change.o src/libs6f/s6f_user_get_confdirs.o ${LIBNSSS}
+libs6f.a.xyzzy: src/libs6f/s6f_confdir_open.o src/libs6f/s6f_lock.o src/libs6f/s6f_report_state_change.o src/libs6f/s6f_user_get_confdirs.o ${LIBNSSS}
 else
-libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_lock.lo src/libs6f/s6f_mkdirp.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo ${LIBNSSS}
+libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_lock.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo ${LIBNSSS}
 endif
 s6: EXTRA_LIBS :=
 s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_startstop.o src/s6/process_status.o src/s6/service.o src/s6/service_startstop.o src/s6/service_status.o libs6f.a.xyzzy -ls6rc -ls6 -lskarnet

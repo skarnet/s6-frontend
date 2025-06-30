@@ -6,6 +6,7 @@
 #include <errno.h>
 
 #include <skalibs/stat.h>
+#include <skalibs/posixplz.h>
 #include <skalibs/strerr.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/unix-transactional.h>
@@ -22,7 +23,8 @@ int s6f_confdir_open (char const *s, int flagcreate)
       strerr_diefu3sys(111, "open ", s, " for reading") ;
     if (flagcreate)
     {
-      s6f_mkdirp(s, 02755) ;
+      if (mkdirp(s, 02755) == -1)
+        strerr_diefu2sys(111, "mkdirp ", s) ;
       fd = open_read(s) ;
       if (fd == -1)
         strerr_diefu3sys(111, "open ", s, " for reading") ;

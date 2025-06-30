@@ -1,6 +1,5 @@
 s6f_confdir_open.o
 s6f_lock.o
-s6f_mkdirp.o
 s6f_report_state_change.o
 s6f_user_get_confdirs.o
 ${LIBNSSS}
