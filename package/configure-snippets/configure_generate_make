@@ -1,11 +1,5 @@
-if $usensss ; then
-  echo "LIBNSSS := -lnsss"
-  echo "MAYBEPTHREAD_LIB := -lpthread"
-else
-  echo "LIBNSSS :="
-  echo "MAYBEPTHREAD_LIB :="
-fi
-
+echo "LIBNSSS := -lnsss"
+echo "MAYBEPTHREAD_LIB := -lpthread"
 echo "REPODIR := $repodir"
 echo "BOOTDIR := $bootdir"
 echo "STMPDIR := $stmpdir"

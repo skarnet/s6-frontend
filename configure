@@ -53,7 +53,6 @@ Optional features:
   --enable-pkgconfig            Build and install .pc files for pkg-config [disabled]
   --enable-slashpackage[=ROOT]  assume /package installation at ROOT [disabled]
   --enable-absolute-paths       hardcode absolute BINDIR/foobar paths in binaries [disabled]
-  --enable-nsss                 use the nsss library for user information [disabled]
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
   --enable-aliases-daemontools  build emulation of daemontools programs [disabled]
@@ -185,7 +184,6 @@ repodir=/var/lib/s6-frontend/s6-rc/repository
 bootdir=/etc/s6-rc
 stmpdir=/run/s6-frontend
 defpath='$libdir/s6-frontend/s6-rc/source:$sysconfdir/s6-frontend/s6-rc/source'
-usensss=false
 uses6li=true
 useutillinux=false
 adaemontools=false
@@ -234,8 +232,6 @@ for arg ; do
     --bootdir=*) bootdir=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
     --with-def-path=*) defpath=${arg#*=} ;;
-    --enable-nsss|--enable-nsss=yes) usensss=true ;;
-    --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
     --disable-s6li|--enable-s6li=no) uses6li=false ;;
     --enable-util-linux|--enable-util-linux=yes) useutillinux=true ;;
@@ -551,14 +547,8 @@ if $allpic ; then
 else
   echo "STATIC_LIBS_ARE_PIC :="
 fi
-if $usensss ; then
-  echo "LIBNSSS := -lnsss"
-  echo "MAYBEPTHREAD_LIB := -lpthread"
-else
-  echo "LIBNSSS :="
-  echo "MAYBEPTHREAD_LIB :="
-fi
-
+echo "LIBNSSS := -lnsss"
+echo "MAYBEPTHREAD_LIB := -lpthread"
 echo "REPODIR := $repodir"
 echo "BOOTDIR := $bootdir"
 echo "STMPDIR := $stmpdir"
