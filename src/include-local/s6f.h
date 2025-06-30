@@ -22,7 +22,7 @@ extern void s6f_mkdirp (char const *, mode_t) ;
 extern int s6f_confdir_open (char const *, int) ;
 extern int s6f_lock (char const *, int) ;
 
-extern void s6f_report_state_change (uint32_t, unsigned char const *, unsigned char const *, char const *) ;
+extern void s6f_report_state_change (uint32_t, unsigned char const *, unsigned char const *, char const *, int) ;
 
 extern void s6f_user_get_confdirs (s6f_confdirs *, stralloc *) ;
 

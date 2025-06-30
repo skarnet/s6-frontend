@@ -73,26 +73,26 @@ static int do_status (char const *dir, int withlog)
 }
 
 
-enum process_status_golb_e
+enum golb_e
 {
-  PROCESS_STATUS_GOLB_WITHLOGS,
-  PROCESS_STATUS_GOLB_N
+  GOLB_WITHLOGS,
+  GOLB_N
 } ;
 
-static gol_bool const process_status_golb[1] =
+static gol_bool const rgolb[1] =
 {
-  { .so = 'l', .lo = "with-logs", .set = 1, .mask = 1 << PROCESS_STATUS_GOLB_WITHLOGS }
+  { .so = 'l', .lo = "with-logs", .clear = 0, .set = 1 << GOLB_WITHLOGS }
 } ;
 
 
 int process_status (char const *const *argv)
 {
   size_t scandirlen = strlen(g->dirs.scan) ;
-  uint64_t golb = 0 ;
+  uint64_t wgolb = 0 ;
   int e = 0 ;
   PROG = "s6 process status" ;
 
-  argv += gol_argv(argv, process_status_golb, 1, 0, 0, &golb, 0) ;
+  argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
   if (!argv) dieusage() ;
   process_check_services(argv, env_len(argv)) ;
   for (; *argv ; argv++)
@@ -102,7 +102,7 @@ int process_status (char const *const *argv)
     memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, *argv, len+1) ;
-    if (do_status(path, !!(golb & 1 << PROCESS_STATUS_GOLB_WITHLOGS))) e = 1 ;
+    if (do_status(path, !!(wgolb & 1 << GOLB_WITHLOGS))) e = 1 ;
   }
   return e ;
 }

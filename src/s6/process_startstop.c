@@ -9,9 +9,6 @@
 
 #include "s6-internal.h"
 
-#define USAGE "s6 process restart [ -W|--nowait ] services..."
-#define dieusage() strerr_dieusage(100, USAGE)
-
 enum golb_e
 {
   GOLB_WAIT,
@@ -24,15 +21,25 @@ static gol_bool const rgolb[2] =
   { .so = 'w', .lo = "wait",   .clear = 0, .set = 1 << GOLB_WAIT }
 } ;
 
-int process_restart (char const *const *argv)
+static int process_startstop (char const *const *argv, int h)
 {
   uint64_t wgolb = 1 << GOLB_WAIT ;
   size_t argc ;
-  PROG = "s6 process restart" ;
+  PROG = h ? "s6 process start" : "s6 process stop" ;
 
   argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
-  if (!argv) dieusage() ;
+  if (!argv) strerr_dien(100, 4, PROG, ": usage: ", PROG, " [ -W|--nowait | -w|--wait ] services...") ;
   argc = env_len(argv) ;
   process_check_services(argv, argc) ;
-  return process_send_svc(wgolb & 1 << GOLB_WAIT ? "-rwR" : "-r", argv, argc) ;
+  return process_send_svc(wgolb & 1 << GOLB_WAIT ? h ? "-uwU" : "-dwD" : h ? "-u" : "-d", argv, argc) ;
+}
+
+int process_start (char const *const *argv)
+{
+  return process_startstop(argv, 1) ;
+}
+
+int process_stop (char const *const *argv)
+{
+  return process_startstop(argv, 0) ;
 }

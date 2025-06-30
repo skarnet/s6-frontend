@@ -46,31 +46,30 @@ static int process_kill_hack_kill (int sig, char const *const *argv)
 }
 
 
-enum process_kill_gola_e
+enum gola_e
 {
-  PROCESS_KILL_GOLA_SIGNAL,
-  PROCESS_KILL_GOLA_N
+  GOLA_SIGNAL,
+  GOLA_N
 } ;
 
-static gol_arg const process_kill_gola[PROCESS_KILL_GOLA_N] =
+static gol_arg const rgola[GOLA_N] =
 {
-  { .so = 's', .lo = "signal", .i = PROCESS_KILL_GOLA_SIGNAL },
+  { .so = 's', .lo = "signal", .i = GOLA_SIGNAL },
 } ;
 
 int process_kill (char const *const *argv)
 {
-  uint64_t golb = 0 ;
-  char const *gola[PROCESS_KILL_GOLA_N] = { 0 } ;
+  char const *wgola[GOLA_N] = { 0 } ;
   char const *svcopt = 0 ;
   size_t argc ;
   int sig = SIGTERM ;
   PROG = "s6 process kill" ;
 
-  argv += gol_argv(argv, 0, 0, process_kill_gola, PROCESS_KILL_GOLA_N, &golb, gola) ;
+  argv += gol_argv(argv, 0, 0, rgola, GOLA_N, 0, wgola) ;
   if (!argv) dieusage() ;
-  if (gola[PROCESS_KILL_GOLA_SIGNAL])
+  if (wgola[GOLA_SIGNAL])
   {
-    if (!sig0_scan(gola[PROCESS_KILL_GOLA_SIGNAL], &sig))
+    if (!sig0_scan(wgola[GOLA_SIGNAL], &sig))
       strerr_dief1x(100, "--signal= argument must be the name or number of a signal") ;
   }
   argc = env_len(argv) ;

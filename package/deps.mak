@@ -16,14 +16,12 @@ src/s6/help.o src/s6/help.lo: src/s6/help.c src/s6/s6-internal.h
 src/s6/process.o src/s6/process.lo: src/s6/process.c src/s6/s6-internal.h
 src/s6/process_kill.o src/s6/process_kill.lo: src/s6/process_kill.c src/s6/s6-internal.h
 src/s6/process_restart.o src/s6/process_restart.lo: src/s6/process_restart.c src/s6/s6-internal.h
-src/s6/process_start.o src/s6/process_start.lo: src/s6/process_start.c src/s6/s6-internal.h
+src/s6/process_startstop.o src/s6/process_startstop.lo: src/s6/process_startstop.c src/s6/s6-internal.h
 src/s6/process_status.o src/s6/process_status.lo: src/s6/process_status.c src/s6/s6-internal.h
-src/s6/process_stop.o src/s6/process_stop.lo: src/s6/process_stop.c src/s6/s6-internal.h
 src/s6/s6.o src/s6/s6.lo: src/s6/s6.c src/include/s6-frontend/config.h src/s6/s6-internal.h
 src/s6/service.o src/s6/service.lo: src/s6/service.c src/s6/s6-internal.h
-src/s6/service_start.o src/s6/service_start.lo: src/s6/service_start.c src/s6/s6-internal.h
+src/s6/service_startstop.o src/s6/service_startstop.lo: src/s6/service_startstop.c src/s6/s6-internal.h
 src/s6/service_status.o src/s6/service_status.lo: src/s6/service_status.c src/s6/s6-internal.h
-src/s6/service_stop.o src/s6/service_stop.lo: src/s6/service_stop.c src/s6/s6-internal.h
 src/s6/util.o src/s6/util.lo: src/s6/util.c src/s6/s6-internal.h
 
 s6-frontend-alias: EXTRA_LIBS :=
@@ -40,5 +38,5 @@ else
 libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_lock.lo src/libs6f/s6f_mkdirp.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo ${LIBNSSS}
 endif
 s6: EXTRA_LIBS :=
-s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_start.o src/s6/process_status.o src/s6/process_stop.o src/s6/service.o src/s6/service_start.o src/s6/service_status.o src/s6/service_stop.o libs6f.a.xyzzy -ls6rc -ls6 -lskarnet
+s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_startstop.o src/s6/process_status.o src/s6/service.o src/s6/service_startstop.o src/s6/service_status.o libs6f.a.xyzzy -ls6rc -ls6 -lskarnet
 INTERNAL_LIBS := libs6f.a.xyzzy

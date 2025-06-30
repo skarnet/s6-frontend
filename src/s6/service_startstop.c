@@ -17,38 +17,35 @@
 
 #include "s6-internal.h"
 
-#define USAGE "s6 service start services..."
-#define dieusage() strerr_dieusage(100, USAGE)
-
-enum service_start_golb_e
+enum golb_e
 {
-  SERVICE_START_GOLB_DRYRUN,
-  SERVICE_START_GOLB_WAIT,
-  SERVICE_START_GOLB_N
+  GOLB_DRYRUN,
+  GOLB_WAIT,
+  GOLB_N
 } ;
 
-enum service_start_gola_e
+enum gola_e
 {
-  SERVICE_START_GOLA_TIMEOUT,
-  SERVICE_START_GOLA_N
+  GOLA_TIMEOUT,
+  GOLA_N
 } ;
 
-static gol_bool const service_start_golb[3] =
+static gol_bool const rgolb[3] =
 {
-  { .so = 'n', .lo = "dryrun", .set = 1, .mask = 1 << SERVICE_START_GOLB_DRYRUN },
-  { .so = 'W', .lo = "nowait", .set = 0, .mask = 1 << SERVICE_START_GOLB_WAIT },
-  { .so = 'w', .lo = "wait", .set = 1, .mask = 1 << SERVICE_START_GOLB_WAIT }
+  { .so = 'n', .lo = "dryrun", .clear = 0, .set = 1 << GOLB_DRYRUN },
+  { .so = 'W', .lo = "nowait", .clear = 1 << GOLB_WAIT, .set = 0 },
+  { .so = 'w', .lo = "wait",   .clear = 0, .set = 1 << GOLB_WAIT }
 } ;
 
-static gol_arg const service_start_gola[SERVICE_START_GOLA_N] =
+static gol_arg const rgola[GOLA_N] =
 {
-  { .so = 't', .lo = "timeout", .i = SERVICE_START_GOLA_TIMEOUT }
+  { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT }
 } ;
 
-int service_start (char const *const *argv)
+static int service_startstop (char const *const *argv, int h)
 {
-  char const *gola[SERVICE_START_GOLA_N] = { 0 } ;
-  uint64_t golb = 0 ;
+  char const *wgola[GOLA_N] = { 0 } ;
+  uint64_t wgolb = 0 ;
   unsigned int t = 0 ;
   size_t argc = env_len(argv) ;
   pid_t pid ;
@@ -56,14 +53,14 @@ int service_start (char const *const *argv)
   uint32_t nlong, nshort, n ;
   int livelock, compiledlock ;
   size_t livelen = strlen(g->dirs.live) ;
-  PROG = "s6 service start" ;
+  PROG = h ? "s6 service start" : "s6 service stop" ;
 
-  argv += gol_argv(argv, service_start_golb, 3, service_start_gola, SERVICE_START_GOLA_N, &golb, gola) ;
-  if (!*argv) dieusage() ;
+  argv += gol_argv(argv, rgolb, 3, rgola, GOLA_N, &wgolb, wgola) ;
+  if (!*argv) strerr_dieusage(100, h ? "s6 service start services..." : "s6 service stop services...") ;
 
-  if (gola[SERVICE_START_GOLA_TIMEOUT])
+  if (wgola[GOLA_TIMEOUT])
   {
-    if (!uint0_scan(gola[SERVICE_START_GOLA_TIMEOUT], &t))
+    if (!uint0_scan(wgola[GOLA_TIMEOUT], &t))
       strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
   }
   s6f_lock(g->dirs.stmp, 0) ;  /* leaks, it's fine */
@@ -96,7 +93,7 @@ int service_start (char const *const *argv)
       newargv[m++] = fmtt ;
       fmtt[uint_fmt(fmtt, t)] = 0 ;
     }
-    if (golb & 1 << SERVICE_START_GOLB_DRYRUN)
+    if (wgolb & 1 << GOLB_DRYRUN)
     {
       newargv[m++] = "-n" ;
       newargv[m++] = "1" ;
@@ -104,7 +101,7 @@ int service_start (char const *const *argv)
     newargv[m++] = "-l" ;
     newargv[m++] = g->dirs.live ;
     newargv[m++] = "--" ;
-    newargv[m++] = "start" ;
+    newargv[m++] = h ? "start" : "stop" ;
     while (*argv) newargv[m++] = *argv++ ;
     newargv[m++] = 0 ;
     pid = cspawn(newargv[0], newargv, (char const *const *)environ, CSPAWN_FLAGS_SIGBLOCKNONE, 0, 0) ;
@@ -117,6 +114,16 @@ int service_start (char const *const *argv)
   unsigned char newstate[n] ;
   if (!s6rc_live_state_read(g->dirs.live, newstate, n))
     strerr_diefu2sys(111, "read state in ", g->dirs.live) ;
-  s6f_report_state_change(n, oldstate, newstate, dbfn) ;
+  s6f_report_state_change(n, oldstate, newstate, dbfn, h) ;
   return wait_estatus(wstat) ;
+}
+
+int service_start (char const *const *argv)
+{
+  return service_startstop(argv, 1) ;
+}
+
+int service_stop (char const *const *argv)
+{
+  return service_startstop(argv, 0) ;
 }

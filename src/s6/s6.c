@@ -28,47 +28,47 @@ int version (char const *const *argv)
   return 0 ;
 }
 
-enum main_golb_e
+enum golb_e
 {
-  MAIN_GOLB_HELP,
-  MAIN_GOLB_VERSION,
-  MAIN_GOLB_USER,
-  MAIN_GOLB_N
+  GOLB_HELP,
+  GOLB_VERSION,
+  GOLB_USER,
+  GOLB_N
 } ;
 
-enum main_gola_e
+enum gola_e
 {
-  MAIN_GOLA_SCANDIR,
-  MAIN_GOLA_LIVEDIR,
-  MAIN_GOLA_REPODIR,
-  MAIN_GOLA_BOOTDIR,
-  MAIN_GOLA_STMPDIR,
-  MAIN_GOLA_VERBOSITY,
-  MAIN_GOLA_COLOR,
-  MAIN_GOLA_N
+  GOLA_SCANDIR,
+  GOLA_LIVEDIR,
+  GOLA_REPODIR,
+  GOLA_BOOTDIR,
+  GOLA_STMPDIR,
+  GOLA_VERBOSITY,
+  GOLA_COLOR,
+  GOLA_N
 } ;
 
-static gol_bool const main_golb[MAIN_GOLB_N] =
+static gol_bool const rgolb[GOLB_N] =
 {
-  { .so = 'h', .lo = "help", .set = 1, .mask = 1 << MAIN_GOLB_HELP },
-  { .so = 'V', .lo = "version", .set = 1, .mask = 1 << MAIN_GOLB_VERSION },
-  { .so = 0, .lo = "user", .set = 1, .mask = 1 << MAIN_GOLB_USER }
+  { .so = 'h', .lo = "help", .clear = 0, .set = 1 << GOLB_HELP },
+  { .so = 'V', .lo = "version", .clear = 0, .set = 1 << GOLB_VERSION },
+  { .so = 0, .lo = "user", .clear = 0, .set = 1 << GOLB_USER }
 } ;
 
-static gol_arg const main_gola[MAIN_GOLA_N] =
+static gol_arg const rgola[GOLA_N] =
 {
-  { .so = 's', .lo = "scandir", .i = MAIN_GOLA_SCANDIR },
-  { .so = 'l', .lo = "livedir", .i = MAIN_GOLA_LIVEDIR },
-  { .so = 'r', .lo = "repodir", .i = MAIN_GOLA_REPODIR },
-  { .so = 'b', .lo = "bootdir", .i = MAIN_GOLA_BOOTDIR },
-  { .so = 0,   .lo = "stmpdir", .i = MAIN_GOLA_STMPDIR },
-  { .so = 'v', .lo = "verbosity", .i = MAIN_GOLA_VERBOSITY },
-  { .so = 0,   .lo = "color", .i = MAIN_GOLA_COLOR }
+  { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
+  { .so = 'l', .lo = "livedir", .i = GOLA_LIVEDIR },
+  { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
+  { .so = 'b', .lo = "bootdir", .i = GOLA_BOOTDIR },
+  { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
+  { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
+  { .so = 0,   .lo = "color", .i = GOLA_COLOR }
 } ;
 
 struct global_s *g ;
 
-static struct command_s const main_commands[] =
+static struct command_s const commands[] =
 {
   { .s = "help", .f = &help },
   { .s = "process", .f = &process },
@@ -79,55 +79,55 @@ static struct command_s const main_commands[] =
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;
-  char const *gola[MAIN_GOLA_N] = { 0 } ;
-  uint64_t golb = 0 ;
+  char const *wgola[GOLA_N] = { 0 } ;
+  uint64_t wgolb = 0 ;
   unsigned int golc ;
   struct command_s *cmd ;
   PROG = "s6" ;
   g = &globals_in_the_stack ;
 
-  golc = gol_main(argc, argv, main_golb, MAIN_GOLB_N, main_gola, MAIN_GOLA_N, &golb, gola) ;
+  golc = gol_main(argc, argv, rgolb, GOLB_N, rgola, GOLA_N, &wgolb, wgola) ;
   argc -= golc ; argv += golc ;
 
-  if (gola[MAIN_GOLA_VERBOSITY] && !uint0_scan(gola[MAIN_GOLA_VERBOSITY], &g->verbosity))
+  if (wgola[GOLA_VERBOSITY] && !uint0_scan(wgola[GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (golb & 1 << MAIN_GOLB_VERSION) version(argv) ;
-  if (golb & 1 << MAIN_GOLB_HELP) help(argv) ;
-  if (golb & (1 << MAIN_GOLB_VERSION | 1 << MAIN_GOLB_HELP)) return 0 ;
+  if (wgolb & 1 << GOLB_VERSION) version(argv) ;
+  if (wgolb & 1 << GOLB_HELP) help(argv) ;
+  if (wgolb & (1 << GOLB_VERSION | 1 << GOLB_HELP)) return 0 ;
 
-  if (gola[MAIN_GOLA_SCANDIR]) g->dirs.scan = gola[MAIN_GOLA_SCANDIR] ;
-  if (gola[MAIN_GOLA_LIVEDIR]) g->dirs.live = gola[MAIN_GOLA_LIVEDIR] ;
-  if (gola[MAIN_GOLA_REPODIR]) g->dirs.repo = gola[MAIN_GOLA_REPODIR] ;
-  if (gola[MAIN_GOLA_BOOTDIR]) g->dirs.boot = gola[MAIN_GOLA_BOOTDIR] ;
-  if (gola[MAIN_GOLA_STMPDIR]) g->dirs.stmp = gola[MAIN_GOLA_STMPDIR] ;
+  if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;
+  if (wgola[GOLA_LIVEDIR]) g->dirs.live = wgola[GOLA_LIVEDIR] ;
+  if (wgola[GOLA_REPODIR]) g->dirs.repo = wgola[GOLA_REPODIR] ;
+  if (wgola[GOLA_BOOTDIR]) g->dirs.boot = wgola[GOLA_BOOTDIR] ;
+  if (wgola[GOLA_STMPDIR]) g->dirs.stmp = wgola[GOLA_STMPDIR] ;
 
   {
     int force_color = 0 ;
     g->istty = isatty(1) ;
-    if (gola[MAIN_GOLA_COLOR])
+    if (wgola[GOLA_COLOR])
     {
-      if (!strcmp(gola[MAIN_GOLA_COLOR], "yes"))
+      if (!strcmp(wgola[GOLA_COLOR], "yes"))
       {
         force_color = 1 ;
         g->color = 1 ;
       }
-      else if (!strcmp(gola[MAIN_GOLA_COLOR], "no"))
+      else if (!strcmp(wgola[GOLA_COLOR], "no"))
       {
         force_color = 1 ;
         g->color = 0 ;
       }
-      else if (strcmp(gola[MAIN_GOLA_COLOR], "auto"))
+      else if (strcmp(wgola[GOLA_COLOR], "auto"))
         strerr_dief1x(100, "--color value must be yes, no, or auto") ;
     }
     if (!force_color) g->color = g->istty ;
   }
 
-  g->isuser = !!(golb & 1 << MAIN_GOLB_USER) ;
+  g->isuser = !!(wgolb & 1 << GOLB_USER) ;
   if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (!*argv) dieusage() ;
-  cmd = BSEARCH(struct command_s, *argv, main_commands) ;
+  cmd = BSEARCH(struct command_s, *argv, commands) ;
   if (!cmd) dieusage() ;
   return (*cmd->f)(++argv) ;
 }

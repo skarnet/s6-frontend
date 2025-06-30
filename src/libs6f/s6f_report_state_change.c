@@ -10,7 +10,7 @@
 
 #include "s6f.h"
 
-void s6f_report_state_change (uint32_t n, unsigned char const *oldstate, unsigned char const *newstate, char const *compiled)
+void s6f_report_state_change (uint32_t n, unsigned char const *oldstate, unsigned char const *newstate, char const *compiled, int h)
 {
   if (!memcmp(oldstate, newstate, n))
   {
@@ -45,7 +45,9 @@ void s6f_report_state_change (uint32_t n, unsigned char const *oldstate, unsigne
       if (!r) strerr_dief3x(4, "invalid service database in ", compiled, "/db") ;
 
       if (buffer_puts(buffer_1, PROG) < 0
-       || buffer_puts(buffer_1, ": info: the following atomic services have changed state:\n") < 0)
+       || buffer_puts(buffer_1, ": info: the following atomic services have been brought ") < 0
+       || buffer_puts(buffer_1, h ? "up" : "down") < 0
+       || buffer_puts(buffer_1, ":\n") < 0)
         strerr_diefu1sys(111, "write to stdout") ;
       for (uint32_t i = 0 ; i < n ; i++)
       {

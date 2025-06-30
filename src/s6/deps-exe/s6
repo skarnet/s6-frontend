@@ -3,13 +3,11 @@ util.o
 process.o
 process_kill.o
 process_restart.o
-process_start.o
+process_startstop.o
 process_status.o
-process_stop.o
 service.o
-service_start.o
+service_startstop.o
 service_status.o
-service_stop.o
 libs6f.a.xyzzy
 -ls6rc
 -ls6
