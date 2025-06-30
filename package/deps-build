@@ -1,5 +1,5 @@
 true		true	/package/prog/skalibs		2.14.4.0	libskarnet
-$usensss	false	/package/admin/nsss		0.2.1.0		libnsss
+true		true	/package/admin/nsss		0.2.1.0		libnsss
 true		false	/package/admin/execline		2.9.7.0		libexecline
 true		false	/package/admin/s6		2.13.2.0	libs6 libs6auto
 true		false	/package/admin/s6-rc		0.5.6.0		libs6rc
