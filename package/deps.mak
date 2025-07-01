@@ -37,5 +37,5 @@ else
 libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_lock.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo ${LIBNSSS}
 endif
 s6: EXTRA_LIBS :=
-s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_startstop.o src/s6/process_status.o src/s6/service.o src/s6/service_startstop.o src/s6/service_status.o libs6f.a.xyzzy -ls6rc -ls6 -lskarnet
+s6: src/s6/s6.o src/s6/help.o src/s6/util.o src/s6/process.o src/s6/process_kill.o src/s6/process_restart.o src/s6/process_startstop.o src/s6/process_status.o src/s6/service.o src/s6/service_startstop.o src/s6/service_status.o libs6f.a.xyzzy -ls6rc -ls6 ${LIBNSSS} -lskarnet
 INTERNAL_LIBS := libs6f.a.xyzzy

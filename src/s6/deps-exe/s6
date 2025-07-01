@@ -11,4 +11,5 @@ service_status.o
 libs6f.a.xyzzy
 -ls6rc
 -ls6
+${LIBNSSS}
 -lskarnet
