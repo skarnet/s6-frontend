@@ -28,13 +28,23 @@ else
 fi
 
 echo "#undef ${package_macro_name}_REPODIR"
-echo "#define ${package_macro_name}_REPODIR \"$repodir\""
+if test -n "$repodir" ; then
+  echo "#define ${package_macro_name}_REPODIR \"$repodir\""
+else
+  if test -n "$livedir" ; then
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_REPODIR S6RC_REPO_BASE"
+fi
 
 echo "#undef ${package_macro_name}_BOOTDIR"
 echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
 
 echo "#undef ${package_macro_name}_STMPDIR"
 echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
+
+echo "#undef ${package_macro_name}_CONFFILE"
+echo "#define ${package_macro_name}_CONFFILE \"$conffile\""
 
 echo "#undef ${package_macro_name}_DEFPATH"
 echo "#define ${package_macro_name}_DEFPATH \"$defpath\""

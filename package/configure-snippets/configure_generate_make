@@ -1,10 +1,15 @@
-echo "LIBNSSS := -lnsss"
-echo "MAYBEPTHREAD_LIB := -lpthread"
 echo "REPODIR := $repodir"
 echo "BOOTDIR := $bootdir"
 echo "STMPDIR := $stmpdir"
 echo "DEFPATH := $defpath"
 
+if $usensss ; then
+  echo "LIBNSSS := -lnsss"
+  echo "MAYBEPTHREAD_LIB := -lpthread"
+else
+  echo "LIBNSSS :="
+  echo "MAYBEPTHREAD_LIB :="
+fi
 if $adaemontools ; then
   echo "WRAP_DAEMONTOOLS := 1"
 else

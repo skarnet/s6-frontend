@@ -1,5 +1,6 @@
 BIN_TARGETS := \
-s6
+s6 \
+s6-frontend
 
 LIBEXEC_TARGETS :=
 

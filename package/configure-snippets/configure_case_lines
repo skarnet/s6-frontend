@@ -3,7 +3,10 @@
     --repodir=*) repodir=${arg#*=} ;;
     --bootdir=*) bootdir=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
+    --conffile=*) conffile=${arg#*=} ;;
     --with-def-path=*) defpath=${arg#*=} ;;
+    --enable-nsss|--enable-nsss=yes) usensss=true ;;
+    --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
     --disable-s6li|--enable-s6li=no) uses6li=false ;;
     --enable-util-linux|--enable-util-linux=yes) useutillinux=true ;;

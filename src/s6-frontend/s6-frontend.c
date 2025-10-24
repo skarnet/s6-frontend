@@ -16,7 +16,7 @@
 #include <s6-frontend/config.h>
 #include "s6-internal.h"
 
-#define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
+#define USAGE "s6-frontend [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 
@@ -79,11 +79,20 @@ static struct command_s const commands[] =
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;
-  char const *wgola[GOLA_N] = { 0 } ;
   uint64_t wgolb = 0 ;
   unsigned int golc ;
   struct command_s *cmd ;
-  PROG = "s6" ;
+  char const *wgola[GOLA_N] =
+  {
+    [GOLA_SCANDIR] = getenv("scandir"),
+    [GOLA_LIVEDIR] = getenv("livedir"),
+    [GOLA_REPODIR] = getenv("repodir"),
+    [GOLA_BOOTDIR] = getenv("bootdir"),
+    [GOLA_STMPDIR] = getenv("stmpdir"),
+    [GOLA_VERBOSITY] = 0,
+    [GOLA_COLOR] = 0
+  } ;
+  PROG = "s6-frontend" ;
   g = &globals_in_the_stack ;
 
   golc = gol_main(argc, argv, rgolb, GOLB_N, rgola, GOLA_N, &wgolb, wgola) ;

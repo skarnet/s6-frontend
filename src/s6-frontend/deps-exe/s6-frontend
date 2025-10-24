@@ -9,7 +9,8 @@ service.o
 service_startstop.o
 service_status.o
 libs6f.a.xyzzy
+${LIBNSSS}
 -ls6rc
 -ls6
-${LIBNSSS}
 -lskarnet
+${MAYBEPTHREAD_LIB}
