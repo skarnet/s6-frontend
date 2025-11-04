@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <skalibs/gccattributes.h>
 #include <skalibs/uint64.h>
 #include <skalibs/posixplz.h>
 #include <skalibs/types.h>
@@ -14,21 +15,40 @@
 
 #include <s6/supervise.h>
 
-#include "s6-internal.h"
+#include "s6f.h"
+#include "s6-frontend-internal.h"
 
 #define USAGE "s6 process kill [ --signal=sig ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int process_kill_hack_kill (int sig, char const *const *argv)
+static void process_kill_hack_kill (int sig, char const *const *argv, size_t argc) gccattr_noreturn ;
+static void process_kill_hack_kill (int sig, char const *const *argv, size_t argc, int dowait, unsigned int timeout)
 {
   size_t scandirlen = strlen(g->dirs.scan) ;
+  unsigned int m = 0 ;
+  char fmt[UINT_FMT] ;
   if (g->verbosity)
   {
-    char fmt[INT_FMT] ;
-    fmt[int_fmt(fmt, sig)] = 0 ;
-    strerr_warnw3x("signal ", fmt, " is not natively supported by s6-svc, results may be unreliable") ;
+    fmt[uint_fmt(fmt, (unsigned int)sig)] = 0 ;
+    strerr_warnw3x("signal ", fmt, " is not natively supported by s6-svc, cannot ensure reliability") ;
   }
-
+  pid_t pids[argc] ;
+  char const *newargv[5 + argc + (dowait ? 4 + argc + (timeout ? 2 : 0) : 0)] ;
+  char equotestorage[dowait ? s6f_equote_space(argv, argc) : 1] ;
+  if (dowait)
+  {
+    newargv[m++] = S6_EXTBINPREFIX "s6-svlisten" ;
+    newargv[m++] = "-dwD" ;
+    if (timeout)
+    {
+      fmt[uint_fmt(fmt, timeout)] = 0 ;
+      newargv[m++] = "-t" ;
+      newargv[m++] = fmt ;
+    }
+    newargv[m++] = "--" ;
+    m += s6f_equote(newargv + m, argv, argc, equotestorage) ;
+  }
+  
   for (; *argv ; argv++)
   {
     s6_svstatus_t status ;
@@ -42,7 +62,7 @@ static int process_kill_hack_kill (int sig, char const *const *argv)
       strerr_diefu2sys(111, "read status file for service ", path) ;
     if (status.pid && !status.flagfinishing) kill(status.pid, sig) ;
   }
-  return 0 ;
+  _exit(0) ;
 }
 
 
@@ -52,18 +72,18 @@ enum gola_e
   GOLA_N
 } ;
 
-static gol_arg const rgola[GOLA_N] =
+static gol_arg const rgola[] =
 {
   { .so = 's', .lo = "signal", .i = GOLA_SIGNAL },
 } ;
 
-int process_kill (char const *const *argv)
+void process_kill (char const *const *argv, process_options const *options)
 {
   char const *wgola[GOLA_N] = { 0 } ;
-  char const *svcopt = 0 ;
   size_t argc ;
   int sig = SIGTERM ;
-  PROG = "s6 process kill" ;
+  char svcopt[5] = "-!\0\0\0" ;
+  PROG = "s6-frontend: process kill" ;
 
   argv += gol_argv(argv, 0, 0, rgola, GOLA_N, 0, wgola) ;
   if (!argv) dieusage() ;
@@ -76,18 +96,20 @@ int process_kill (char const *const *argv)
   process_check_services(argv, argc) ;
   switch (sig)
   {
-    case SIGALRM : svcopt = "-a" ; break ;
-    case SIGABRT : svcopt = "-b" ; break ;
-    case SIGQUIT : svcopt = "-q" ; break ;
-    case SIGHUP  : svcopt = "-h" ; break ;
-    case SIGKILL : svcopt = "-k" ; break ;
-    case SIGTERM : svcopt = "-t" ; break ;
-    case SIGINT  : svcopt = "-i" ; break ;
-    case SIGUSR1 : svcopt = "-1" ; break ;
-    case SIGUSR2 : svcopt = "-2" ; break ;
-    case SIGSTOP : svcopt = "-p" ; break ;
-    case SIGCONT : svcopt = "-c" ; break ;
-    case SIGWINCH: svcopt = "-y" ; break ;
+    case SIGALRM : svcopt[1] = 'a' ; break ;
+    case SIGABRT : svcopt[1] = 'b' ; break ;
+    case SIGQUIT : svcopt[1] = 'q' ; break ;
+    case SIGHUP  : svcopt[1] = 'h' ; break ;
+    case SIGKILL : svcopt[1] = 'k' ; break ;
+    case SIGTERM : svcopt[1] = 't' ; break ;
+    case SIGINT  : svcopt[1] = 'i' ; break ;
+    case SIGUSR1 : svcopt[1] = '1' ; break ;
+    case SIGUSR2 : svcopt[1] = '2' ; break ;
+    case SIGSTOP : svcopt[1] = 'p' ; break ;
+    case SIGCONT : svcopt[1] = 'c' ; break ;
+    case SIGWINCH: svcopt[1] = 'y' ; break ;
   }
-  return svcopt ? process_send_svc(svcopt, argv, argc) : process_kill_hack_kill(sig, argv) ;
+  if (options->flags & 1) { svcopt[2] = 'w' ; svcopt[3] = 'D' ; }
+  if (svcopt[1] != '!') process_send_svc(svcopt, argv, argc, options->timeout) ;
+  else process_kill_hack_kill(sig, argv, argc, options->flags & 1, unsigned int timeout) ;
 }

@@ -15,7 +15,7 @@
 #include <s6-rc/config.h>
 #include <s6-rc/s6rc-utils.h>
 
-#include "s6-internal.h"
+#include "s6-frontend-internal.h"
 
 enum golb_e
 {

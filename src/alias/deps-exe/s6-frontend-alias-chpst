@@ -1,3 +1,0 @@
-${LIBNSSS}
--lskarnet
-${MAYBEPTHREAD_LIB}

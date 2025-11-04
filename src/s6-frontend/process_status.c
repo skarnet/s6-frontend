@@ -15,7 +15,7 @@
 
 #include <s6/config.h>
 
-#include "s6-internal.h"
+#include "s6-frontend-internal.h"
 
 #define USAGE "s6 process status [ -l|--with-logs ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)

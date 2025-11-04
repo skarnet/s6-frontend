@@ -19,42 +19,46 @@ else
   echo "#define ${package_macro_name}_SCANDIR $scandirdefault"
 fi
 
+needs6rcconfig=true
 echo "#undef ${package_macro_name}_LIVEDIR"
 if test -n "$livedir" ; then
   echo "#define ${package_macro_name}_LIVEDIR \"$livedir\""
 else
-  echo "#include <s6-rc/config.h>"
-  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVE_BASE"
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVEDIR"
 fi
 
 echo "#undef ${package_macro_name}_REPODIR"
 if test -n "$repodir" ; then
   echo "#define ${package_macro_name}_REPODIR \"$repodir\""
 else
-  if test -n "$livedir" ; then
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
     echo "#include <s6-rc/config.h>"
   fi
-  echo "#define ${package_macro_name}_REPODIR S6RC_REPO_BASE"
+  echo "#define ${package_macro_name}_REPODIR S6RC_REPODIR"
 fi
 
-echo "#undef ${package_macro_name}_BOOTDIR"
-echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
+echo "#undef ${package_macro_name}_BOOTDB"
+if test -n "$bootdb" ; then
+  echo "#define ${package_macro_name}_BOOTDB \"$bootdb\""
+else
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_BOOTDB S6RC_BOOTDB"
+fi
 
 echo "#undef ${package_macro_name}_STMPDIR"
 echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 
-echo "#undef ${package_macro_name}_CONFFILE"
-echo "#define ${package_macro_name}_CONFFILE \"$conffile\""
+echo "#undef ${package_macro_name}_CONF"
+echo "#define ${package_macro_name}_CONF \"$conffile\""
 
-echo "#undef ${package_macro_name}_DEFPATH"
-echo "#define ${package_macro_name}_DEFPATH \"$defpath\""
+echo "#undef ${package_macro_name}_STOREPATH"
+echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
 
-echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
-if $adaemontools ; then
-  echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"
-fi
-
-echo "#undef ${package_macro_name}_WRAP_RUNIT"
-if $arunit ; then
-  echo "#define ${package_macro_name}_WRAP_RUNIT"
-fi

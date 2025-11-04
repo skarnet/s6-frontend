@@ -3,7 +3,7 @@
 #include <skalibs/buffer.h>
 #include <skalibs/strerr.h>
 
-#include "s6-internal.h"
+#include "s6-frontend-internal.h"
 
 #define MAIN_HELP_MESSAGE "This is the main help message.\n"
 

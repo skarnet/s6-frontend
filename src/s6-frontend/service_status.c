@@ -4,7 +4,7 @@
 #include <skalibs/strerr.h>
 #include <skalibs/gol.h>
 
-#include "s6-internal.h"
+#include "s6-frontend-internal.h"
 
 #define USAGE "s6 service status services..."
 #define dieusage() strerr_dieusage(100, USAGE)

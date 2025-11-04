@@ -7,7 +7,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include <skalibs/gccattributes.h>
+#include <skalibs/uint64.h>
 #include <skalibs/functypes.h>
+#include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 
 #include <s6-frontend/config.h>
@@ -15,8 +18,7 @@
 
  /* util */
 
-extern int keycmp (void const *, void const *) ;
-#define BSEARCH(type, key, array) bsearch(key, (array), sizeof(array)/sizeof(type), sizeof(type), &keycmp)
+#define BSEARCH(type, key, array) bsearch(key, (array), sizeof(array)/sizeof(type), sizeof(type), &str_cmp)
 
 
  /* help */
@@ -29,14 +31,22 @@ extern int help (char const *const *) ;
 
  /* process */
 
-extern void process_check_services (char const *const *, size_t) ;
-extern int process_send_svc (char const *, char const *const *, size_t) ;
+typedef struct process_options_s process_options, *process_options_ref ;
+struct process_options_s
+{
+  uint64_t flags ;
+  unsigned int timeout ;
+} ;
+#define PROCESS_OPTIONS_ZERO { .flags = 0, .timeout = 0 }
 
-extern int process_kill (char const *const *) ;
-extern int process_restart (char const *const *) ;
-extern int process_start (char const *const *) ;
-extern int process_status (char const *const *) ;
-extern int process_stop (char const *const *) ;
+extern void process_check_services (char const *const *, size_t) ;
+extern int process_send_svc (char const *, char const *const *, size_t, unsigned int) gccattr_noreturn ;
+
+extern int process_kill (char const *const *, process_options const *) ;
+extern void process_restart (char const *const *, process_options const *) gccattr_noreturn ;
+extern void process_start (char const *const *, process_options const *) gccattr_noreturn ;
+extern void process_stop (char const *const *, process_options const *) gccattr_noreturn ;
+extern int process_status (char const *const *, process_options const *) ;
 
 extern int process (char const *const *) ;
 
@@ -69,7 +79,7 @@ struct global_s
     .scan = S6_FRONTEND_SCANDIR, \
     .live = S6_FRONTEND_LIVEDIR, \
     .repo = S6_FRONTEND_REPODIR, \
-    .boot = S6_FRONTEND_BOOTDIR, \
+    .boot = S6_FRONTEND_BOOTDB, \
     .stmp = S6_FRONTEND_STMPDIR, \
   }, \
   .userstorage = STRALLOC_ZERO, \
@@ -77,6 +87,15 @@ struct global_s
   .istty = 0, \
   .color = 0 \
 }
+
+struct modif_s
+{
+  char const *s ;
+  size_t len ;
+  unsigned int n ;
+} ;
+
+extern struct modif_s const cleanup_modif ;
 
 struct command_s
 {

@@ -28,10 +28,10 @@ Fine tuning of the installation directories:
   --scandir=DIR                 assume s6-svscan is running on DIR [s6li default: /run/service]
   --livedir=DIR                 run s6-rc live directory in DIR [s6-rc default: /run/s6-rc]
   --repodir=DIR                 default s6-rc repository [s6-rc default: /var/lib/s6-frontend/repository]
-  --bootdir=DIR                 location of the bootable s6-rc compiled db [/etc/s6-rc]
+  --bootdb=LINK                 location of the bootable s6-rc compiled db [s6-rc default: /etc/s6-rc/compiled/current]
   --stmpdir=DIR                 secure location for temporary s6-frontend files [/run/s6-frontend]
   --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
-  --with-def-path=PATH          path to service files [LIBDIR/s6-frontend/s6-rc/source:SYSCONFDIR/s6-frontend/s6-rc/source]
+  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
  If no --prefix option is given, by default libdir (but not dynlibdir) will be
  /usr/lib, and includedir will be /usr/include.
 
@@ -57,9 +57,6 @@ Optional features:
   --enable-nsss                 use the nsss library for user information [disabled]
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
-  --enable-aliases-daemontools  build emulation of daemontools programs [disabled]
-  --enable-aliases-runit        build emulation of runit programs [disabled]
-  --disable-aliases-symlinks    do not create daemontools/runit multicall symlinks [enabled]
 
 EOF
 exit 0
@@ -182,17 +179,15 @@ vpathd=''
 build=
 scandir=
 livedir=
-repodir=/var/lib/s6-frontend/s6-rc/repository
-bootdir=/etc/s6-rc
+repodir=
+bootdb=
 stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6-frontend.conf'
-defpath='$libdir/s6-frontend/s6-rc/source:$sysconfdir/s6-frontend/s6-rc/source'
+storepath='$prefix/share/s6-rc/sources:$sysconfdir/s6-rc/sources'
+
 usensss=false
 uses6li=true
 useutillinux=false
-adaemontools=false
-arunit=false
-asymlinks=true
 
 for arg ; do
   case "$arg" in
@@ -233,22 +228,16 @@ for arg ; do
     --scandir=*) scandir=${arg#*=} ;;
     --livedir=*) livedir=${arg#*=} ;;
     --repodir=*) repodir=${arg#*=} ;;
-    --bootdir=*) bootdir=${arg#*=} ;;
+    --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
     --conffile=*) conffile=${arg#*=} ;;
-    --with-def-path=*) defpath=${arg#*=} ;;
+    --with-store-path=*) storepath=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
     --disable-s6li|--enable-s6li=no) uses6li=false ;;
     --enable-util-linux|--enable-util-linux=yes) useutillinux=true ;;
     --disable-util-linux|--enable-util-linux=no) useutillinux=false ;;
-    --enable-aliases-daemontools|--enable-aliases-daemontools=yes) adaemontools=true ;;
-    --disable-aliases-daemontools|--enable-aliases-daemontools=no) adaemontools=false ;;
-    --enable-aliases-runit|--enable-aliases-runit=yes) arunit=true ;;
-    --disable-aliases-runit|--enable-aliases-runit=no) arunit=false ;;
-    --enable-aliases-symlinks|--enable-aliases-symlinks=yes) asymlinks=true ;;
-    --disable-aliases-symlinks|--enable-aliases-symlinks=no) asymlinks=false ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --host=*|--target=*) target=${arg#*=} ;;
@@ -277,7 +266,7 @@ fi
 
 # Expand installation directories
 stripdir prefix
-for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot stmpdir conffile defpath ; do
+for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot stmpdir conffile storepath ; do
   eval tmp=\${$i}
   eval $i=$tmp
   stripdir $i
@@ -554,10 +543,12 @@ if $allpic ; then
 else
   echo "STATIC_LIBS_ARE_PIC :="
 fi
+echo "SCANDIR := $scandir"
+echo "LIVEDIR := $livedir"
 echo "REPODIR := $repodir"
-echo "BOOTDIR := $bootdir"
+echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
-echo "DEFPATH := $defpath"
+echo "STOREPATH := $storepath"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"
@@ -565,21 +556,6 @@ if $usensss ; then
 else
   echo "LIBNSSS :="
   echo "MAYBEPTHREAD_LIB :="
-fi
-if $adaemontools ; then
-  echo "WRAP_DAEMONTOOLS := 1"
-else
-  echo "WRAP_DAEMONTOOLS :="
-fi
-if $arunit ; then
-  echo "WRAP_RUNIT := 1"
-else
-  echo "WRAP_RUNIT :="
-fi
-if $asymlinks ; then
-  echo "WRAP_SYMLINKS := 1"
-else
-  echo "WRAP_SYMLINKS :="
 fi
 exec 1>&3 3>&-
 echo "  ... done."
@@ -633,45 +609,49 @@ else
   echo "#define ${package_macro_name}_SCANDIR $scandirdefault"
 fi
 
+needs6rcconfig=true
 echo "#undef ${package_macro_name}_LIVEDIR"
 if test -n "$livedir" ; then
   echo "#define ${package_macro_name}_LIVEDIR \"$livedir\""
 else
-  echo "#include <s6-rc/config.h>"
-  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVE_BASE"
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_LIVEDIR S6RC_LIVEDIR"
 fi
 
 echo "#undef ${package_macro_name}_REPODIR"
 if test -n "$repodir" ; then
   echo "#define ${package_macro_name}_REPODIR \"$repodir\""
 else
-  if test -n "$livedir" ; then
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
     echo "#include <s6-rc/config.h>"
   fi
-  echo "#define ${package_macro_name}_REPODIR S6RC_REPO_BASE"
+  echo "#define ${package_macro_name}_REPODIR S6RC_REPODIR"
 fi
 
-echo "#undef ${package_macro_name}_BOOTDIR"
-echo "#define ${package_macro_name}_BOOTDIR \"$bootdir\""
+echo "#undef ${package_macro_name}_BOOTDB"
+if test -n "$bootdb" ; then
+  echo "#define ${package_macro_name}_BOOTDB \"$bootdb\""
+else
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_BOOTDB S6RC_BOOTDB"
+fi
 
 echo "#undef ${package_macro_name}_STMPDIR"
 echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 
-echo "#undef ${package_macro_name}_CONFFILE"
-echo "#define ${package_macro_name}_CONFFILE \"$conffile\""
+echo "#undef ${package_macro_name}_CONF"
+echo "#define ${package_macro_name}_CONF \"$conffile\""
 
-echo "#undef ${package_macro_name}_DEFPATH"
-echo "#define ${package_macro_name}_DEFPATH \"$defpath\""
+echo "#undef ${package_macro_name}_STOREPATH"
+echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
 
-echo "#undef ${package_macro_name}_WRAP_DAEMONTOOLS"
-if $adaemontools ; then
-  echo "#define ${package_macro_name}_WRAP_DAEMONTOOLS"
-fi
-
-echo "#undef ${package_macro_name}_WRAP_RUNIT"
-if $arunit ; then
-  echo "#define ${package_macro_name}_WRAP_RUNIT"
-fi
 echo
 echo "#endif"
 exec 1>&3 3>&-

@@ -14,11 +14,18 @@
 #include <s6-rc/config.h>
 
 #include <s6-frontend/config.h>
-#include "s6-internal.h"
+#include "s6-frontend-internal.h"
 
-#define USAGE "s6-frontend [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
+#define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
+#define CLEANUP_MODIF "EXECLINE_STRICT\0scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity"
+struct modif_s const cleanup_modif =
+{
+  .s = CLEANUP_MODIF,
+  .len = sizeof(CLEANUP_MODIF),
+  .n = 7
+} ;
 
 int version (char const *const *argv)
 {
@@ -30,10 +37,9 @@ int version (char const *const *argv)
 
 enum golb_e
 {
-  GOLB_HELP,
-  GOLB_VERSION,
-  GOLB_USER,
-  GOLB_N
+  GOLB_HELP = 0x01,
+  GOLB_VERSION = 0x02,
+  GOLB_USER = 0x04,
 } ;
 
 enum gola_e
@@ -41,43 +47,42 @@ enum gola_e
   GOLA_SCANDIR,
   GOLA_LIVEDIR,
   GOLA_REPODIR,
-  GOLA_BOOTDIR,
+  GOLA_BOOTDB,
   GOLA_STMPDIR,
   GOLA_VERBOSITY,
   GOLA_COLOR,
   GOLA_N
 } ;
 
-static gol_bool const rgolb[GOLB_N] =
-{
-  { .so = 'h', .lo = "help", .clear = 0, .set = 1 << GOLB_HELP },
-  { .so = 'V', .lo = "version", .clear = 0, .set = 1 << GOLB_VERSION },
-  { .so = 0, .lo = "user", .clear = 0, .set = 1 << GOLB_USER }
-} ;
-
-static gol_arg const rgola[GOLA_N] =
-{
-  { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
-  { .so = 'l', .lo = "livedir", .i = GOLA_LIVEDIR },
-  { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
-  { .so = 'b', .lo = "bootdir", .i = GOLA_BOOTDIR },
-  { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
-  { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
-  { .so = 0,   .lo = "color", .i = GOLA_COLOR }
-} ;
-
 struct global_s *g ;
 
-static struct command_s const commands[] =
+int main (int argc, char const *const *argv)
 {
-  { .s = "help", .f = &help },
-  { .s = "process", .f = &process },
-  { .s = "service", .f = &service },
-  { .s = "version", .f = &version },
-} ;
+  static struct command_s const commands[] =
+  {
+    { .s = "help", .f = &help },
+    { .s = "process", .f = &process },
+    { .s = "service", .f = &service },
+    { .s = "version", .f = &version },
+  } ;
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'h', .lo = "help", .clear = 0, .set = GOLB_HELP },
+    { .so = 'V', .lo = "version", .clear = 0, .set = GOLB_VERSION },
+    { .so = 0, .lo = "user", .clear = 0, .set = GOLB_USER },
+  } ;
 
-int main (int argc, char const *const *argv, char const *const *envp)
-{
+  static gol_arg const rgola[] =
+  {
+    { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
+    { .so = 'l', .lo = "livedir", .i = GOLA_LIVEDIR },
+    { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
+    { .so = 'b', .lo = "bootdb", .i = GOLA_BOOTDB },
+    { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
+    { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
+    { .so = 0,   .lo = "color", .i = GOLA_COLOR },
+  } ;
+
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;
   uint64_t wgolb = 0 ;
   unsigned int golc ;
@@ -87,28 +92,28 @@ int main (int argc, char const *const *argv, char const *const *envp)
     [GOLA_SCANDIR] = getenv("scandir"),
     [GOLA_LIVEDIR] = getenv("livedir"),
     [GOLA_REPODIR] = getenv("repodir"),
-    [GOLA_BOOTDIR] = getenv("bootdir"),
+    [GOLA_BOOTDB] = getenv("bootdb"),
     [GOLA_STMPDIR] = getenv("stmpdir"),
-    [GOLA_VERBOSITY] = 0,
+    [GOLA_VERBOSITY] = getenv("verbosity"),
     [GOLA_COLOR] = 0
   } ;
   PROG = "s6-frontend" ;
   g = &globals_in_the_stack ;
 
-  golc = gol_main(argc, argv, rgolb, GOLB_N, rgola, GOLA_N, &wgolb, wgola) ;
+  golc = GOL_main(argc, argv, rgolb, rgola, &wgolb, wgola) ;
   argc -= golc ; argv += golc ;
 
   if (wgola[GOLA_VERBOSITY] && !uint0_scan(wgola[GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (wgolb & 1 << GOLB_VERSION) version(argv) ;
-  if (wgolb & 1 << GOLB_HELP) help(argv) ;
-  if (wgolb & (1 << GOLB_VERSION | 1 << GOLB_HELP)) return 0 ;
+  if (wgolb & GOLB_VERSION) version(argv) ;
+  if (wgolb & GOLB_HELP) help(argv) ;
+  if (wgolb & (GOLB_VERSION | GOLB_HELP)) return 0 ;
 
   if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;
   if (wgola[GOLA_LIVEDIR]) g->dirs.live = wgola[GOLA_LIVEDIR] ;
   if (wgola[GOLA_REPODIR]) g->dirs.repo = wgola[GOLA_REPODIR] ;
-  if (wgola[GOLA_BOOTDIR]) g->dirs.boot = wgola[GOLA_BOOTDIR] ;
+  if (wgola[GOLA_BOOTDB]) g->dirs.boot = wgola[GOLA_BOOTDB] ;
   if (wgola[GOLA_STMPDIR]) g->dirs.stmp = wgola[GOLA_STMPDIR] ;
 
   {
@@ -132,7 +137,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (!force_color) g->color = g->istty ;
   }
 
-  g->isuser = !!(wgolb & 1 << GOLB_USER) ;
+  g->isuser = !!(wgolb & GOLB_USER) ;
   if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (!*argv) dieusage() ;

@@ -1,7 +1,9 @@
+echo "SCANDIR := $scandir"
+echo "LIVEDIR := $livedir"
 echo "REPODIR := $repodir"
-echo "BOOTDIR := $bootdir"
+echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
-echo "DEFPATH := $defpath"
+echo "STOREPATH := $storepath"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"
@@ -9,19 +11,4 @@ if $usensss ; then
 else
   echo "LIBNSSS :="
   echo "MAYBEPTHREAD_LIB :="
-fi
-if $adaemontools ; then
-  echo "WRAP_DAEMONTOOLS := 1"
-else
-  echo "WRAP_DAEMONTOOLS :="
-fi
-if $arunit ; then
-  echo "WRAP_RUNIT := 1"
-else
-  echo "WRAP_RUNIT :="
-fi
-if $asymlinks ; then
-  echo "WRAP_SYMLINKS := 1"
-else
-  echo "WRAP_SYMLINKS :="
 fi

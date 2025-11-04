@@ -68,7 +68,7 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
   
   bootpos = storage->len ;
   if (!(confighome ? stralloc_cats(storage, confighome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.config"))
-   || !stralloc_cats(storage, "/s6-rc")
+   || !stralloc_cats(storage, "/s6-rc/compiled/current")
    || !stralloc_0(storage)) dienomem() ;
 
   stmppos = storage->len ;
