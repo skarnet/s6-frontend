@@ -42,7 +42,7 @@ void process_check_services (char const *const *argv, size_t argc)
   }
 }
 
-void process_send_svc (char const *svcopt, char const *const *argv, size_t argc, unsigned int timeout)
+void process_send_svc (char const *svcopt, char const *const *argv, unsigned int argc, unsigned int timeout)
 {
   size_t const scandirlen = strlen(g->dirs.scan) ;
   size_t len = 0 ;
@@ -89,7 +89,7 @@ enum gola_e
 
 int process (char const *const *argv)
 {
-  static struct command_s const process_commands[] =
+  static struct process_command_s const process_commands[] =
   {
     { .s = "help", .f = &process_help },
     { .s = "kill", .f = &process_kill },
@@ -108,16 +108,16 @@ int process (char const *const *argv)
     { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
   } ;
 
-  struct command_s *cmd ;
+  struct process_command_s *cmd ;
   process_options options = PROCESS_OPTIONS_ZERO ;
   char const *wgola[GOLA_N] = { 0 } ;
 
-  PROG = "s6-frontend: process" ;
   argv += GOL_argv(argv, rgolb, rgola, &options.flags, wgola) ;
   if (!*argv) dieusage() ;
   if (wgola[GOLA_TIMEOUT] && !uint0_scan(wgola[GOLA_TIMEOUT], &options.timeout))
     strerr_dief1x(100, "timeout must be a numerical argument (milliseconds)") ;
-  cmd = BSEARCH(struct command_s, *argv, process_commands) ;
+  cmd = BSEARCH(struct process_command_s, *argv, process_commands) ;
   if (!cmd) dieusage() ;
-  return (*cmd->f)(++argv, &options) ;
+  (*cmd->f)(++argv, &options) ;
+  return 0 ;
 }

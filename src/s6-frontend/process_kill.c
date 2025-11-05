@@ -8,11 +8,10 @@
 #include <skalibs/uint64.h>
 #include <skalibs/posixplz.h>
 #include <skalibs/types.h>
-#include <skalibs/strerr.h>
-#include <skalibs/gol.h>
-#include <skalibs/env.h>
+#include <skalibs/envexec.h>
 #include <skalibs/sig.h>
 
+#include <s6/config.h>
 #include <s6/supervise.h>
 
 #include "s6f.h"
@@ -21,24 +20,23 @@
 #define USAGE "s6 process kill [ --signal=sig ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static void process_kill_hack_kill (int sig, char const *const *argv, size_t argc) gccattr_noreturn ;
-static void process_kill_hack_kill (int sig, char const *const *argv, size_t argc, int dowait, unsigned int timeout)
+static void process_kill_hack_kill (int sig, char const *const *argv, unsigned int argc, int dowait, unsigned int timeout) gccattr_noreturn ;
+static void process_kill_hack_kill (int sig, char const *const *argv, unsigned int argc, int dowait, unsigned int timeout)
 {
   size_t scandirlen = strlen(g->dirs.scan) ;
+  size_t l = 0 ;
+  size_t equotelen = dowait ? s6f_equote_space(argv, argc, g->dirs.scan) : 1 ;
   unsigned int m = 0 ;
-  char fmt[UINT_FMT] ;
+  char const *newargv[3 + argc + (dowait ? 4 + argc + (timeout ? 2 : 0) : 0)] ;
+  char equotestorage[equotelen] ;
+  char fmt[UINT_FMT + PID_FMT * argc] ;
+  l = uint_fmt(fmt, (unsigned int)sig) ; fmt[l++] = 0 ;
   if (g->verbosity)
-  {
-    fmt[uint_fmt(fmt, (unsigned int)sig)] = 0 ;
     strerr_warnw3x("signal ", fmt, " is not natively supported by s6-svc, cannot ensure reliability") ;
-  }
-  pid_t pids[argc] ;
-  char const *newargv[5 + argc + (dowait ? 4 + argc + (timeout ? 2 : 0) : 0)] ;
-  char equotestorage[dowait ? s6f_equote_space(argv, argc) : 1] ;
   if (dowait)
   {
     newargv[m++] = S6_EXTBINPREFIX "s6-svlisten" ;
-    newargv[m++] = "-dwD" ;
+    newargv[m++] = "-D" ;
     if (timeout)
     {
       fmt[uint_fmt(fmt, timeout)] = 0 ;
@@ -46,23 +44,30 @@ static void process_kill_hack_kill (int sig, char const *const *argv, size_t arg
       newargv[m++] = fmt ;
     }
     newargv[m++] = "--" ;
-    m += s6f_equote(newargv + m, argv, argc, equotestorage) ;
+    m += s6f_equote(newargv + m, argv, argc, g->dirs.scan, equotestorage) ;
   }
-  
-  for (; *argv ; argv++)
+
+  newargv[m++] = S6_FRONTEND_LIBEXECPREFIX "s6-frontend-helper-kill" ;
+  newargv[m++] = fmt ;
+  for (unsigned int i = 0 ; i < argc ; i++)
   {
     s6_svstatus_t status ;
-    size_t arglen = strlen(*argv) ;
+    size_t arglen = strlen(argv[i]) ;
     char path[scandirlen + arglen + 2] ;
     memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
-    memcpy(path + scandirlen + 1, *argv, arglen) ;
+    memcpy(path + scandirlen + 1, argv[i], arglen) ;
     path[scandirlen + 1 + arglen] = 0 ;
     if (!s6_svstatus_read(path, &status))
       strerr_diefu2sys(111, "read status file for service ", path) ;
-    if (status.pid && !status.flagfinishing) kill(status.pid, sig) ;
+    if (status.pid && !status.flagfinishing)
+    {
+      newargv[m++] = fmt + l ;
+      l += pid_fmt(fmt + l, status.pid) ; fmt[l++] = 0 ;
+    }
   }
-  _exit(0) ;
+  newargv[m++] = 0 ;
+  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
 }
 
 
@@ -111,5 +116,5 @@ void process_kill (char const *const *argv, process_options const *options)
   }
   if (options->flags & 1) { svcopt[2] = 'w' ; svcopt[3] = 'D' ; }
   if (svcopt[1] != '!') process_send_svc(svcopt, argv, argc, options->timeout) ;
-  else process_kill_hack_kill(sig, argv, argc, options->flags & 1, unsigned int timeout) ;
+  else process_kill_hack_kill(sig, argv, argc, options->flags & 1, options->timeout) ;
 }

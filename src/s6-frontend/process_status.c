@@ -1,6 +1,7 @@
 /* ISC license. */
 
 #include <string.h>
+#include <unistd.h>
 #include <sys/wait.h>
 #include <errno.h>
 
@@ -73,24 +74,16 @@ static int do_status (char const *dir, int withlog)
 }
 
 
-enum golb_e
-{
-  GOLB_WITHLOGS,
-  GOLB_N
-} ;
-
 static gol_bool const rgolb[1] =
 {
-  { .so = 'l', .lo = "with-logs", .clear = 0, .set = 1 << GOLB_WITHLOGS }
+  { .so = 'l', .lo = "with-logs", .clear = 0, .set = 0x01 }
 } ;
 
-
-int process_status (char const *const *argv)
+void process_status (char const *const *argv, process_options const *options)
 {
   size_t scandirlen = strlen(g->dirs.scan) ;
   uint64_t wgolb = 0 ;
   int e = 0 ;
-  PROG = "s6 process status" ;
 
   argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
   if (!argv) dieusage() ;
@@ -102,7 +95,8 @@ int process_status (char const *const *argv)
     memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, *argv, len+1) ;
-    if (do_status(path, !!(wgolb & 1 << GOLB_WITHLOGS))) e = 1 ;
+    if (do_status(path, wgolb & 1)) e = 1 ;
   }
-  return e ;
+  (void)options ;
+  _exit(e) ;
 }

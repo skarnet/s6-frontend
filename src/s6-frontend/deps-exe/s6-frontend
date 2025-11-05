@@ -1,11 +1,12 @@
 help.o
-util.o
 process.o
+process_help.o
 process_kill.o
 process_restart.o
 process_startstop.o
 process_status.o
 service.o
+service_help.o
 service_startstop.o
 service_status.o
 libs6f.a.xyzzy

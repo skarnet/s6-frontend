@@ -9,18 +9,19 @@ src/libs6f/s6f_equote.o src/libs6f/s6f_equote.lo: src/libs6f/s6f_equote.c src/in
 src/libs6f/s6f_lock.o src/libs6f/s6f_lock.lo: src/libs6f/s6f_lock.c src/include-local/s6f.h
 src/libs6f/s6f_report_state_change.o src/libs6f/s6f_report_state_change.lo: src/libs6f/s6f_report_state_change.c src/include-local/s6f.h
 src/libs6f/s6f_user_get_confdirs.o src/libs6f/s6f_user_get_confdirs.lo: src/libs6f/s6f_user_get_confdirs.c src/include-local/s6f.h
-src/s6-frontend/help.o src/s6-frontend/help.lo: src/s6-frontend/help.c src/include-local/s6-internal.h
-src/s6-frontend/process.o src/s6-frontend/process.lo: src/s6-frontend/process.c src/include-local/s6-internal.h
+src/s6-frontend/help.o src/s6-frontend/help.lo: src/s6-frontend/help.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
+src/s6-frontend/process.o src/s6-frontend/process.lo: src/s6-frontend/process.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/process_help.o src/s6-frontend/process_help.lo: src/s6-frontend/process_help.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/process_kill.o src/s6-frontend/process_kill.lo: src/s6-frontend/process_kill.c src/s6-frontend/s6-frontend-internal.h src/include-local/s6f.h
-src/s6-frontend/process_restart.o src/s6-frontend/process_restart.lo: src/s6-frontend/process_restart.c src/include-local/s6-internal.h
+src/s6-frontend/process_restart.o src/s6-frontend/process_restart.lo: src/s6-frontend/process_restart.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/process_startstop.o src/s6-frontend/process_startstop.lo: src/s6-frontend/process_startstop.c src/s6-frontend/s6-frontend-internal.h
-src/s6-frontend/process_status.o src/s6-frontend/process_status.lo: src/s6-frontend/process_status.c src/include-local/s6-internal.h
-src/s6-frontend/s6-frontend.o src/s6-frontend/s6-frontend.lo: src/s6-frontend/s6-frontend.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
+src/s6-frontend/process_status.o src/s6-frontend/process_status.lo: src/s6-frontend/process_status.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/s6-frontend.o src/s6-frontend/s6-frontend.lo: src/s6-frontend/s6-frontend.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/s6.o src/s6-frontend/s6.lo: src/s6-frontend/s6.c src/include/s6-frontend/config.h
-src/s6-frontend/service.o src/s6-frontend/service.lo: src/s6-frontend/service.c src/include-local/s6-internal.h
-src/s6-frontend/service_startstop.o src/s6-frontend/service_startstop.lo: src/s6-frontend/service_startstop.c src/include-local/s6-internal.h
-src/s6-frontend/service_status.o src/s6-frontend/service_status.lo: src/s6-frontend/service_status.c src/include-local/s6-internal.h
-src/s6-frontend/util.o src/s6-frontend/util.lo: src/s6-frontend/util.c src/include-local/s6-internal.h
+src/s6-frontend/service.o src/s6-frontend/service.lo: src/s6-frontend/service.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/service_help.o src/s6-frontend/service_help.lo: src/s6-frontend/service_help.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/service_startstop.o src/s6-frontend/service_startstop.lo: src/s6-frontend/service_startstop.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/service_status.o src/s6-frontend/service_status.lo: src/s6-frontend/service_status.c src/s6-frontend/s6-frontend-internal.h
 
 s6-frontend-helper-kill: EXTRA_LIBS :=
 s6-frontend-helper-kill: src/helpers/s6-frontend-helper-kill.o -lskarnet
@@ -32,5 +33,5 @@ endif
 s6: EXTRA_LIBS :=
 s6: src/s6-frontend/s6.o -lskarnet
 s6-frontend: EXTRA_LIBS := ${MAYBEPTHREAD_LIB}
-s6-frontend: src/s6-frontend/s6-frontend.o src/s6-frontend/help.o src/s6-frontend/util.o src/s6-frontend/process.o src/s6-frontend/process_kill.o src/s6-frontend/process_restart.o src/s6-frontend/process_startstop.o src/s6-frontend/process_status.o src/s6-frontend/service.o src/s6-frontend/service_startstop.o src/s6-frontend/service_status.o libs6f.a.xyzzy ${LIBNSSS} -ls6rc -ls6 -lskarnet
+s6-frontend: src/s6-frontend/s6-frontend.o src/s6-frontend/help.o src/s6-frontend/process.o src/s6-frontend/process_help.o src/s6-frontend/process_kill.o src/s6-frontend/process_restart.o src/s6-frontend/process_startstop.o src/s6-frontend/process_status.o src/s6-frontend/service.o src/s6-frontend/service_help.o src/s6-frontend/service_startstop.o src/s6-frontend/service_status.o libs6f.a.xyzzy ${LIBNSSS} -ls6rc -ls6 -lskarnet
 INTERNAL_LIBS := libs6f.a.xyzzy

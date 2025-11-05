@@ -13,27 +13,18 @@
 #include <s6/config.h>
 #include <s6-rc/config.h>
 
-#include <s6-frontend/config.h>
 #include "s6-frontend-internal.h"
 
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-#define CLEANUP_MODIF "EXECLINE_STRICT\0scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity"
+#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity"
 struct modif_s const cleanup_modif =
 {
   .s = CLEANUP_MODIF,
   .len = sizeof(CLEANUP_MODIF),
-  .n = 7
+  .n = 6
 } ;
-
-int version (char const *const *argv)
-{
-  (void)argv ;
-  if (!buffer_putsflush(buffer_1, "s6-frontend v" S6_FRONTEND_VERSION "\n"))
-    strerr_diefu1sys(111, "write to stdout") ;
-  return 0 ;
-}
 
 enum golb_e
 {

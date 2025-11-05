@@ -16,17 +16,13 @@
 #include <s6-frontend/config.h>
 #include "s6f.h"
 
- /* util */
-
-#define BSEARCH(type, key, array) bsearch(key, (array), sizeof(array)/sizeof(type), sizeof(type), &str_cmp)
+#define BSEARCH(type, key, array) bsearch(key, (array), sizeof(array)/sizeof(type), sizeof(type), &stringkey_bcmp)
 
 
  /* help */
 
-extern int process_help (char const *const *) ;
-extern int service_help (char const *const *) ;
-
 extern int help (char const *const *) ;
+extern int version (char const *const *) ;
 
 
  /* process */
@@ -39,20 +35,32 @@ struct process_options_s
 } ;
 #define PROCESS_OPTIONS_ZERO { .flags = 0, .timeout = 0 }
 
-extern void process_check_services (char const *const *, size_t) ;
-extern int process_send_svc (char const *, char const *const *, size_t, unsigned int) gccattr_noreturn ;
+typedef void process_command_func (char const *const *, process_options const *) ;
+typedef process_command_func *process_command_func_ref ;
 
-extern int process_kill (char const *const *, process_options const *) ;
+struct process_command_s
+{
+  char const *s ;
+  process_command_func_ref f ;
+} ;
+#define PROCESS_COMMAND_ZERO { .s = 0, .f = 0 }
+
+extern void process_check_services (char const *const *, size_t) ;
+extern void process_send_svc (char const *, char const *const *, unsigned int, unsigned int) gccattr_noreturn ;
+
+extern void process_help (char const *const *, process_options const *) ;
+extern void process_kill (char const *const *, process_options const *) gccattr_noreturn ;
 extern void process_restart (char const *const *, process_options const *) gccattr_noreturn ;
 extern void process_start (char const *const *, process_options const *) gccattr_noreturn ;
 extern void process_stop (char const *const *, process_options const *) gccattr_noreturn ;
-extern int process_status (char const *const *, process_options const *) ;
+extern void process_status (char const *const *, process_options const *) ;
 
 extern int process (char const *const *) ;
 
 
  /* service */
 
+extern int service_help (char const *const *) ;
 extern int service_start (char const *const *) ;
 extern int service_status (char const *const *) ;
 extern int service_stop (char const *const *) ;
@@ -97,15 +105,16 @@ struct modif_s
 
 extern struct modif_s const cleanup_modif ;
 
+typedef int command_func (char const *const *) ;
+typedef command_func *command_func_ref ;
+
 struct command_s
 {
   char const *s ;
-  main_func_ref f ;
+  command_func_ref f ;
 } ;
 #define COMMAND_ZERO { .s = 0, .f = 0 }
 
 extern struct global_s *g ;
-
-extern int version (char const *const *) ;
 
 #endif
