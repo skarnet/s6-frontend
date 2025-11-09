@@ -4,4 +4,3 @@
   --bootdb=LINK                 location of the bootable s6-rc compiled db [s6-rc default: /etc/s6-rc/compiled/current]
   --stmpdir=DIR                 secure location for temporary s6-frontend files [/run/s6-frontend]
   --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
-  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]

@@ -1,5 +1,7 @@
 /* ISC license. */
 
+#include <unistd.h>
+
 #include <skalibs/buffer.h>
 #include <skalibs/strerr.h>
 
@@ -8,18 +10,18 @@
 
 #define MAIN_HELP_MESSAGE "This is the main help message.\n"
 
-int version (char const *const *argv)
+void version (char const *const *argv)
 {
   (void)argv ;
   if (!buffer_putsflush(buffer_1, "s6-frontend v" S6_FRONTEND_VERSION "\n"))
     strerr_diefu1sys(111, "write to stdout") ;
-  return 0 ;
+  _exit(0) ;
 }
 
-int help (char const *const *argv)
+void help (char const *const *argv)
 {
   (void)argv ;
   if (!buffer_putsflush(buffer_1, MAIN_HELP_MESSAGE))
     strerr_diefu1sys(111, "write to stdout") ;
-  return 0 ;
+  _exit(0) ;
 }

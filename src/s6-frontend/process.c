@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <skalibs/uint64.h>
 #include <skalibs/stat.h>
@@ -17,7 +18,7 @@
 #define USAGE "s6 process [ process options ] subcommand [ subcommand options ] services... Type \"s6 process help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int check_service (char const *name, size_t scandirlen)
+static inline int check_service (char const *name, size_t scandirlen)
 {
   struct stat st ;
   size_t namelen = strlen(name) ;
@@ -75,21 +76,9 @@ void process_send_svc (char const *svcopt, char const *const *argv, unsigned int
   xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
 }
 
-
-enum golb_e
+void process (char const *const *argv)
 {
-  GOLB_WAIT = 0x01,
-} ;
-
-enum gola_e
-{
-  GOLA_TIMEOUT,
-  GOLA_N
-} ;
-
-int process (char const *const *argv)
-{
-  static struct process_command_s const process_commands[] =
+  static struct command_s const process_commands[] =
   {
     { .s = "help", .f = &process_help },
     { .s = "kill", .f = &process_kill },
@@ -98,26 +87,11 @@ int process (char const *const *argv)
     { .s = "status", .f = &process_status },
     { .s = "stop", .f = &process_stop },
   } ;
-  static gol_bool const rgolb[] =
-  {
-    { .so = 'W', .lo = "nowait", .clear = GOLB_WAIT, .set = 0 },
-    { .so = 'w', .lo = "wait",   .clear = 0, .set = GOLB_WAIT }
-  } ;
-  static gol_arg const rgola[] =
-  {
-    { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
-  } ;
-
-  struct process_command_s *cmd ;
-  process_options options = PROCESS_OPTIONS_ZERO ;
-  char const *wgola[GOLA_N] = { 0 } ;
-
-  argv += GOL_argv(argv, rgolb, rgola, &options.flags, wgola) ;
+  struct command_s *cmd ;
+  argv += gol_argv(argv, 0, 0, 0, 0, 0, 0) ;
   if (!*argv) dieusage() ;
-  if (wgola[GOLA_TIMEOUT] && !uint0_scan(wgola[GOLA_TIMEOUT], &options.timeout))
-    strerr_dief1x(100, "timeout must be a numerical argument (milliseconds)") ;
-  cmd = BSEARCH(struct process_command_s, *argv, process_commands) ;
+  cmd = BSEARCH(struct command_s, *argv, process_commands) ;
   if (!cmd) dieusage() ;
-  (*cmd->f)(++argv, &options) ;
-  return 0 ;
+  (*cmd->f)(++argv) ;
+  _exit(101) ;
 }

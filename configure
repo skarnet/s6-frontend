@@ -31,7 +31,6 @@ Fine tuning of the installation directories:
   --bootdb=LINK                 location of the bootable s6-rc compiled db [s6-rc default: /etc/s6-rc/compiled/current]
   --stmpdir=DIR                 secure location for temporary s6-frontend files [/run/s6-frontend]
   --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
-  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
  If no --prefix option is given, by default libdir (but not dynlibdir) will be
  /usr/lib, and includedir will be /usr/include.
 
@@ -57,6 +56,10 @@ Optional features:
   --enable-nsss                 use the nsss library for user information [disabled]
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
+
+  --with-conf-file=FILE         default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
+  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
+  --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
 
 EOF
 exit 0
@@ -184,6 +187,7 @@ bootdb=
 stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6-frontend.conf'
 storepath='$prefix/share/s6-rc/sources:$sysconfdir/s6-rc/sources'
+defbundle=
 
 usensss=false
 uses6li=true
@@ -230,8 +234,9 @@ for arg ; do
     --repodir=*) repodir=${arg#*=} ;;
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
-    --conffile=*) conffile=${arg#*=} ;;
+    --with-conf-file=*) conffile=${arg#*=} ;;
     --with-store-path=*) storepath=${arg#*=} ;;
+    --with-default-bundle=*) defbundle=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
@@ -643,6 +648,17 @@ else
   echo "#define ${package_macro_name}_BOOTDB S6RC_BOOTDB"
 fi
 
+echo "#undef ${package_macro_name}_DEFBUNDLE"
+if test -n "$defbundle" ; then
+  echo "#define ${package_macro_name}_DEFBUNDLE \"$defbundle\""
+else
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_DEFBUNDLE S6RC_DEFBUNDLE"
+fi
+
 echo "#undef ${package_macro_name}_STMPDIR"
 echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 
@@ -651,7 +667,6 @@ echo "#define ${package_macro_name}_CONF \"$conffile\""
 
 echo "#undef ${package_macro_name}_STOREPATH"
 echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
-
 echo
 echo "#endif"
 exec 1>&3 3>&-

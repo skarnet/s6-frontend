@@ -18,7 +18,7 @@
 
 #include "s6-frontend-internal.h"
 
-#define USAGE "s6 process status [ -l|--with-logs ] services..."
+#define USAGE "s6 process status [ --with-logs ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static int spawn_and_wait (char const *const *argv)
@@ -40,7 +40,7 @@ static int spawn_and_wait (char const *const *argv)
   return !!WIFSIGNALED(wstat) || !!WEXITSTATUS(wstat) ;
 }
 
-static int do_status (char const *dir, int withlog)
+static inline int do_status (char const *dir, int withlog)
 {
   int e ;
   char const *argv[4] = { S6_EXTBINPREFIX "s6-svstat", "--", dir, 0 } ;
@@ -73,19 +73,23 @@ static int do_status (char const *dir, int withlog)
   return e ;
 }
 
-
-static gol_bool const rgolb[1] =
+enum golb_e
 {
-  { .so = 'l', .lo = "with-logs", .clear = 0, .set = 0x01 }
+  GOLB_WITHLOGS = 0x01,
 } ;
 
-void process_status (char const *const *argv, process_options const *options)
+void process_status (char const *const *argv)
 {
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'L', .lo = "without-logs", .clear = GOLB_WITHLOGS, .set = 0 },
+    { .so = 'l', .lo = "with-logs", .clear = 0, .set = GOLB_WITHLOGS },
+  } ;
   size_t scandirlen = strlen(g->dirs.scan) ;
   uint64_t wgolb = 0 ;
   int e = 0 ;
 
-  argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
+  argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
   if (!argv) dieusage() ;
   process_check_services(argv, env_len(argv)) ;
   for (; *argv ; argv++)
@@ -95,8 +99,7 @@ void process_status (char const *const *argv, process_options const *options)
     memcpy(path, g->dirs.scan, scandirlen) ;
     path[scandirlen] = '/' ;
     memcpy(path + scandirlen + 1, *argv, len+1) ;
-    if (do_status(path, wgolb & 1)) e = 1 ;
+    if (do_status(path, wgolb & GOLB_WITHLOGS)) e = 1 ;
   }
-  (void)options ;
   _exit(e) ;
 }

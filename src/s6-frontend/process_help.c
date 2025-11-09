@@ -1,5 +1,7 @@
 /* ISC license. */
 
+#include <unistd.h>
+
 #include <skalibs/buffer.h>
 #include <skalibs/strerr.h>
 
@@ -7,10 +9,10 @@
 
 #define PROCESS_HELP_MESSAGE "This is the process help message.\n"
 
-void process_help (char const *const *argv, process_options const *options)
+void process_help (char const *const *argv)
 {
   if (!buffer_putsflush(buffer_1, PROCESS_HELP_MESSAGE))
     strerr_diefu1sys(111, "write to stdout") ;
   (void)argv ;
-  (void)options ;
+  _exit(0) ;
 }

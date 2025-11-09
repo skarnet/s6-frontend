@@ -17,7 +17,7 @@
 #include "s6f.h"
 #include "s6-frontend-internal.h"
 
-#define USAGE "s6 process kill [ --signal=sig ] services..."
+#define USAGE "s6 process kill [ --signal=sig ] [ --timeout=millisecs ] [ --wait | --nowait ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static void process_kill_hack_kill (int sig, char const *const *argv, unsigned int argc, int dowait, unsigned int timeout) gccattr_noreturn ;
@@ -70,32 +70,48 @@ static void process_kill_hack_kill (int sig, char const *const *argv, unsigned i
   xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
 }
 
+enum golb_e
+{
+  GOLB_WAIT = 0x01,
+} ;
 
 enum gola_e
 {
   GOLA_SIGNAL,
+  GOLA_TIMEOUT,
   GOLA_N
 } ;
 
-static gol_arg const rgola[] =
+void process_kill (char const *const *argv)
 {
-  { .so = 's', .lo = "signal", .i = GOLA_SIGNAL },
-} ;
-
-void process_kill (char const *const *argv, process_options const *options)
-{
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'W', .lo = "nowait", .clear = GOLB_WAIT, .set = 0 },
+    { .so = 'w', .lo = "wait", .clear = 0, .set = GOLB_WAIT },
+  } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 's', .lo = "signal", .i = GOLA_SIGNAL },
+    { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
+  } ;
   char const *wgola[GOLA_N] = { 0 } ;
-  size_t argc ;
+  uint64_t wgolb = 0 ;
+  unsigned int timeout = 0 ;
   int sig = SIGTERM ;
+  unsigned int argc ;
   char svcopt[5] = "-!\0\0\0" ;
-  PROG = "s6-frontend: process kill" ;
 
-  argv += gol_argv(argv, 0, 0, rgola, GOLA_N, 0, wgola) ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
   if (!argv) dieusage() ;
   if (wgola[GOLA_SIGNAL])
   {
     if (!sig0_scan(wgola[GOLA_SIGNAL], &sig))
       strerr_dief1x(100, "--signal= argument must be the name or number of a signal") ;
+  }
+  if (wgola[GOLA_TIMEOUT])
+  {
+    if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
+      strerr_dief1x(100, "--timeout= argument must be an unsigned integer (in milliseconds)") ;
   }
   argc = env_len(argv) ;
   process_check_services(argv, argc) ;
@@ -114,7 +130,7 @@ void process_kill (char const *const *argv, process_options const *options)
     case SIGCONT : svcopt[1] = 'c' ; break ;
     case SIGWINCH: svcopt[1] = 'y' ; break ;
   }
-  if (options->flags & 1) { svcopt[2] = 'w' ; svcopt[3] = 'D' ; }
-  if (svcopt[1] != '!') process_send_svc(svcopt, argv, argc, options->timeout) ;
-  else process_kill_hack_kill(sig, argv, argc, options->flags & 1, options->timeout) ;
+  if (wgolb & GOLB_WAIT) { svcopt[2] = 'w' ; svcopt[3] = 'D' ; }
+  if (svcopt[1] != '!') process_send_svc(svcopt, argv, argc, timeout) ;
+  else process_kill_hack_kill(sig, argv, argc, !!(wgolb & GOLB_WAIT), timeout) ;
 }

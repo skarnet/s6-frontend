@@ -21,51 +21,40 @@
 
  /* help */
 
-extern int help (char const *const *) ;
-extern int version (char const *const *) ;
+extern void help (char const *const *) gccattr_noreturn ;
+extern void version (char const *const *) gccattr_noreturn ;
+
+
+ /* live */
+
+extern int live_startstop (char const *const *, int h) ;
+
+extern void live (char const *const *) gccattr_noreturn ;
+extern void live_help (char const *const *) gccattr_noreturn ;
+extern void live_restart (char const *const *) gccattr_noreturn ;
+extern void live_start (char const *const *) gccattr_noreturn ;
+extern void live_status (char const *const *) gccattr_noreturn ;
+extern void live_stop (char const *const *) gccattr_noreturn ;
 
 
  /* process */
 
-typedef struct process_options_s process_options, *process_options_ref ;
-struct process_options_s
-{
-  uint64_t flags ;
-  unsigned int timeout ;
-} ;
-#define PROCESS_OPTIONS_ZERO { .flags = 0, .timeout = 0 }
-
-typedef void process_command_func (char const *const *, process_options const *) ;
-typedef process_command_func *process_command_func_ref ;
-
-struct process_command_s
-{
-  char const *s ;
-  process_command_func_ref f ;
-} ;
-#define PROCESS_COMMAND_ZERO { .s = 0, .f = 0 }
-
 extern void process_check_services (char const *const *, size_t) ;
 extern void process_send_svc (char const *, char const *const *, unsigned int, unsigned int) gccattr_noreturn ;
 
-extern void process_help (char const *const *, process_options const *) ;
-extern void process_kill (char const *const *, process_options const *) gccattr_noreturn ;
-extern void process_restart (char const *const *, process_options const *) gccattr_noreturn ;
-extern void process_start (char const *const *, process_options const *) gccattr_noreturn ;
-extern void process_stop (char const *const *, process_options const *) gccattr_noreturn ;
-extern void process_status (char const *const *, process_options const *) ;
-
-extern int process (char const *const *) ;
+extern void process (char const *const *) gccattr_noreturn ;
+extern void process_help (char const *const *) gccattr_noreturn ;
+extern void process_kill (char const *const *) gccattr_noreturn ;
+extern void process_restart (char const *const *) gccattr_noreturn ;
+extern void process_start (char const *const *) gccattr_noreturn ;
+extern void process_stop (char const *const *) gccattr_noreturn ;
+extern void process_status (char const *const *) gccattr_noreturn ;
 
 
  /* service */
 
-extern int service_help (char const *const *) ;
-extern int service_start (char const *const *) ;
-extern int service_status (char const *const *) ;
-extern int service_stop (char const *const *) ;
-
-extern int service (char const *const *) ;
+extern void service (char const *const *) gccattr_noreturn ;
+extern void service_help (char const *const *) gccattr_noreturn ;
 
 
  /* main */
@@ -105,7 +94,7 @@ struct modif_s
 
 extern struct modif_s const cleanup_modif ;
 
-typedef int command_func (char const *const *) ;
+typedef void command_func (char const *const *) ;
 typedef command_func *command_func_ref ;
 
 struct command_s

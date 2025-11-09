@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include <skalibs/posixplz.h>
 #include <skalibs/uint64.h>
@@ -19,9 +20,7 @@
 
 enum golb_e
 {
-  GOLB_DRYRUN,
-  GOLB_WAIT,
-  GOLB_N
+  GOLB_DRYRUN = 0x01,
 } ;
 
 enum gola_e
@@ -30,20 +29,17 @@ enum gola_e
   GOLA_N
 } ;
 
-static gol_bool const rgolb[3] =
+int live_startstop (char const *const *argv, int h)
 {
-  { .so = 'n', .lo = "dryrun", .clear = 0, .set = 1 << GOLB_DRYRUN },
-  { .so = 'W', .lo = "nowait", .clear = 1 << GOLB_WAIT, .set = 0 },
-  { .so = 'w', .lo = "wait",   .clear = 0, .set = 1 << GOLB_WAIT }
-} ;
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'n', .lo = "dry-run", .clear = 0, .set = GOLB_DRYRUN },
+  } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
+  } ;
 
-static gol_arg const rgola[GOLA_N] =
-{
-  { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT }
-} ;
-
-static int service_startstop (char const *const *argv, int h)
-{
   char const *wgola[GOLA_N] = { 0 } ;
   uint64_t wgolb = 0 ;
   unsigned int t = 0 ;
@@ -53,10 +49,9 @@ static int service_startstop (char const *const *argv, int h)
   uint32_t nlong, nshort, n ;
   int livelock, compiledlock ;
   size_t livelen = strlen(g->dirs.live) ;
-  PROG = h ? "s6 service start" : "s6 service stop" ;
 
-  argv += gol_argv(argv, rgolb, 3, rgola, GOLA_N, &wgolb, wgola) ;
-  if (!*argv) strerr_dieusage(100, h ? "s6 service start services..." : "s6 service stop services...") ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+  if (!*argv) strerr_dieusage(100, h ? "s6 live start services..." : "s6 live stop services...") ;
 
   if (wgola[GOLA_TIMEOUT])
   {
@@ -93,7 +88,7 @@ static int service_startstop (char const *const *argv, int h)
       newargv[m++] = fmtt ;
       fmtt[uint_fmt(fmtt, t)] = 0 ;
     }
-    if (wgolb & 1 << GOLB_DRYRUN)
+    if (wgolb & GOLB_DRYRUN)
     {
       newargv[m++] = "-n" ;
       newargv[m++] = "1" ;
@@ -114,16 +109,16 @@ static int service_startstop (char const *const *argv, int h)
   unsigned char newstate[n] ;
   if (!s6rc_live_state_read(g->dirs.live, newstate, n))
     strerr_diefu2sys(111, "read state in ", g->dirs.live) ;
-  s6f_report_state_change(n, oldstate, newstate, dbfn, h) ;
+  if (g->verbosity) s6f_report_state_change(n, oldstate, newstate, dbfn, h) ;
   return wait_estatus(wstat) ;
 }
 
-int service_start (char const *const *argv)
+void service_start (char const *const *argv)
 {
-  return service_startstop(argv, 1) ;
+  _exit(live_startstop(argv, 1)) ;
 }
 
-int service_stop (char const *const *argv)
+void service_stop (char const *const *argv)
 {
-  return service_startstop(argv, 0) ;
+  _exit(live_startstop(argv, 0)) ;
 }

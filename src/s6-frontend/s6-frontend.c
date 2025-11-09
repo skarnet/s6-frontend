@@ -18,7 +18,7 @@
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity"
+#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity\0defaultbundle"
 struct modif_s const cleanup_modif =
 {
   .s = CLEANUP_MODIF,
@@ -134,5 +134,5 @@ int main (int argc, char const *const *argv)
   if (!*argv) dieusage() ;
   cmd = BSEARCH(struct command_s, *argv, commands) ;
   if (!cmd) dieusage() ;
-  return (*cmd->f)(++argv) ;
+  (*cmd->f)(++argv) ;
 }

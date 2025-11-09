@@ -2,3 +2,7 @@
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
 
+  --with-conf-file=FILE         default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
+  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
+  --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
+

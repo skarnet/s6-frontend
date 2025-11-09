@@ -53,6 +53,17 @@ else
   echo "#define ${package_macro_name}_BOOTDB S6RC_BOOTDB"
 fi
 
+echo "#undef ${package_macro_name}_DEFBUNDLE"
+if test -n "$defbundle" ; then
+  echo "#define ${package_macro_name}_DEFBUNDLE \"$defbundle\""
+else
+  if $needs6rcconfig ; then
+    needs6rcconfig=false
+    echo "#include <s6-rc/config.h>"
+  fi
+  echo "#define ${package_macro_name}_DEFBUNDLE S6RC_DEFBUNDLE"
+fi
+
 echo "#undef ${package_macro_name}_STMPDIR"
 echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 
@@ -61,4 +72,3 @@ echo "#define ${package_macro_name}_CONF \"$conffile\""
 
 echo "#undef ${package_macro_name}_STOREPATH"
 echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
-
