@@ -27,8 +27,6 @@ extern void version (char const *const *) gccattr_noreturn ;
 
  /* live */
 
-extern int live_startstop (char const *const *, int h) ;
-
 extern void live (char const *const *) gccattr_noreturn ;
 extern void live_help (char const *const *) gccattr_noreturn ;
 extern void live_restart (char const *const *) gccattr_noreturn ;
