@@ -1,7 +1,7 @@
 /* ISC license. */
 
-#ifndef S6_INTERNAL_H
-#define S6_INTERNAL_H
+#ifndef S6_FRONTEND_INTERNAL_H
+#define S6_FRONTEND_INTERNAL_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -29,19 +29,30 @@ extern void version (char const *const *) gccattr_noreturn ;
 
 extern void live (char const *const *) gccattr_noreturn ;
 extern void live_help (char const *const *) gccattr_noreturn ;
+
+extern void live_boot (char const *const *) gccattr_noreturn ;
+extern void live_init (char const *const *) gccattr_noreturn ;
+extern void live_start_everything (char const *const *) gccattr_noreturn ;
+
+extern void live_halt (char const *const *) gccattr_noreturn ;
+extern void live_poweroff (char const *const *) gccattr_noreturn ;
+extern void live_reboot (char const *const *) gccattr_noreturn ;
+
 extern void live_restart (char const *const *) gccattr_noreturn ;
 extern void live_start (char const *const *) gccattr_noreturn ;
 extern void live_status (char const *const *) gccattr_noreturn ;
 extern void live_stop (char const *const *) gccattr_noreturn ;
+extern void live_stop_everything (char const *const *) gccattr_noreturn ;
 
 
  /* process */
 
-extern void process_check_services (char const *const *, size_t) ;
+extern void process_check_services (char const *const *, unsigned int) ;
 extern void process_send_svc (char const *, char const *const *, unsigned int, unsigned int) gccattr_noreturn ;
 
 extern void process (char const *const *) gccattr_noreturn ;
 extern void process_help (char const *const *) gccattr_noreturn ;
+
 extern void process_kill (char const *const *) gccattr_noreturn ;
 extern void process_restart (char const *const *) gccattr_noreturn ;
 extern void process_start (char const *const *) gccattr_noreturn ;
@@ -49,10 +60,20 @@ extern void process_stop (char const *const *) gccattr_noreturn ;
 extern void process_status (char const *const *) gccattr_noreturn ;
 
 
- /* service */
+ /* repository */
 
-extern void service (char const *const *) gccattr_noreturn ;
-extern void service_help (char const *const *) gccattr_noreturn ;
+extern void repository (char const *const *) gccattr_noreturn ;
+extern void repository_help (char const *const *) gccattr_noreturn ;
+
+extern void repository_init (char const *const *) gccattr_noreturn ;
+
+
+ /* set */
+
+extern void set_change (char const *const *argv, char const *, char const *) gccattr_noreturn ;
+
+extern void set (char const *const *) gccattr_noreturn ;
+extern void set_help (char const *const *) gccattr_noreturn ;
 
 
  /* main */

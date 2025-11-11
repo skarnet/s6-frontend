@@ -49,20 +49,12 @@ struct global_s *g ;
 
 int main (int argc, char const *const *argv)
 {
-  static struct command_s const commands[] =
-  {
-    { .s = "help", .f = &help },
-    { .s = "process", .f = &process },
-    { .s = "service", .f = &service },
-    { .s = "version", .f = &version },
-  } ;
   static gol_bool const rgolb[] =
   {
     { .so = 'h', .lo = "help", .clear = 0, .set = GOLB_HELP },
     { .so = 'V', .lo = "version", .clear = 0, .set = GOLB_VERSION },
     { .so = 0, .lo = "user", .clear = 0, .set = GOLB_USER },
   } ;
-
   static gol_arg const rgola[] =
   {
     { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
@@ -72,6 +64,15 @@ int main (int argc, char const *const *argv)
     { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
     { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
     { .so = 0,   .lo = "color", .i = GOLA_COLOR },
+  } ;
+  static struct command_s const commands[] =
+  {
+    { .s = "help", .f = &help },
+    { .s = "live", .f = &live },
+    { .s = "process", .f = &process },
+    { .s = "repository", .f = &repository },
+    { .s = "set", .f = &set },
+    { .s = "version", .f = &version },
   } ;
 
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;

@@ -1,15 +1,8 @@
 /* ISC license. */
 
-#include <string.h>
-#include <errno.h>
 #include <unistd.h>
 
-#include <skalibs/uint64.h>
-#include <skalibs/stat.h>
-#include <skalibs/types.h>
-#include <skalibs/posixplz.h>
 #include <skalibs/envexec.h>
-#include <skalibs/djbunix.h>
 
 #include <s6/config.h>
 
@@ -22,11 +15,17 @@ void live (char const *const *argv)
 {
   static struct command_s const commands[] =
   {
+    { .s = "boot", .f = &live_boot },
+    { .s = "halt", .f = &live_halt },
     { .s = "help", .f = &live_help },
+    { .s = "poweroff", .f = &live_poweroff },
+    { .s = "reboot", .f = &live_reboot },
     { .s = "restart", .f = &live_restart },
     { .s = "start", .f = &live_start },
+    { .s = "start-everything", .f = &live_start_everything },
     { .s = "status", .f = &live_status },
     { .s = "stop", .f = &live_stop },
+    { .s = "stop-everything", .f = &live_stop_everything },
   } ;
   struct command_s *cmd ;
 

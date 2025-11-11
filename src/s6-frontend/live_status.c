@@ -130,7 +130,7 @@ static void live_status_some (char const *const *services)
   unsigned int m = 0 ;
   size_t uplistpos ;
   int e ;
-  char const * argv[59] ;
+  char const *argv[59] ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa) ;
   if (e) _exit(e) ;

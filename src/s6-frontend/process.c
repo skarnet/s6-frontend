@@ -30,10 +30,10 @@ static inline int check_service (char const *name, size_t scandirlen)
   return stat(path, &st) == -1 ? errno == ENOENT ? 0 : -1 : !!S_ISDIR(st.st_mode) ;
 }
 
-void process_check_services (char const *const *argv, size_t argc)
+void process_check_services (char const *const *argv, unsigned int argc)
 {
   size_t const scandirlen = strlen(g->dirs.scan) ;
-  for (size_t i = 0 ; i < argc ; i++)
+  for (unsigned int i = 0 ; i < argc ; i++)
   {
     int r = check_service(argv[i], scandirlen) ;
     if (r == -1)
@@ -48,7 +48,7 @@ void process_send_svc (char const *svcopt, char const *const *argv, unsigned int
   size_t const scandirlen = strlen(g->dirs.scan) ;
   size_t len = 0 ;
   unsigned int m = 0 ;
-  for (size_t i = 0 ; i < argc ; i++) len += scandirlen + 2 + strlen(argv[i]) ;
+  for (unsigned int i = 0 ; i < argc ; i++) len += scandirlen + 2 + strlen(argv[i]) ;
   char const *newargv[4 + (timeout ? 2 : 0) + argc] ;
   char s[len] ;
   char fmtt[timeout ? UINT_FMT : 1] ;
@@ -64,7 +64,7 @@ void process_send_svc (char const *svcopt, char const *const *argv, unsigned int
   newargv[m++] = "--" ;
 
   len = 0 ;
-  for (size_t i = 0 ; i < argc ; i++)
+  for (unsigned int i = 0 ; i < argc ; i++)
   {
     size_t l = strlen(argv[i]) ;
     newargv[m++] = s + len ;
