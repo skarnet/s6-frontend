@@ -24,30 +24,36 @@
 static void live_status_all (void) gccattr_noreturn ;
 static void live_status_all (void)
 {
-  static char const *const argv[] =
-  {
+  char const *argv[23] ;
+  unsigned int m = 0 ;
 #ifdef S6_FRONTEND_USE_UTIL_LINUX
-    EXECLINE_EXTBINPREFIX "pipeline", "-w", "--",
-     " column", " -ts/",
-    "",
+  if (g->color)
+  {
+    argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
+    argv[m++] = "-w" ;
+    argv[m++] = "--" ;
+    argv[m++] = " column" ;
+    argv[m++] = " -ts/" ;
+    argv[m++] = "" ;
+  }
 #endif
-    EXECLINE_EXTBINPREFIX "if",
-     " " EXECLINE_EXTBINPREFIX "pipeline",
-      "  " S6RC_EXTBINPREFIX "s6-rc",
-      "  -ua",
-      "  list",
-     " ",
-     " sed",
-     " s|$|/up",
-     "",
-     " " S6RC_EXTBINPREFIX "s6-rc",
-     " -da",
-     " list",
-    "",
-    "sed",
-    "s|$|/down",
-    0
-  } ;
+  argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
+  argv[m++] = " " EXECLINE_EXTBINPREFIX "pipeline" ;
+  argv[m++] = "  " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = "  -ua" ;
+  argv[m++] = "  list" ;
+  argv[m++] = " " ;
+  argv[m++] = " sed" ;
+  argv[m++] = " s|$|/up" ;
+  argv[m++] = "" ;
+  argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
+  argv[m++] = " " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = " -da" ;
+  argv[m++] = " list" ;
+  argv[m++] = "" ;
+  argv[m++] = "sed" ;
+  argv[m++] = "s|$|/down" ;
+  argv[m++] = 0 ;
   xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
 }
 
@@ -141,12 +147,15 @@ static void live_status_some (char const *const *services)
   if (!stralloc_0(&sa)) dienomem() ;
 
 #ifdef S6_FRONTEND_USE_UTIL_LINUX
-  argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
-  argv[m++] = "-w" ;
-  argv[m++] = "--" ;
-  argv[m++] = " column" ;
-  argv[m++] = " -ts/" ;
-  argv[m++] = "",
+  if (g->color)
+  {
+    argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
+    argv[m++] = "-w" ;
+    argv[m++] = "--" ;
+    argv[m++] = " column" ;
+    argv[m++] = " -ts/" ;
+    argv[m++] = "",
+  }
 #endif
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "piperw" ;

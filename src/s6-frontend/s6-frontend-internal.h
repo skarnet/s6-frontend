@@ -66,14 +66,27 @@ extern void repository (char const *const *) gccattr_noreturn ;
 extern void repository_help (char const *const *) gccattr_noreturn ;
 
 extern void repository_init (char const *const *) gccattr_noreturn ;
+extern void repository_sync (char const *const *) gccattr_noreturn ;
+extern void repository_list (char const *const *) gccattr_noreturn ;
 
 
  /* set */
 
-extern void set_change (char const *const *argv, char const *, char const *) gccattr_noreturn ;
+extern int set_check_service_names (char const *const *, unsigned int) ;
 
 extern void set (char const *const *) gccattr_noreturn ;
 extern void set_help (char const *const *) gccattr_noreturn ;
+
+extern void set_list (char const *const *) gccattr_noreturn ;
+extern void set_status (char const *const *) gccattr_noreturn ;
+
+extern void set_load (char const *const *) gccattr_noreturn ;
+extern void set_save (char const *const *) gccattr_noreturn ;
+
+extern void set_mask (char const *const *) gccattr_noreturn ;
+extern void set_unmask (char const *const *) gccattr_noreturn ;
+extern void set_enable (char const *const *) gccattr_noreturn ;
+extern void set_disable (char const *const *) gccattr_noreturn ;
 
 
  /* main */

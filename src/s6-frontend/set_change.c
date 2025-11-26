@@ -1,8 +1,5 @@
 /* ISC license. */
 
-#include <string.h>
-#include <unistd.h>
-
 #include <skalibs/gccattributes.h>
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
@@ -24,7 +21,8 @@ enum gola_e
   GOLA_N
 } ;
 
-void set_change (char const *const *argv, char const *newsub, char const *cmd)
+static void set_change (char const *const *argv, char const *newsub, char const *cmd) gccattr_noreturn ;
+static void set_change (char const *const *argv, char const *newsub, char const *cmd)
 {
   static gol_bool const rgolb[] =
   {
@@ -77,4 +75,24 @@ void set_change (char const *const *argv, char const *newsub, char const *cmd)
     newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;
   xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+}
+
+void set_disable (char const *const *argv)
+{
+  set_change(argv, "latent", "disable") ;
+}
+
+void set_enable (char const *const *argv)
+{
+  set_change(argv, "active", "enable") ;
+}
+
+void set_mask (char const *const *argv)
+{
+  set_change(argv, "masked", "mask") ;
+}
+
+void set_unmask (char const *const *argv)
+{
+  set_change(argv, "latent", "unmask") ;
 }

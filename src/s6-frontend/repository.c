@@ -15,6 +15,8 @@ void repository (char const *const *argv)
   {
     { .s = "help", .f = &repository_help },
     { .s = "init", .f = &repository_init },
+    { .s = "list", .f = &repository_list },
+    { .s = "sync", .f = &repository_sync },
   } ;
   struct command_s *cmd ;
   argv += gol_argv(argv, 0, 0, 0, 0, 0, 0) ;

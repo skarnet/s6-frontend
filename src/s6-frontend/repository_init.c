@@ -1,10 +1,14 @@
 /* ISC license. */
 
 #include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/envexec.h>
+#include <skalibs/cspawn.h>
+#include <skalibs/djbunix.h>
 
 #include <s6-rc/config.h>
 
@@ -14,6 +18,7 @@
 enum golb_e
 {
   GOLB_FORCE = 0x01,
+  GOLB_UPDATE = 0x02,
 } ;
 
 enum gola_e
@@ -28,6 +33,7 @@ void repository_init (char const *const *argv)
   static gol_bool const rgolb[] =
   {
     { .so = 'f', .lo = "force", .clear = 0, .set = GOLB_FORCE },
+    { .so = 'U', .lo = "update-stores", .clear = 0, .set = GOLB_UPDATE },
   } ;
   static gol_arg const rgola[] =
   {
@@ -53,18 +59,15 @@ void repository_init (char const *const *argv)
   }
   if (storage[len-1]) { n++ ; storage[len] = 0 ; }
 
-  char const *newargv[10 + n] ;
+  char const *newargv[11 + n] ;
+  fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-repo-init" ;
-  if (g->verbosity != 1)
-  {
-    fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
-    newargv[m++] = "-v" ;
-    newargv[m++] = fmtv ;
-  }
+  newargv[m++] = "-v" ;
+  newargv[m++] = fmtv ;
   newargv[m++] = "-r" ;
   newargv[m++] = g->dirs.repo ;
-  if (wgolb & GOLB_FORCE)
-    newargv[m++] = "-f" ;
+  if (wgolb & GOLB_FORCE) newargv[m++] = "-f" ;
+  if (wgolb & GOLB_UPDATE) newargv[m++] = "-U" ;
   if (wgola[GOLA_FDHUSER])
   {
     newargv[m++] = "-h" ;
@@ -78,5 +81,26 @@ void repository_init (char const *const *argv)
     len += strlen(storage + len) + 1 ;
   }
   newargv[m++] = 0 ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  if (wgolb & GOLB_UPDATE)
+    xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  else
+  {
+    int wstat ;
+    pid_t pid = xmspawn_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n, 0, 0, 0) ;
+    if (wait_pid(pid, &wstat) == -1) strerr_diefu1sys(111, "wait_pid") ;
+    if (wait_estatus(wstat)) _exit(wait_estatus(wstat)) ;
+    m = 0 ;
+    newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-new" ;
+    if (g->verbosity != 1)
+    {
+      newargv[m++] = "-v" ;
+      newargv[m++] = fmtv ;
+    }
+    newargv[m++] = "-r" ;
+    newargv[m++] = g->dirs.repo ;
+    newargv[m++] = "--" ;
+    newargv[m++] = "current" ;
+    newargv[m++] = 0 ;
+    xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  }
 }
