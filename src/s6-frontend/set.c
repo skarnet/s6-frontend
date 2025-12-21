@@ -23,6 +23,8 @@ void set (char const *const *argv)
 {
   static struct command_s const commands[] =
   {
+    { .s = "check", .f = &set_check },
+    { .s = "commit", .f = &set_commit },
     { .s = "disable", .f = &set_disable },
     { .s = "enable", .f = &set_enable },
     { .s = "help", .f = &set_help },

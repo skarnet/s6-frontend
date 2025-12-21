@@ -3,6 +3,7 @@ live.o
 live_boot.o
 live_help.o
 live_hpr.o
+live_install.o
 live_startstop.o
 live_status.o
 live_stop_everything.o
@@ -19,6 +20,8 @@ repository_list.o
 repository_sync.o
 set.o
 set_change.o
+set_check.o
+set_commit.o
 set_copy.o
 set_help.o
 set_list.o

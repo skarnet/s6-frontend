@@ -18,6 +18,7 @@ void live (char const *const *argv)
     { .s = "boot", .f = &live_boot },
     { .s = "halt", .f = &live_halt },
     { .s = "help", .f = &live_help },
+    { .s = "install", .f = &live_install },
     { .s = "poweroff", .f = &live_poweroff },
     { .s = "reboot", .f = &live_reboot },
     { .s = "restart", .f = &live_restart },

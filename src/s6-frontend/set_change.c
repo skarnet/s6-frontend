@@ -79,7 +79,7 @@ static void set_change (char const *const *argv, char const *newsub, char const 
 
 void set_disable (char const *const *argv)
 {
-  set_change(argv, "latent", "disable") ;
+  set_change(argv, "usable", "disable") ;
 }
 
 void set_enable (char const *const *argv)
@@ -94,5 +94,5 @@ void set_mask (char const *const *argv)
 
 void set_unmask (char const *const *argv)
 {
-  set_change(argv, "latent", "unmask") ;
+  set_change(argv, "usable", "unmask") ;
 }

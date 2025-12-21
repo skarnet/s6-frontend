@@ -218,5 +218,5 @@ void live_status (char const *const *argv)
   argv += gol_argv(argv, 0, 0, 0, 0, 0, 0) ;
   if (!argv) live_status_all() ;
   else live_status_some(argv) ;
-  // _exit(0) ;
+  _exit(0) ;
 }
