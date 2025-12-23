@@ -72,6 +72,7 @@ int main (int argc, char const *const *argv)
     { .s = "process", .f = &process },
     { .s = "repository", .f = &repository },
     { .s = "set", .f = &set },
+    { .s = "system", .f = &s6system },
     { .s = "version", .f = &version },
   } ;
 

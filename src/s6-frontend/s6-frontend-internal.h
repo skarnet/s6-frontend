@@ -27,21 +27,17 @@ extern void version (char const *const *) gccattr_noreturn ;
 
  /* live */
 
+extern void exec_live_start_everything (unsigned int, int, char const *) gccattr_noreturn ;
+
 extern void live (char const *const *) gccattr_noreturn ;
 extern void live_help (char const *const *) gccattr_noreturn ;
-
-extern void live_boot (char const *const *) gccattr_noreturn ;
-extern void live_init (char const *const *) gccattr_noreturn ;
-extern void live_start_everything (char const *const *) gccattr_noreturn ;
-
-extern void live_halt (char const *const *) gccattr_noreturn ;
-extern void live_poweroff (char const *const *) gccattr_noreturn ;
-extern void live_reboot (char const *const *) gccattr_noreturn ;
 
 extern void live_restart (char const *const *) gccattr_noreturn ;
 extern void live_start (char const *const *) gccattr_noreturn ;
 extern void live_status (char const *const *) gccattr_noreturn ;
 extern void live_stop (char const *const *) gccattr_noreturn ;
+
+extern void live_start_everything (char const *const *) gccattr_noreturn ;
 extern void live_stop_everything (char const *const *) gccattr_noreturn ;
 
 extern void live_install (char const *const *) gccattr_noreturn ;
@@ -92,6 +88,19 @@ extern void set_disable (char const *const *) gccattr_noreturn ;
 
 extern void set_check (char const *const *) gccattr_noreturn ;
 extern void set_commit (char const *const *) gccattr_noreturn ;
+
+
+ /* system */
+
+extern void s6system (char const *const *) gccattr_noreturn ;
+extern void system_help (char const *const *) gccattr_noreturn ;
+
+extern void system_boot (char const *const *) gccattr_noreturn ;
+extern void system_init (char const *const *) gccattr_noreturn ;
+
+extern void system_halt (char const *const *) gccattr_noreturn ;
+extern void system_poweroff (char const *const *) gccattr_noreturn ;
+extern void system_reboot (char const *const *) gccattr_noreturn ;
 
 
  /* main */

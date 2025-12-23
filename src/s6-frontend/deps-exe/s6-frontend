@@ -1,11 +1,10 @@
 help.o
 live.o
-live_boot.o
 live_help.o
-live_hpr.o
 live_install.o
 live_startstop.o
 live_status.o
+live_start_everything.o
 live_stop_everything.o
 process.o
 process_help.o
@@ -26,6 +25,10 @@ set_copy.o
 set_help.o
 set_list.o
 set_status.o
+system.o
+system_boot.o
+system_help.o
+system_hpr.o
 libs6f.a.xyzzy
 ${LIBNSSS}
 -ls6rc

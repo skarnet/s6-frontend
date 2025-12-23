@@ -36,7 +36,7 @@ static gol_arg const rgola[] =
   { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
 } ;
 
-static void live_init_fill (char const **argv, char const *prefix)
+static void system_init_fill (char const **argv, char const *prefix)
 {
   unsigned int m = 0 ;
   argv[m++] = S6RC_EXTBINPREFIX "s6-rc-init" ;
@@ -55,21 +55,21 @@ static void live_init_fill (char const **argv, char const *prefix)
   argv[m++] = 0 ;
 }
 
-void live_init (char const *const *argv)
+void system_init (char const *const *argv)
 {
   char const *wgola[GOLA_N] = { 0 } ;
   char const *newargv[13] ;
   argv += gol_argv(argv, 0, 0, rgola, 1, 0, wgola) ;
-  live_init_fill(newargv, wgola[GOLA_PREFIX]) ;
+  system_init_fill(newargv, wgola[GOLA_PREFIX]) ;
   xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
 }
 
-static void live_init_spawn (char const *prefix)
+static void system_init_spawn (char const *prefix)
 {
   pid_t pid ;
   int wstat ;
   char const *newargv[13] ;
-  live_init_fill(newargv, prefix) ;
+  system_init_fill(newargv, prefix) ;
   pid = xmspawn_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n, 0, 0, 0) ;
   if (wait_pid(pid, &wstat) == -1)
     strerr_diefu2sys(111, "wait for ", newargv[0]) ;
@@ -77,55 +77,7 @@ static void live_init_spawn (char const *prefix)
     strerr_dief2x(wait_estatus(wstat), newargv[0], " failed") ;
 }
 
-static void exec_live_start_everything (unsigned int timeout, int dryrun, char const *defbundle) gccattr_noreturn ;
-static void exec_live_start_everything (unsigned int timeout, int dryrun, char const *defbundle)
-{
-  unsigned int m = 0 ;
-  char const *argv[13] ;
-  char fmtv[UINT_FMT] ;
-  char fmtt[UINT_FMT] ;
-
-  argv[m++] = S6RC_EXTBINPREFIX "s6-rc" ;
-  if (g->verbosity != 1)
-  {
-    fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
-    argv[m++] = "-v" ;
-    argv[m++] = fmtv ;
-  }
-  if (timeout)
-  {
-    fmtt[uint_fmt(fmtt, timeout)] = 0 ;
-    argv[m++] = "-t" ;
-    argv[m++] = fmtt ;
-  }
-  if (dryrun) argv[m++] = "-n1" ;
-  argv[m++] = "-l" ;
-  argv[m++] = g->dirs.live ;
-  argv[m++] = "-b" ;
-  argv[m++] = "--" ;
-  argv[m++] = "start" ;
-  argv[m++] = defbundle ;
-  argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
-}
-
-void live_start_everything (char const *const *argv)
-{
-  uint64_t wgolb = 0 ;
-  char const *wgola[GOLA_N] = { 0 } ;
-  unsigned int timeout = 0 ;
-
-  wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
-  argv += gol_argv(argv, rgolb, 1, rgola + 1, 2, &wgolb, wgola) ;
-  if (wgola[GOLA_TIMEOUT])
-  {
-    if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
-      strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
-  }
-  exec_live_start_everything(timeout, !!(wgolb & GOLB_DRYRUN), wgola[GOLA_DEFBUNDLE]) ;
-}
-
-void live_boot (char const *const *argv)
+void system_boot (char const *const *argv)
 {
   uint64_t wgolb = 0 ;
   char const *wgola[GOLA_N] = { 0 } ;
@@ -136,8 +88,8 @@ void live_boot (char const *const *argv)
   if (wgola[GOLA_TIMEOUT])
   {
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
-    strerr_dief1x(100, "--timeout= argument must be an unsigned integer (in milliseconds)") ;
+    strerr_dief1x(100, "timeout must be an unsigned integer (in milliseconds)") ;
   }
-  live_init_spawn(wgola[GOLA_PREFIX]) ;
+  system_init_spawn(wgola[GOLA_PREFIX]) ;
   exec_live_start_everything(timeout, !!(wgolb & GOLB_DRYRUN), wgola[GOLA_DEFBUNDLE]) ;
 }

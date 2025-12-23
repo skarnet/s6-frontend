@@ -15,12 +15,8 @@ void live (char const *const *argv)
 {
   static struct command_s const commands[] =
   {
-    { .s = "boot", .f = &live_boot },
-    { .s = "halt", .f = &live_halt },
     { .s = "help", .f = &live_help },
     { .s = "install", .f = &live_install },
-    { .s = "poweroff", .f = &live_poweroff },
-    { .s = "reboot", .f = &live_reboot },
     { .s = "restart", .f = &live_restart },
     { .s = "start", .f = &live_start },
     { .s = "start-everything", .f = &live_start_everything },
