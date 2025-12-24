@@ -9,7 +9,7 @@
 
 #include "s6-frontend-internal.h"
 
-#define USAGE "s6 process restart [ -W|--nowait | -w|--wait ] [ -t timeout | --timeout=timeout ] services..."
+#define USAGE "s6 process restart [ -W|--no-wait | -w|--wait ] [ -t timeout | --timeout=timeout ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 enum golb_e
@@ -27,7 +27,7 @@ void process_restart (char const *const *argv)
 {
   static gol_bool const rgolb[] =
   {
-    { .so = 'W', .lo = "nowait", .clear = GOLB_WAIT, .set = 0 },
+    { .so = 'W', .lo = "no-wait", .clear = GOLB_WAIT, .set = 0 },
     { .so = 'w', .lo = "wait", .clear = 0, .set = GOLB_WAIT },
   } ;
   static gol_arg const rgola[] =

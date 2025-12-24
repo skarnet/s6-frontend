@@ -17,7 +17,7 @@
 #include "s6f.h"
 #include "s6-frontend-internal.h"
 
-#define USAGE "s6 process kill [ --signal=sig ] [ --timeout=millisecs ] [ --wait | --nowait ] services..."
+#define USAGE "s6 process kill [ --signal=sig ] [ --timeout=millisecs ] [ --wait | --no-wait ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static void process_kill_hack_kill (int sig, char const *const *argv, unsigned int argc, int dowait, unsigned int timeout) gccattr_noreturn ;
@@ -86,7 +86,7 @@ void process_kill (char const *const *argv)
 {
   static gol_bool const rgolb[] =
   {
-    { .so = 'W', .lo = "nowait", .clear = GOLB_WAIT, .set = 0 },
+    { .so = 'W', .lo = "no-wait", .clear = GOLB_WAIT, .set = 0 },
     { .so = 'w', .lo = "wait", .clear = 0, .set = GOLB_WAIT },
   } ;
   static gol_arg const rgola[] =

@@ -28,7 +28,7 @@ static void process_startstop (char const *const *argv, int h, char const *usage
   {
     { .so = 'P', .lo = "no-permanent", .clear = GOLB_PERMANENT, .set = 0 },
     { .so = 'p', .lo = "permanent", .clear = 0, .set = GOLB_PERMANENT },
-    { .so = 'W', .lo = "nowait", .clear = GOLB_WAIT, .set = 0 },
+    { .so = 'W', .lo = "no-wait", .clear = GOLB_WAIT, .set = 0 },
     { .so = 'w', .lo = "wait", .clear = 0, .set = GOLB_WAIT },
   } ;
   static gol_arg const rgola[] =

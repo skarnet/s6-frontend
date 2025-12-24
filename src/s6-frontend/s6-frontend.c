@@ -53,14 +53,14 @@ int main (int argc, char const *const *argv)
   {
     { .so = 'h', .lo = "help", .clear = 0, .set = GOLB_HELP },
     { .so = 'V', .lo = "version", .clear = 0, .set = GOLB_VERSION },
-    { .so = 0, .lo = "user", .clear = 0, .set = GOLB_USER },
+//    { .so = 0, .lo = "user", .clear = 0, .set = GOLB_USER },
   } ;
   static gol_arg const rgola[] =
   {
     { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
     { .so = 'l', .lo = "livedir", .i = GOLA_LIVEDIR },
     { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
-    { .so = 'b', .lo = "bootdb", .i = GOLA_BOOTDB },
+    { .so = 'c', .lo = "bootdb", .i = GOLA_BOOTDB },
     { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
     { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
     { .so = 0,   .lo = "color", .i = GOLA_COLOR },
@@ -130,8 +130,8 @@ int main (int argc, char const *const *argv)
     if (!force_color) g->color = g->istty ;
   }
 
-  g->isuser = !!(wgolb & GOLB_USER) ;
-  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
+//  g->isuser = !!(wgolb & GOLB_USER) ;
+//  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (!*argv) dieusage() ;
   cmd = BSEARCH(struct command_s, *argv, commands) ;

@@ -6,6 +6,7 @@ live_startstop.o
 live_status.o
 live_start_everything.o
 live_stop_everything.o
+main_help.o
 process.o
 process_help.o
 process_kill.o
