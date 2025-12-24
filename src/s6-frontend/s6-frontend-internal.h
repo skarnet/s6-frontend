@@ -19,12 +19,6 @@
 #define BSEARCH(type, key, array) bsearch(key, (array), sizeof(array)/sizeof(type), sizeof(type), &stringkey_bcmp)
 
 
- /* help */
-
-extern void help (char const *const *) gccattr_noreturn ;
-extern void version (char const *const *) gccattr_noreturn ;
-
-
  /* live */
 
 extern void exec_live_start_everything (unsigned int, int, char const *) gccattr_noreturn ;
@@ -104,6 +98,9 @@ extern void system_reboot (char const *const *) gccattr_noreturn ;
 
 
  /* main */
+
+extern void main_help (char const *const *) gccattr_noreturn ;
+extern void main_version (char const *const *) gccattr_noreturn ;
 
 struct global_s
 {

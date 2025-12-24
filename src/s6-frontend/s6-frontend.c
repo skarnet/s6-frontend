@@ -67,13 +67,13 @@ int main (int argc, char const *const *argv)
   } ;
   static struct command_s const commands[] =
   {
-    { .s = "help", .f = &help },
+    { .s = "help", .f = &main_help },
     { .s = "live", .f = &live },
     { .s = "process", .f = &process },
     { .s = "repository", .f = &repository },
     { .s = "set", .f = &set },
     { .s = "system", .f = &s6system },
-    { .s = "version", .f = &version },
+    { .s = "version", .f = &main_version },
   } ;
 
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;
@@ -99,8 +99,8 @@ int main (int argc, char const *const *argv)
   if (wgola[GOLA_VERBOSITY] && !uint0_scan(wgola[GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (wgolb & GOLB_VERSION) version(argv) ;
-  if (wgolb & GOLB_HELP) help(argv) ;
+  if (wgolb & GOLB_VERSION) main_version(argv) ;
+  if (wgolb & GOLB_HELP) main_help(argv) ;
   if (wgolb & (GOLB_VERSION | GOLB_HELP)) return 0 ;
 
   if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;

@@ -14,4 +14,4 @@ src/s6-frontend/set_help.c \
 src/s6-frontend/system_help.c \
 
 %_help.c: %.help.txt
-	exec ./tools/help2c.sh $* < $< > $@
+	exec ./tools/help2c.sh $(*F) < $< > $@
