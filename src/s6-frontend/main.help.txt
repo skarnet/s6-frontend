@@ -1,34 +1,29 @@
-Usage: s6 [ global options ] command subcommand [ subcommand options ] [ arguments... ]
+Usage: s6 [ global_options... ] command subcommand [ subcommand_options... ] [ args... ]
 
 For details about a command and its options, try: s6 command help (e.g.: s6 live help)
 
-
 Commands:
-
   help		this message
   version	print the version of this package
-
   system	boot and shutdown the system
   live		start and stop services and their dependencies
   process	control individual long-running processes
-
   set		manipulate sets of services (offline, to later install them live)
   repository	manipulate the service repository itself
 
-
 Global options:
-
   -h		--help			equivalent to "s6 help"
   -V		--version		equivalent to "s6 version"
 
 		--color=yes|no|auto	display fancy or boring-but-parsable text.
 					auto is the default: fancy if in a terminal.
 
-  These options override the values set in s6-frontend.conf:
+ These options override the values set in s6-frontend.conf:
   -v V		--verbosity=V		verbosity (0 is terse, 1 is normal/default, more is verbose)
   -s SCANDIR	--scandir=SCANDIR	where s6-svscan is running
   -l LIVEDIR	--livedir=LIVEDIR	s6-rc live directory
   -r REPODIR	--repodir=REPODIR	s6-rc service set repository
   -c BOOTDB	--bootdb=BOOTDB		live database the system is booting on
 		--stmpdir=STMPDIR	root-only temporary directory
+		--storelist=LIST	list of service stores
 

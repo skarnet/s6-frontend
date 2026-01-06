@@ -3,7 +3,7 @@ echo "LIVEDIR := $livedir"
 echo "REPODIR := $repodir"
 echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
-echo "STOREPATH := $storepath"
+echo "STORELIST := $storelist"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"

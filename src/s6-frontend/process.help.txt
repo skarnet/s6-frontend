@@ -1,18 +1,19 @@
-Usage: s6 process subcommand [ options ] services...
+Usage: s6 process subcommand [ options ] longruns...
+
+ Send commands to *processes* at the s6 supervision level.
+(supervised long-running processes only - not services at the
+s6-rc level. This is useful e.g. to restart a process without
+stopping then starting things depending on it.)
 
 Subcommands:
-
   help		this message
-
   start		start a supervised process without impacting its official state
   stop		stop a supervised process without impacting its official state
   restart	restart a supervised process
   kill		send a signal to a supervised process
   status	read the status of a supervised process
 
-
 s6 process start and s6 process stop options:
-
   -P		--no-permanent		don't override the official state if the daemon dies
 					(i.e. if the service manager says the service should be
 					down, do not restart the daemon; if it says the service
@@ -23,18 +24,21 @@ s6 process start and s6 process stop options:
   -w		--wait			only exit once the daemon is ready or confirmed dead
   -t TIMEOUT	--timeout=TIMEOUT	if -w: give up if not ready after TIMEOUT milliseconds
 
-
 s6 process restart options:
-
   -W		--no-wait		exit without waiting for service readiness
   -w		--wait			only exit once the daemon is ready again
   -t TIMEOUT	--timeout=TIMEOUT	if -w: give up if not ready after TIMEOUT milliseconds
 
-
 s6 process kill options:
-
   -W		--no-wait		exit without waiting for service readiness
   -w		--wait			only exit once the daemon is ready again, if applicable
   -t TIMEOUT	--timeout=TIMEOUT	if -w: give up if not ready after TIMEOUT milliseconds
   -s SIGNAL	--signal=SIGNAL		send signal SIGNAL rather than the default (prob. SIGTERM)
+
+s6 process status options:
+
+  -L		--without-logs		only list the status of longruns given as arguments (default)
+  -l		--with-logs		also list status for service/log. This has no effect
+					on services that have loggers declared in s6-rc, for these
+					you need to list the logger explicitly.
 

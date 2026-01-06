@@ -14,7 +14,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_TIMEOUT,
-  GOLA_DEFBUNDLE,
   GOLA_N
 } ;
 

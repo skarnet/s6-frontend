@@ -58,7 +58,7 @@ Optional features:
   --enable-util-linux           use util-linux functionality [disabled]
 
   --with-conf-file=FILE         default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
-  --with-store-path=PATH        path to service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
+  --with-store-list=LIST        list of service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
 
 EOF
@@ -186,7 +186,7 @@ repodir=
 bootdb=
 stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6-frontend.conf'
-storepath='$prefix/share/s6-rc/sources:$sysconfdir/s6-rc/sources'
+storelist='$prefix/share/s6-frontend/s6-rc/sources:$sysconfdir/s6-frontend/s6-rc/sources'
 defbundle=
 
 usensss=false
@@ -235,7 +235,7 @@ for arg ; do
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
     --with-conf-file=*) conffile=${arg#*=} ;;
-    --with-store-path=*) storepath=${arg#*=} ;;
+    --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
@@ -271,7 +271,7 @@ fi
 
 # Expand installation directories
 stripdir prefix
-for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot stmpdir conffile storepath ; do
+for i in exec_prefix dynlibdir libexecdir bindir libdir includedir sysconfdir pkgconfdir sysdeps sproot stmpdir conffile storelist ; do
   eval tmp=\${$i}
   eval $i=$tmp
   stripdir $i
@@ -553,7 +553,7 @@ echo "LIVEDIR := $livedir"
 echo "REPODIR := $repodir"
 echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
-echo "STOREPATH := $storepath"
+echo "STORELIST := $storelist"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"
@@ -665,8 +665,8 @@ echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 echo "#undef ${package_macro_name}_CONF"
 echo "#define ${package_macro_name}_CONF \"$conffile\""
 
-echo "#undef ${package_macro_name}_STOREPATH"
-echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
+echo "#undef ${package_macro_name}_STORELIST"
+echo "#define ${package_macro_name}_STORELIST \"$storelist\""
 echo
 echo "#endif"
 exec 1>&3 3>&-

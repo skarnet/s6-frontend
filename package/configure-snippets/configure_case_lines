@@ -4,7 +4,7 @@
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
     --with-conf-file=*) conffile=${arg#*=} ;;
-    --with-store-path=*) storepath=${arg#*=} ;;
+    --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;

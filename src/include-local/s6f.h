@@ -15,6 +15,7 @@ struct s6f_confdirs_s
   char const *repo ;  /* $XDG_DATA_HOME/s6-frontend/repository */
   char const *boot ;  /* $XDG_CONFIG_HOME/s6-rc/compiled/current */
   char const *stmp ;  /* $XDG_RUNTIME_DIR/s6-frontend */
+  char const *stol ;  /* $XDG_CONFIG_HOME/s6-rc/sources */
 } ;
 
 extern int s6f_confdir_open (char const *, int) ;

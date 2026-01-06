@@ -24,7 +24,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_FDHUSER,
-  GOLA_STOREPATH,
   GOLA_N
 } ;
 
@@ -38,7 +37,6 @@ void repository_init (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER },
-    { .so = 'p', .lo = "store-path", .i = GOLA_STOREPATH },
   } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
@@ -47,15 +45,14 @@ void repository_init (char const *const *argv)
   size_t len ;
   char fmtv[UINT_FMT] ;
 
-  wgola[GOLA_STOREPATH] = S6_FRONTEND_STOREPATH ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
-  len = strlen(wgola[GOLA_STOREPATH]) ;
+  len = strlen(g->dirs.stol) ;
   char storage[len+1] ;
   for (size_t i = 0 ; i < len ; i++)
   {
-    if (wgola[GOLA_STOREPATH][i] == ':') { n++ ; storage[i] = 0 ; }
-    else storage[i] = wgola[GOLA_STOREPATH][i] ;
+    if (g->dirs.stol[i] == ':') { n++ ; storage[i] = 0 ; }
+    else storage[i] = g->dirs.stol[i] ;
   }
   if (storage[len-1]) { n++ ; storage[len] = 0 ; }
 

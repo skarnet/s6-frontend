@@ -1,1 +1,45 @@
-This is the set help message.
+Usage: s6 set subcommand [ options ] [ arguments... ]
+
+Subcommands:
+  help		this message
+  save		save the current set under a user-provided name
+  load		load a previously saved set
+  list		list services in the working set
+  status	list services in the working set with their sub
+  enable	enable services
+  disable	disable services
+  mask		mask services (hide them from the db entirely)
+  unmask	unmask services (equivalent to "disable")
+  check		check working set and fix inconsistencies
+  commit	commit working set (can then be installed)
+
+
+s6 set save options:
+  -f		--force				overwrite named set if existing
+
+s6 set load options: none
+
+s6 set list options: none
+
+s6 set status options:
+  -E		--with-essentials		show all services, even essential ones (default)
+  -e		--without-essentials		don't show essential services
+
+s6 set enable|disable|mask|unmask options:
+  -f		--ignore-dependencies		only change listed services
+  -n		--dry-run			show what would happen, don't do
+  -I WHAT	--if-dependencies-found=WHAT	WHAT=warn (default) | fail | pull (dependencies will be brought to the same sub)
+
+s6 set check options:
+  -E		--no-force-essential		do not allow manual changes to essential services (default)
+  -e		--force-essential		allow manual changes to essential services
+  -f		--fix				try to fix inconsistencies automatically
+  -d		--down				fix by disabling or masking services if necessary (default)
+  -u		--up				fix by enabling services if necessary
+
+s6 set commit options:
+  -f		--force				compile db even if up-to-date
+  -K		--keep-old			keep old db if any, print its path to stdout
+  -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
+  -h USER	--fdholder-user=USER		user for the s6-fdholderd process (default=root, it's fine)
+

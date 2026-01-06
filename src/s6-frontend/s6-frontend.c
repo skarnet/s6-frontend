@@ -40,6 +40,7 @@ enum gola_e
   GOLA_REPODIR,
   GOLA_BOOTDB,
   GOLA_STMPDIR,
+  GOLA_STORELIST,
   GOLA_VERBOSITY,
   GOLA_COLOR,
   GOLA_N
@@ -62,6 +63,7 @@ int main (int argc, char const *const *argv)
     { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
     { .so = 'c', .lo = "bootdb", .i = GOLA_BOOTDB },
     { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
+    { .so = 0,   .lo = "storelist", .i = GOLA_STORELIST },
     { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
     { .so = 0,   .lo = "color", .i = GOLA_COLOR },
   } ;
@@ -87,6 +89,7 @@ int main (int argc, char const *const *argv)
     [GOLA_REPODIR] = getenv("repodir"),
     [GOLA_BOOTDB] = getenv("bootdb"),
     [GOLA_STMPDIR] = getenv("stmpdir"),
+    [GOLA_STORELIST] = getenv("storelist"),
     [GOLA_VERBOSITY] = getenv("verbosity"),
     [GOLA_COLOR] = 0
   } ;
@@ -108,6 +111,7 @@ int main (int argc, char const *const *argv)
   if (wgola[GOLA_REPODIR]) g->dirs.repo = wgola[GOLA_REPODIR] ;
   if (wgola[GOLA_BOOTDB]) g->dirs.boot = wgola[GOLA_BOOTDB] ;
   if (wgola[GOLA_STMPDIR]) g->dirs.stmp = wgola[GOLA_STMPDIR] ;
+  if (wgola[GOLA_STORELIST]) g->dirs.stol = wgola[GOLA_STORELIST] ;
 
   {
     int force_color = 0 ;

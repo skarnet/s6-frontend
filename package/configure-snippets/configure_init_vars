@@ -4,7 +4,7 @@ repodir=
 bootdb=
 stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6-frontend.conf'
-storepath='$prefix/share/s6-rc/sources:$sysconfdir/s6-rc/sources'
+storelist='$prefix/share/s6-frontend/s6-rc/sources:$sysconfdir/s6-frontend/s6-rc/sources'
 defbundle=
 
 usensss=false

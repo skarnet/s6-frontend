@@ -121,6 +121,7 @@ struct global_s
     .repo = S6_FRONTEND_REPODIR, \
     .boot = S6_FRONTEND_BOOTDB, \
     .stmp = S6_FRONTEND_STMPDIR, \
+    .stol = S6_FRONTEND_STORELIST, \
   }, \
   .userstorage = STRALLOC_ZERO, \
   .isuser = 0, \

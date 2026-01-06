@@ -70,5 +70,5 @@ echo "#define ${package_macro_name}_STMPDIR \"$stmpdir\""
 echo "#undef ${package_macro_name}_CONF"
 echo "#define ${package_macro_name}_CONF \"$conffile\""
 
-echo "#undef ${package_macro_name}_STOREPATH"
-echo "#define ${package_macro_name}_STOREPATH \"$storepath\""
+echo "#undef ${package_macro_name}_STORELIST"
+echo "#define ${package_macro_name}_STORELIST \"$storelist\""

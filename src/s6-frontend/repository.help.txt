@@ -1,1 +1,18 @@
-This is the repository help message.
+Usage: s6 repository subcommand [ options ]
+
+Subcommands:
+  help		this message
+  init		initialize a service repository
+  sync		synchronize repository with stores
+  list		list names of saved service sets
+
+s6 repository init options:
+  -f		--force			Overwrite existing repository
+  -U		--update-stores		Update existing repository with new stores
+  -h USER	--fdholder-user		Set USER as reference fdholder owner
+
+s6 repository sync options:
+  -h USER	--fdholder-user		Set USER as reference fdholder owner
+
+s6 repository list options: none
+

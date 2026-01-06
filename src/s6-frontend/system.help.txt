@@ -1,1 +1,14 @@
-This is the system help message.
+Usage: s6 system subcommand
+
+Subcommands:
+  help		this message
+  boot		initialize the service manager and start default services
+
+ plus, if s6-frontend has been built with s6-linux-init support:
+  halt		halt the system (without powering it off)
+  poweroff	halt the system, powering it off
+  shutdown	synonymous with poweroff
+  reboot	reboot the system
+
+No options.
+
