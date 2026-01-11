@@ -2,9 +2,7 @@
 
 #include <stdlib.h>
 
-#include <skalibs/prog.h>
-#include <skalibs/strerr.h>
-#include <skalibs/exec.h>
+#include <skalibs/envexec.h>
 
 #include <execline/config.h>
 
@@ -24,7 +22,7 @@ int main (int argc, char const *const *argv)
   newargv[m++] = "-I" ;
   newargv[m++] = "--" ;
   newargv[m++] = conffile ;
-  newargv[m++] = S6_FRONTEND_BINPREFIX "s6-frontend" ;
+  newargv[m++] = S6_FRONTEND_LIBEXECPREFIX "s6-frontend" ;
   while (argc--) newargv[m++] = *argv++ ;
   newargv[m++] = 0 ;
   xexec(newargv) ;

@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6-frontend program</title>
+    <meta name="Description" content="s6-frontend: the s6-frontend program" />
+    <meta name="Keywords" content="s6-frontend s6 frontend ecosystem interface" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6-frontend</tt> internal program </h1>
+
+<p>
+ <tt>s6-frontend</tt> is the program that does the real command dispatching behind
+the <a href="s6.html">s6</a> command line. It is not meant to be called directly;
+users should call <a href="s6.html">s6</a> instead.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6-frontend [ <em>global_options...</em> ] <em>commandM/em> <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<div id="details">
+<h2> Detailed operation </h2>
+</div>
+
+<p>
+ What really happens when you call <code>s6 <em>args...</em></code> is the following:
+</p>
+
+<ul>
+ <li> <a href="s6.html">s6</a> gets the name of its configuration file from the
+<tt>S6_FRONTEND_CONF</tt> environment variable, or from the compiled-in default if
+this variable is unset. Normally this default is <tt>/etc/s6-frontend.conf</tt>. </li>
+ <li> This configuration file (let's call it <em>conf</em>) contains
+<a href="s6-frontend.conf.html">variable definitions</a> that set the default for
+all the parts of the s6 system. </li>
+ <li> <a href="s6.html">s6</a> rewrites itself into
+<code>envfile -I <em>conf</em> -- s6-frontend <em>args...</em></code> </li>
+ <li> The <a href="//skarnet.org/software/execline/envfile.html">envfile</a> program
+reads and parses <em>conf</em>, and then runs <a href="s6-frontend.html">s6-frontend</a>
+with the additional environment variables defined in <em>conf</em>.
+ <li> s6-frontend sets its defaults according to these environment variables, then
+performs the work described in the documents linked from the <a href="s6.html">s6</a> page. </li>
+</ul>
+
+<p>
+ The separation between <a href="s6.html">s6</a> and s6-frontend is really just a
+trick to avoid writing an additional parser for the <a href="s6-frontend.conf.html">s6-frontend.conf</a>
+configuration file. The <a href="//skarnet.org/software/execline/">execline</a>
+set of tools is a dependency of s6-frontend anyway, because s6-frontend uses
+some if these tools to build complex command lines calling various parts of the
+s6 ecosystem; so using the
+<a href="//skarnet.org/software/execline/envfile.html">envfile</a> tool as well
+to read the configuration was a natural fit.
+</p>
+
+<p>
+ That is why <em>usage</em> messages given by the various <code>s6 foobar help</code>
+commands print <code>Usage: s6 foobar subcommand...</code> but error messages, if
+they happen, print <code>s6-frontend: fatal: error condition</code>, because
+the program where the error occurred is s6-frontend, not s6. </p>
+
+<p>
+Note that most error messages will print the name of <em>another command</em>,
+somewhere in the s6 ecosystem. That is a command invoked by s6-frontend to perform
+the task required by the user; and if it fails, its own error message will be more
+informative than whatever wrapping s6-frontend could do. This might be a little
+confusing at first, but a design decision was made that it was a better trade-off
+to provide accurate error messages at the expense of a little predictability in the
+name of the program that prepends the error messages.
+</p>
+
+<p>
+ In summary:
+</p>
+
+<ul>
+ <li> <a href="s6.html">s6</a> is what the user types </li>
+ <li> s6-frontend is what interprets the user's command into orders to give to
+various parts of the s6 ecosystem </li>
+ <li> Various programs from the <a href="//skarnet.org/software/s6/">s6 supervision
+suite</a> or the <a href="//skarnet.org/software/s6-rc/">s6-rc service manager</a>,
+invoked by s6-frontend, perform the work. When they succeed, it is transparent;
+when they fail, they prepend the error message with their name. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6-frontend.conf configuration file</title>
+    <meta name="Description" content="s6-frontend: the s6-frontend.conf configuration file" />
+    <meta name="Keywords" content="s6-frontend.conf s6-frontend configuration file execline variable" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>/etc/s6-frontend.conf</tt> configuration file </h1>
+
+<div id="goal">
+<h2> Goal and usage </h2>
+</div>
+
+<p>
+ <tt>/etc/s6-frontend.conf</tt> is a configuration file provided by the
+distribution, or written by the system administrator, defining various
+settings for the <a href="s6.html">s6</a> commands, as well as the default
+policies of an s6-based system (i.e. where various directories and files
+are located).
+</p>
+
+<p>
+ This is, for instance, what allows the
+<a href="s6_process_restart">s6 process restart foobar</a> command to send
+<a href="//skarnet.org/software/s6/s6-svc.html">s6-svc -r</a> to the
+<em>foobar</em> service without the user needing to type, or even remember,
+what the full path to the <em>foobar</em> service directory is.
+</p>
+
+<div id="description">
+<h2> Description </h2>
+</div>
+
+<p>
+The <tt>/etc/s6-frontend.conf</tt> file follows the syntax of the
+<a href="//skarnet.org/software/execline/envfile.html">envfile</a> command:
+simple <code>key = value</code> lines, comments permitted.
+</p>
+
+<p>
+ If a value is left empty, the compiled-in default is used.
+</p>
+
+<p>
+ The variables that can be set are the following:
+</p>
+
+<table>
+<tr> <th>Name</th> <th>Contents</th> <th>Default</th> </tr>
+
+<tr>
+ <td> scandir </td>
+ <td> The directory where <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
+is running. </td>
+ <td> <tt>/run/service</tt> (possibly overridden by the <tt>--scandir</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-linux-init/"></a> or to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> livedir </td>
+ <td> The directory hosting the live service database managed by
+<a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> </td>
+ <td> <tt>/run/s6-rc</tt> (possibly overridden by the <tt>--livedir</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> repodir </td>
+ <td> The directory hosting the repository of service sets managed by the
+<a href="//skarnet.org/software/s6-rc/repodefs.html">s6-rc <em>repo</em> commands</a> </td>
+ <td> <tt>/var/lib/s6-rc/repository</tt> (possibly overridden by the <tt>--repodir</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> bootdb </td>
+ <td> The path to the boot-time compiled service database </td>
+ <td> <tt>/etc/s6-rc/compiled/current</tt> (possibly overridden by the <tt>--bootdb</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> stmpdir </td>
+ <td> A directory suitable for root-only runtime data and temporary files for s6-frontend </td>
+ <td> <tt>/run/s6-frontend</tt> (possibly overridden by the <tt>--stmpdir</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> storelist </td>
+ <td> A colon-separated (<tt>:</tt>) list of directories containing the
+<a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a> of s6-rc service
+definition directories </td>
+ <td> <tt>/usr/share/s6-frontend/s6-rc/sources:/etc/s6-frontend/s6-rc/sources</tt>
+(possibly overridden by the <tt>--storelist</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
+</tr>
+
+<tr>
+ <td> verbosity </td>
+ <td> The default verbosity for <a href="s6.html">s6</a> and its invoked commands. 0 is
+terse (only print fatal error messages), 1 is normal (print error messages and warnings),
+over 1 is increasingly verbose (print informational messages, up to tracing and debug
+messages at level 4-5) </td>
+ <td> <strong>1</strong> </td>
+</tr>
+</table>
+
+</body>
+</html>

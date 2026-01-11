@@ -14,6 +14,7 @@ process_restart.o
 process_startstop.o
 process_status.o
 repository.o
+repository_check.o
 repository_help.o
 repository_init.o
 repository_list.o

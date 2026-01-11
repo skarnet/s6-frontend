@@ -61,6 +61,8 @@ extern void repository_init (char const *const *) gccattr_noreturn ;
 extern void repository_sync (char const *const *) gccattr_noreturn ;
 extern void repository_list (char const *const *) gccattr_noreturn ;
 
+extern void repository_check (char const *const *) gccattr_noreturn ;
+
 
  /* set */
 

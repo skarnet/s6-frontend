@@ -5,6 +5,8 @@ Subcommands:
   init		initialize a service repository
   sync		synchronize repository with stores
   list		list names of saved service sets
+  check         check all sets and fix inconsistencies
+
 
 s6 repository init options:
   -f		--force			Overwrite existing repository
@@ -15,4 +17,11 @@ s6 repository sync options:
   -h USER	--fdholder-user		Set USER as reference fdholder owner
 
 s6 repository list options: none
+
+s6 repository check options:
+  -E		--no-force-essential		do not allow manual changes to essential services (default)
+  -e		--force-essential		allow manual changes to essential services
+  -f		--fix				try to fix inconsistencies automatically
+  -d		--down				fix by disabling or masking services if necessary (default)
+  -u		--up				fix by enabling services if necessary
 

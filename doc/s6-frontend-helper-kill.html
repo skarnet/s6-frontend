@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6-frontend-helper-kill program</title>
+    <meta name="Description" content="s6-frontend: the s6-frontend-helper-kill program" />
+    <meta name="Keywords" content="s6 s6-frontend helper kill" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6-frontend-helper-kill</tt> internal program </h1>
+
+<p>
+ <tt>s6-frontend-helper-kill</tt> is a small utility to send numerical
+signals to a given list of pids. It is not meant to be called directly,
+although nothing bad will happen if you do. It is used in command lines crafted by
+<a href="s6_process_kill.html">s6 process kill</a> instead of the POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/kill.html">kill</a>
+program, because the latter does not support sending arbitrary numerical signals.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6-frontend-helper-kill <em>sig</em> <em>pids...</em>
+</pre>
+
+<ul>
+ <li> s6-frontend-helper-kill reads an integer, <em>sig</em>, and a list
+of one or more integers, <em>pids...</em>, on its command line. </li>
+ <li> It sends signal number <em>sig</em> to all the processes listed as <em>pids...</em>. </li>
+</ul>
+
+<div id="exitcodes">
+<h2> Exit codes </h2>
+</div>
+
+<dl>
+ <dt> 0 </dt> <dd> Success </dd>
+ <dt> 100 </dt> <dd> Wrong usage </dd>
+</dl>
+
+</body>
+</html>

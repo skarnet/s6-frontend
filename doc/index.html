@@ -20,45 +20,58 @@
 <h2> What is it&nbsp;? </h2>
 
 <p>
- <strong><em><red> s6-frontend is still in development. </red></em></strong>
+ s6-frontend is a frontend to the s6 init system. It provides
+the one-stop-shop <a href="s6.html">s6</a> command, that is used
+to address every part of the init system.
 </p>
 
+<h3> Huh? </h3>
+
 <p>
- s6-frontend is a frontend to the s6 ecosystem. It is made of
-several parts:
+ The <em>s6 init system</em> is made of several different parts:
 </p>
 
 <ul>
- <li> A set of user-friendly commands, making it easier to manage a
-s6-based system for people who are used to other tools. </li>
- <li> An independent configuration file format,
-and tools that automatically analyze a configuration written in that
-format and transform it into a configuration suitable for booting a
-system via
-<a href="//skarnet.org/software/s6/">s6</a>,
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> and
-<a href="//skarnet.org/software/s6-rc/">s6-rc</a>. This should help
-users who are not familiar with s6 and s6-rc directory-based configuration
-but are used to, for instance, systemd unit files.</li>
- <li> A prepackaged set of configuration files, implementing <em>policy</em>,
-suitable for booting a large majority of Linux-based systems. This should
-help distributions that want to switch to s6 but do not want to rewrite all
-their init scripts in yet another format. </li>
+ <li> The <a href="//skarnet.org/software/s6/">s6 process supervision suite</a>,
+which is the foundation of the s6 ecosystem. This package is named <em>s6</em>,
+but that name is generally used to mean "the whole thing", so we will refer to it
+as <em>s6-supervision</em> when the context makes it necessary. The goal of a
+process supervision suite is to give administrators an environment to start and
+control daemons in a reliable and flexible way. </li>
+ <li> The <a href="//skarnet.org/software/s6-rc/">s6-rc service manager</a>, that
+works on top of s6-supervision. The goal of a service manager is to start and stop
+services on a system while managing dependencies between services. </li>
+ <li> The <a href="//skarnet.org/software/s6-linux-init">s6-linux-init init package</a>,
+which is an add-on to s6-supervision that makes it usable not only to supervise
+daemons, but also to boot a Linux system and serve as its pid 1. </li>
 </ul>
 
 <p>
- These parts are all independent from one another. But when put all together,
-they implement a powerful, fast, turnkey init system that is usable on
-<em>any</em> distribution.
+ The separation in different packages is purposeful: the goal is to keep the
+system entirely modular, and not tie it to a particular use. s6-supervision
+is often used on its own, in environments that already have an init system
+(no need for s6-linux-init) and a service manager (no need for s6-rc).
+For the same purpose of modularity, s6 follows an approach of "one functionality,
+one tool", sometimes to the extreme: the s6-supervision package, as of
+2.14.0.0, hosts 75 binaries.
+</p>
+
+<p>
+ This approach is successful in that it provides comprehensive functionality
+with maximum efficiency: despite its growth, s6 remains extremely
+<em>lightweight</em> in run-time resource usage. However, a recurring
+pattern is that potential users are often rebuked by s6's apparent complexity.
+</p>
+
+<p>
+ s6-frontend is an attempt at managing users' interface expectations. It
+provides <em>one</em> user-facing command, named <strong>s6</strong>, that
+takes intuitively-named subcommands in order to control all the important
+parts of an s6-based system.
 </p>
 
 <hr />
 
-<ul>
- <li> <a href="quickstart.html">Quickstart and FAQ</a> </li>
-</ul>
-
-<hr />
 <h2> Installation </h2>
 
 <h3> Requirements </h3>
@@ -131,14 +144,17 @@ the previous versions of s6-frontend and the current one. </li>
 
 <h2> Reference </h2>
 
-<h3> Commands </h3>
-
-<p>
- All these commands exit 111 if they encounter a temporary error, and
-100 if they encounter a permanent error - such as a misuse.
-</p>
+<h3> User-facing commands </h3>
 
 <ul>
+<li> <a href="s6.html">The <tt>s6</tt> program</a> </li>
+</ul>
+
+<h3> Internal programs </h3>
+
+<ul>
+<li> <a href="s6-frontend.html">The <tt>s6-frontend</tt> program</a> </li>
+<li> <a href="s6-frontend-helper-kill.html">The <tt>s6-frontend-helper-kill</tt> program</a> </li>
 </ul>
 
 <h2> Related resources </h2>
