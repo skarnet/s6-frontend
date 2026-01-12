@@ -1,0 +1,273 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 process command</title>
+    <meta name="Description" content="s6-frontend: the s6 process command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software process longrun daemon" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 process</tt> command </h1>
+
+<p>
+ <tt>s6 process</tt> regroups actions that target services that are managed
+by an instance of <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
+running on the <a href="s6-frontend.conf.html">configured</a> <em>scandir</em>.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6 process <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<div id="subcommands">
+<h2> Subcommands </h2>
+</div>
+
+<div id="help">
+<h3> help </h3>
+</div>
+
+<p>
+ <tt>s6 process help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 process</tt> command. It is not as detailed as this page.
+</p>
+
+<div id="kill">
+<h3> kill </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 process kill [ -W | -w ] [ -s <em>sig</em> ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 process kill <em>servicenames...</em></tt> sends a signal to every
+supervised daemon listed by name in <em>servicenames</em>. If
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
+<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
+<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
+a <tt>foobard</tt> daemon, then <code>s6 process kill foobar</code> will send a
+signal to the current running instance of <tt>foobard</tt>. </li>
+ <li> Note that even if the daemon dies as a consequence of receiving the signal,
+it will normally be restarted by it supervisor. To kill a daemon and not having
+it restart, you need <a href="#stop"><tt>s6 process stop</tt></a>. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -W, --no-wait </dt>
+<dd> Exit immediately, do not wait until the daemon has died and the service
+has cleaned up. This is the default. </dd>
+
+<dt> -w, --wait </dt>
+<dd> Only exit when the daemon has died and the finish script of the service,
+if any, has run. </dd>
+
+<dt> -s <em>sig</em>, --signal=<em>sig</em> </dt>
+<dd> Send signal <em>sig</em>. The default is SIGTERM. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> Only wait for at most <em>timeout</em> milliseconds; if the daemon still
+hasn't died after that time, exit. The default is 0, meaning infinite: the
+command can wait forever. This option is only effective when paired with the
+<tt>--wait</tt> option. </dd>
+</dl>
+
+
+<div id="status">
+<h3> status </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 process status [ -L | -l ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 process status <em>servicenames...</em></tt> prints a line of
+status for every
+supervised daemon listed by name in <em>servicenames</em>. If
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
+<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
+<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
+a <tt>foobard</tt> daemon, then <code>s6 process status foobar</code> will print
+a status line describing the current state of <tt>foobard</tt>. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -L, --without-logs </dt>
+<dd> Only print the status for <tt>/run/service/foobar</tt> even if
+<tt>/run/service/foobar/log</tt> exists. This is the default. </dd>
+
+<dt> -l, --with-logs </dt>
+<dd> If a <tt>/run/service/foobar/log</tt> service directory exists,
+also print its status along with the one for <tt>/run/service/foobar</tt>.
+Note that this option has <em>no effect</em> on loggers managed by
+s6-rc, e.g. services defined in the store and managed by
+<a href="s6_live.html"><tt>s6 live</tt></a>, because these loggers are
+treated at separate, independent services. The <tt>-l</tt> option is
+only useful with old-style logged s6 services that are not managed by
+s6-rc. </dd>
+</dl>
+
+<div id="start">
+<h3> start </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 process start [ -P | -p ] [ -W | -w ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 process start <em>servicenames...</em></tt> brings up every
+supervised daemon listed by name in <em>servicenames</em>. If
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
+<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
+<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
+a <tt>foobard</tt> daemon, then <code>s6 process start foobar</code> will make sure
+an instance of <tt>foobard</tt> is running. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -P, --no-permanent </dt>
+<dd> Only change the current state of the service, not its default state.
+If there is a <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
+in <tt>/run/service/foobar</tt>, then <tt>s6 process start foobar</tt> will
+bring the service up, but will not restart it if <tt>foobard</tt> dies. This
+is the default. </dd>
+
+<dt> -p, --permanent </dt>
+<dd> Also change the default state of the service.
+If there is a <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
+in <tt>/run/service/foobar</tt>, then <tt>s6 process start foobar</tt> will
+delete it, and the service will be automatically restart it
+if <tt>foobard</tt> dies. </dd>
+
+<dt> -W, --no-wait </dt>
+<dd> Exit immediately, do not wait until the service is up.
+This is the default. </dd>
+
+<dt> -w, --wait </dt>
+<dd> Only exit when the service is up and (if applicable) ready. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> Only wait for at most <em>timeout</em> milliseconds; if the daemon still
+isn't up and ready after that time, exit. The default is 0, meaning infinite: the
+command can wait forever. This option is only effective when paired with the
+<tt>--wait</tt> option. </dd>
+</dl>
+
+<div id="stop">
+<h3> stop </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 process stop [ -P | -p ] [ -W | -w ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 process stop <em>servicenames...</em></tt> brings down every
+supervised daemon listed by name in <em>servicenames</em>. If
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
+<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
+<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
+a <tt>foobard</tt> daemon, then <code>s6 process stop foobar</code> will make sure the
+currently running instance of <tt>foobard</tt> is stopped. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -P, --no-permanent </dt>
+<dd> Only change the current state of the service, not its default state.
+If there is no <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
+in <tt>/run/service/foobar</tt>, then <tt>s6 process stop foobar</tt> will
+stop the service, but it will still be started whenever its supervisor is started.
+This is the default. </dd>
+
+<dt> -p, --permanent </dt>
+<dd> Also change the default state of the service.
+If there is no <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
+in <tt>/run/service/foobar</tt>, then <tt>s6 process stop foobar</tt> will
+create one, and the service will not be automatically started whenever its
+supervisor is started. </dd>
+
+<dt> -W, --no-wait </dt>
+<dd> Exit immediately, do not wait until the service is down.
+This is the default. </dd>
+
+<dt> -w, --wait </dt>
+<dd> Only exit when the service is down and any cleanups are done. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> Only wait for at most <em>timeout</em> milliseconds; if the finish script
+still isn't done after that time, exit. The default is 0, meaning infinite: the
+command can wait forever. This option is only effective when paired with the
+<tt>--wait</tt> option. </dd>
+</dl>
+
+<div id="restart">
+<h3> restart </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 process restart [ -W | -w ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 process restart <em>servicenames...</em></tt> restarts every
+supervised daemon listed by name in <em>servicenames</em>. If
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
+<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
+<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
+a <tt>foobard</tt> daemon, then <code>s6 process restart foobar</code> will make sure the
+currently running instance of <tt>foobard</tt> is killed and a new one is brought up. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -W, --no-wait </dt>
+<dd> Exit immediately, do not wait until the service has restarted
+This is the default. </dd>
+
+<dt> -w, --wait </dt>
+<dd> Only exit when the new instance of the service is up and (if applicable) ready. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> Only wait for at most <em>timeout</em> milliseconds; if the service still
+hasn't restarted after that time, exit. The default is 0, meaning infinite: the
+command can wait forever. This option is only effective when paired with the
+<tt>--wait</tt> option. </dd>
+</dl>
+
+</body>
+</html>

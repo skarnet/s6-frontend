@@ -1,0 +1,279 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 live command</title>
+    <meta name="Description" content="s6-frontend: the s6 live command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software live s6-rc" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 live</tt> command </h1>
+
+<p>
+ <tt>s6 live</tt> regroups actions that target the live <em>machine state</em>
+managed by the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> service manager,
+hosted in the <a href="s6-frontend.conf.html">configured</a> <em>livedir</em>.
+</p>
+
+<p>
+ Where <a href="s6_process.html"><tt>s6 process</tt></a> directly targets instances
+of services supervised by <a href="//skarnet.org/software/s6/">s6-supervision</a>,
+without knowledge of the service manager, and thus can only address longruns,
+<tt>s6 live</tt> targets services defined in the current live database, oneshots
+as well as longruns, and always respects the dependency graph.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6 live <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<div id="subcommands">
+<h2> Subcommands </h2>
+</div>
+
+<div id="help">
+<h3> help </h3>
+</div>
+
+<p>
+ <tt>s6 live help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 live</tt> command. It is not as detailed as this page.
+</p>
+
+<div id="status">
+<h3> status </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live status [ <em>servicenames...</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live status <em>servicenames...</em></tt> prints a line
+for every s6-rc service listed in <em>servicenames</em>. If <em>servicenames</em>
+is empty, then it prints a line for all the services present in the
+current live database. </li>
+ <li> Every line is: the name of the service, a slash character (<tt>/</tt>),
+then <tt>up</tt> or <tt>down</tt> depending on the current state of the service.
+ <li> If the output is a terminal or you have specified <tt>--color=yes</tt>
+in the generic s6 options, and s6-frontend is built with util-linux support,
+then the output is pretty-printed instead of having a slash separate the name
+of the service from its state. </li>
+ <li> No options are defined. </li>
+</ul>
+
+<div id="start">
+<h3> start </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live start [ -n ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 live start <em>servicenames...</em></tt> brings up all the services
+defined in the current live database and listed by name in <em>servicenames</em>,
+as well as their dependencies. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -n, --dry-run </dt>
+<dd> Only print what would be done; do not actually start services. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> If the whole change still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+</dl>
+
+<div id="stop">
+<h3> stop </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live stop [ -n ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 live stop <em>servicenames...</em></tt> brings down all the services
+defined in the current live database and listed by name in <em>servicenames</em>,
+as well as services that depends on them. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -n, --dry-run </dt>
+<dd> Only print what would be done; do not actually stop services. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> If the whole change still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+</dl>
+
+<div id="restart">
+<h3> restart </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live restart [ -W | -w ] [ -t <em>timeout</em> ] [ <em>servicenames...</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live restart <em>servicenames...</em></tt> first brings down all the services
+defined in the current live database and listed by name in <em>servicenames</em>,
+as well as services that depends on them; then it brings back up all the services in
+<em>servicenames</em>. </li>
+ <li> If extra services have been brought down because they depend on a service listed
+in <em>servicenames...</em> but are not themselves in that list, they are not brought
+back up. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -n, --dry-run </dt>
+<dd> Only print what would be done; do not actually stop or start services. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> If the whole restart still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+</dl>
+
+<div id="start_everything">
+<h3> start_everything </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live start_everything [ -n ] [ -t <em>timeout</em> ] [ -D <em>bundle</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live start_everything</tt> brings up all the services
+defined in the current live database and in the default bundle, i.e.
+the bundle of services that are enabled at boot time. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -n, --dry-run </dt>
+<dd> Only print what would be done; do not actually start services. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> If the whole change still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+
+<dl>
+<dt> -D <em>bundle</em>, --default-bundle=<em>bundle</em> </dt>
+<dd> Start the bundle of services named <em>bundle</em> instead.
+The default is <tt>default</tt>, possibly overridden by the
+<tt>--with-default-bundle</tt> build-time configure option in
+<a href="//skarnet.org/software/s6-rc/">s6-rc</a> or
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>. </dd>
+</dl>
+
+<div id="stop_everything">
+<h3> stop_everything </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live stop_everything [ -n ] [ -t <em>timeout</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live stop_everything</tt> brings down all the services,
+except the essential ones. This is not the command that can
+reboot a machine; for that, check <a href="s6_system.html"><tt>s6 system</tt></a>.</li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -n, --dry-run </dt>
+<dd> Only print what would be done; do not actually stop services. </dd>
+
+<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dd> If the whole change still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+</dl>
+
+<div id="install">
+<h3> install </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live install</tt> installs the <em>current working set</em>
+of services, that has been crafted and committed via
+<a href="s6_set.html"><tt>s6 set</tt></a> commands, replacing the current
+live service database. </li>
+ <li> Services that are not defined in the new set are stopped before the
+live database is replaced. </li>
+ <li> The state of services defined in the old live database is preserved
+as much as possible. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -b, --block </dt>
+<dd> Block if something is currently holding the lock on the live service
+database. The default is to fail with an error message instead. </dd>
+
+<dt> -K, --keep-old </dt>
+<dd> Do not automatically delete the old service database after a successful switch.
+Instead, print its path to stdout. </dd>
+
+<dt> -f <em>convfile</em>, --conversion-file=<em>convfile</em> </dt>
+<dd> Use <em>convfile</em> as a conversion file for the underlying
+<a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>
+invocation, i.e. a file translating service names and states between
+the old service database and the one being installed. This option should
+never be necessary if the services in the stores are properly managed. </dd>
+</dl>
+
+</body>
+</html>

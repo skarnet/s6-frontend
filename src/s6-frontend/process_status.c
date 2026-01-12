@@ -18,7 +18,7 @@
 
 #include "s6-frontend-internal.h"
 
-#define USAGE "s6 process status [ --with-logs ] services..."
+#define USAGE "s6 process status [ -L | -l ] services..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static int spawn_and_wait (char const *const *argv)
