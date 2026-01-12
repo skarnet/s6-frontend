@@ -56,70 +56,54 @@ simple <code>key = value</code> lines, comments permitted.
  The variables that can be set are the following:
 </p>
 
-<table>
-<tr> <th>Name</th> <th>Contents</th> <th>Default</th> </tr>
+<dl>
 
-<tr>
- <td> scandir </td>
- <td> The directory where <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
-is running. </td>
- <td> <tt>/run/service</tt> (possibly overridden by the <tt>--scandir</tt> build-time configure option to
+<dt> scandir </dt>
+<dd> The directory where <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
+is running.
+The default is <tt>/run/service</tt> (possibly overridden by the <tt>--scandir</tt> build-time configure option to
 <a href="//skarnet.org/software/s6-linux-init/"></a> or to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> livedir </td>
- <td> The directory hosting the live service database managed by
-<a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> </td>
- <td> <tt>/run/s6-rc</tt> (possibly overridden by the <tt>--livedir</tt> build-time configure option to
+<dt> livedir </dt>
+<dd> The directory hosting the live service database managed by
+<a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a>.
+The default is <tt>/run/s6-rc</tt> (possibly overridden by the <tt>--livedir</tt> build-time configure option to
 <a href="//skarnet.org/software/s6-rc/"></a> or to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> repodir </td>
- <td> The directory hosting the repository of service sets managed by the
-<a href="//skarnet.org/software/s6-rc/repodefs.html">s6-rc <em>repo</em> commands</a> </td>
- <td> <tt>/var/lib/s6-rc/repository</tt> (possibly overridden by the <tt>--repodir</tt> build-time configure option to
+<dt> repodir </dt>
+<dd> The directory hosting the repository of service sets managed by the
+<a href="//skarnet.org/software/s6-rc/repodefs.html">s6-rc <em>repo</em> commands</a>.
+The default is <tt>/var/lib/s6-rc/repository</tt> (possibly overridden by the <tt>--repodir</tt> build-time configure option to
 <a href="//skarnet.org/software/s6-rc/"></a> or to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> bootdb </td>
- <td> The path to the boot-time compiled service database </td>
- <td> <tt>/etc/s6-rc/compiled/current</tt> (possibly overridden by the <tt>--bootdb</tt> build-time configure option to
+<dt> bootdb </dt>
+<dd> The path to the boot-time compiled service database.
+The default is <tt>/etc/s6-rc/compiled/current</tt> (possibly overridden by the <tt>--bootdb</tt> build-time configure option to
 <a href="//skarnet.org/software/s6-rc/"></a> or to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> stmpdir </td>
- <td> A directory suitable for root-only runtime data and temporary files for s6-frontend </td>
- <td> <tt>/run/s6-frontend</tt> (possibly overridden by the <tt>--stmpdir</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<dt> stmpdir </dt>
+<dd> A directory suitable for root-only runtime data and temporary files for s6-frontend.
+The default is <tt>/run/s6-frontend</tt> (possibly overridden by the <tt>--stmpdir</tt> build-time configure option to
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> storelist </td>
- <td> A colon-separated (<tt>:</tt>) list of directories containing the
+<dt> storelist </dt>
+<dd> A colon-separated (<tt>:</tt>) list of directories containing the
 <a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a> of s6-rc service
-definition directories </td>
- <td> <tt>/usr/share/s6-frontend/s6-rc/sources:/etc/s6-frontend/s6-rc/sources</tt>
+definition directories.
+The default is <tt>/usr/share/s6-frontend/s6-rc/sources:/etc/s6-frontend/s6-rc/sources</tt>
 (possibly overridden by the <tt>--storelist</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>) </td>
-</tr>
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
-<tr>
- <td> verbosity </td>
- <td> The default verbosity for <a href="s6.html">s6</a> and its invoked commands. 0 is
+<dt> verbosity </dt>
+<dd> The default verbosity for <a href="s6.html">s6</a> and its invoked commands. 0 is
 terse (only print fatal error messages), 1 is normal (print error messages and warnings),
 over 1 is increasingly verbose (print informational messages, up to tracing and debug
-messages at level 4-5) </td>
- <td> <strong>1</strong> </td>
-</tr>
-</table>
+messages at level 4-5). The default is <strong>1</strong>. </dd>
+</dl>
 
 </body>
 </html>
