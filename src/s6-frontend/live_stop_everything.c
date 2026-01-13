@@ -9,6 +9,7 @@
 enum golb_e
 {
   GOLB_DRYRUN = 0x01,
+  GOLB_INCLUDE_ESSENTIALS = 0x02,
 } ;
 
 enum gola_e
@@ -22,6 +23,8 @@ void live_stop_everything (char const *const *argv)
   static gol_bool const rgolb[] =
   {
     { .so = 'n', .lo = "dry-run", .clear = 0, .set = GOLB_DRYRUN },
+    { .so = 'e', .lo = "without-essentials", .clear = GOLB_INCLUDE_ESSENTIALS, .set = 0 },
+    { .so = 'E', .lo = "with-essentials", .clear = 0, .set = GOLB_INCLUDE_ESSENTIALS },
   } ;
   static gol_arg const rgola[] =
   {
@@ -56,7 +59,7 @@ void live_stop_everything (char const *const *argv)
   if (wgolb & GOLB_DRYRUN) newargv[m++] = "-n1" ;
   newargv[m++] = "-l" ;
   newargv[m++] = g->dirs.live ;
-  newargv[m++] = "-bda" ;
+  newargv[m++] = wgolb & GOLB_INCLUDE_ESSENTIALS ? "-bDa" : "-bda" ;
   newargv[m++] = "--" ;
   newargv[m++] = "change" ;
   newargv[m++] = 0 ;

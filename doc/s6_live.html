@@ -61,7 +61,7 @@ and usage of the <tt>s6 live</tt> command. It is not as detailed as this page.
 <h4> Interface </h4>
 
 <pre>
-     s6 live status [ <em>servicenames...</em> ]
+     s6 live status [ -e | -E ] [ <em>servicenames...</em> ]
 </pre>
 
 <ul>
@@ -75,8 +75,19 @@ then <tt>up</tt> or <tt>down</tt> depending on the current state of the service.
 in the generic s6 options, and s6-frontend is built with util-linux support,
 then the output is pretty-printed instead of having a slash separate the name
 of the service from its state. </li>
- <li> No options are defined. </li>
 </ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -e, --without-essentials </dt>
+<dd> Do not list essential services, which can clutter the display with
+irrelevant information and are all supposed to always be up anyway.
+This is the default. </dd>
+
+<dt> -E, --with-essentials </dt>
+<dd> List all services, including essential ones. </dd>
+</dl>
 
 <div id="start">
 <h3> start </h3>
@@ -213,7 +224,7 @@ The default is <tt>default</tt>, possibly overridden by the
 <h4> Interface </h4>
 
 <pre>
-     s6 live stop_everything [ -n ] [ -t <em>timeout</em> ]
+     s6 live stop_everything [ -n ] [ -e | -E ] [ -t <em>timeout</em> ]
 </pre>
 
 <ul>
@@ -227,6 +238,19 @@ reboot a machine; for that, check <a href="s6_system.html"><tt>s6 system</tt></a
 <dl>
 <dt> -n, --dry-run </dt>
 <dd> Only print what would be done; do not actually stop services. </dd>
+
+<dt> -e, --without-essentials </dt>
+<dd> Do not stop essential services; keep the machine in a state where
+it can more or less run and be interacted with, even if in a completely
+bare state. This is the default. </dd>
+
+<dt> -E, --with-essentials </dt>
+<dd> Also stop essential services. After this command, the machine
+isn't good for much except a reboot. <code>s6 live stop_everything -E</code>
+is the command that should be run right before a shutdown when the
+system is not using s6-linux-init. To that end, the line
+<code>::shutdown:/usr/bin/s6 live stop_everything -E</code> should be
+added to <tt>/etc/inittab</tt>, if that is what the init uses. </dd>
 
 <dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>

@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 system command</title>
+    <meta name="Description" content="s6-frontend: the s6 system command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software boot shutdown system reboot poweroff" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 system</tt> command </h1>
+
+<p>
+ <tt>s6 system</tt> regroups actions related to booting or shutting down
+the system.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6 system <em>subcommand</em>
+</pre>
+
+<ul>
+ <li> No subcommand takes any options. </li>
+</ul>
+
+<div id="subcommands">
+<h2> Subcommands </h2>
+</div>
+
+<div id="help">
+<h3> help </h3>
+</div>
+
+<p>
+ <tt>s6 system help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 system</tt> command. It is not as detailed as this page.
+</p>
+
+<div id="boot">
+<h3> boot </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 system boot
+</pre>
+
+<ul>
+ <li> <tt>s6 system boot</tt> initializes the live directory for s6-rc
+then starts all the services defined in the default bundle. In other
+words, it brings the system from a state where nothing is running to
+a state where everything the user wants is running. </li>
+ <li> This is the command that should be called as soon as the init
+program hands off duties.
+  <ul>
+   <li> On a system making use of
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a>,
+<tt>s6 system boot</tt> should be the sole command defined in the
+<tt>/etc/rc.init</tt> script. </li>
+   <li> On a system using <tt>/etc/inittab</tt>, the first line
+of the inittab should be: <tt>::wait:/usr/bin/s6 system boot</tt> </li>
+  </ul> </li>
+</ul>
+
+<p>
+ The rest of the subcommands are shutdown subcommands, and they
+only work if the machine makes use of
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+s6-frontend has been configured to support it. On a machine that
+does not boot via s6-linux-init, a shutdown should be executed via
+the shutdown commands provided by your init system. In order for
+the shutdown to be clean, the <code>s6 live stop_everything -E</code>
+should be run before the init system performs a hard shutdown. For
+instance, if the system uses <tt>/etc/inittab</tt>, then the
+following line should appear in <tt>/etc/inittab</tt>:
+<code>::shutdown:/usr/bin/s6 live stop_everything -E</code>
+</p>
+
+<div id="reboot">
+<h3> reboot </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 system reboot
+</pre>
+
+<ul>
+ <li> <tt>s6 system reboot</tt> reboots the machine.
+ <li> This only works if the machine makes use of
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+s6-frontend has been configured to support it. </li>
+</ul>
+
+<div id="poweroff">
+<h3> poweroff </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 system poweroff
+</pre>
+
+<ul>
+ <li> <tt>s6 system poweroff</tt> halts the system and turns the
+power off. </li>
+ <li> This only works if the machine makes use of
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+s6-frontend has been configured to support it. </li>
+</ul>
+
+<div id="halt">
+<h3> halt </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 system halt
+</pre>
+
+<ul>
+ <li> <tt>s6 system halt</tt> halts the system without turning
+the power off. </li>
+ <li> This only works if the machine makes use of
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+s6-frontend has been configured to support it. </li>
+</ul>
+
+</body>
+</html>

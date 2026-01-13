@@ -1,0 +1,187 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 repository command</title>
+    <meta name="Description" content="s6-frontend: the s6 repository command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software repository repo s6-rc" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 repository</tt> command </h1>
+
+<p>
+ <tt>s6 repository</tt> regroups actions that target the repository of source
+definition directories for services managed by the
+<a href="//skarnet.org/software/s6-rc/repodefs.html">repo commands</a> of the
+s6-rc service manager. The repository is hosted in the
+<a href="s6-frontend.conf.html">configured</a> <em>repodir</em>.
+</p>
+
+<p>
+ This set of commands is not intended for day-to-day use, since they involve
+serious actions on the repository which is supposed to be stable. Rather,
+they are likely to be a part of automated procedures written by the distribution
+and triggered by specific events like installation or package updates.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6 repository <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<div id="subcommands">
+<h2> Subcommands </h2>
+</div>
+
+<div id="help">
+<h3> help </h3>
+</div>
+
+<p>
+ <tt>s6 repository help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 repository</tt> command. It is not as detailed as this page.
+</p>
+
+<div id="init">
+<h3> init </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 repository init [ -f ] [ -U ] [ -h <em>fdhuser</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 repository init</tt> creates the repository at the configured
+location. </li>
+ <li> It links all the stores defined in the configured store list. </li>
+ <li> It syncs the repository with the stores, importing all the services
+and making its reference database. </li>
+ <li> It creates a service set named <tt>current</tt>, which will be the
+working set for all <a href="s6_set.html"><tt>s6 set</tt></a> commands. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -f, --force </dt>
+<dd> If the repository already exists, overwrite it with a new one.
+This is a dangerous option and should only be used as a last resort
+if the repository seems hopelessly broken. </dd>
+
+<dt> -U, --update-stores </dt>
+<dd> Do not recreate the repository from scratch, but update the list
+of stores. This commands needs to be run when the storelist variable
+has changed. </dd>
+
+<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
+<dd> Specify the fdholder user for the reference database. This has
+no impact whatsoever and this option can safely be ignored. </dd>
+</dl>
+
+<div id="list">
+<h3> list </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 repository list
+</pre>
+
+<ul>
+ <li> <tt>s6 repository list</tt> lists all the saved sets in the repository,
+printing their names on stdout, one per line. It does not list <tt>current</tt>,
+the current working set, which always exists. </li>
+ <li> No options are defined. </li>
+</ul>
+
+<div id="check">
+<h3> check </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 repository check [ -f ] [ -d | -u ] [ -E | -e ]
+</pre>
+
+<ul>
+ <li> <tt>s6 repository check</tt> checks all the services in the set for
+inconsistencies, and prints anything it finds to stdout. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -f, --fix </dt>
+<dd> Also attempt to fix the inconsistencies. </dd>
+
+<dt> -E, --no-force-essential </dt>
+<dd> If fixing a set involves changing a service flagged as essential
+to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> sub, print an error message
+and exit. This is the default. </dd>
+
+<dt> -e, --force-essential </dt>
+<dd> If fixing a set involves changing a service flagged as essential
+to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> sub, perform the change
+and continue. This is normally not necessary with a list of stores
+providing consistent services. </dd>
+
+<dt> -d, --down </dt>
+<dd> Fix sets by disabling or masking services. If service <tt>A</tt>
+depends on service <tt>B</tt> and <tt>B</tt> is masked or disabled,
+change <tt>A</tt> to be masked or disabled as well. This is the
+default. </dd>
+
+<dt> -u, --up </dt>
+<dd> Fix sets by enabling or unmasking services. If service <tt>A</tt>
+depends on service <tt>B</tt> and <tt>A</tt> is unmasked or enabled,
+change <tt>B</tt> to be unmasked or enabled as well. </dd>
+</dl>
+
+<div id="sync">
+<h3> sync </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 repository sync [ -h <em>fdhuser</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 repository sync</tt> synchronizes the repository's view of services
+with the contents of the stores. </li>
+ <li> This command must be run every time the stores change, typically
+when the package manager of the distribution adds or removes a package
+that defines a service. Ideally it should be added to a hook defined by
+the package manager. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
+<dd> Specify the fdholder user for the reference database. This has
+no impact whatsoever and this option can safely be ignored. </dd>
+</dl>
+
+</body>
+</html>
