@@ -81,6 +81,7 @@ extern void set_mask (char const *const *) gccattr_noreturn ;
 extern void set_unmask (char const *const *) gccattr_noreturn ;
 extern void set_enable (char const *const *) gccattr_noreturn ;
 extern void set_disable (char const *const *) gccattr_noreturn ;
+extern void set_make_essential (char const *const *) gccattr_noreturn ;
 
 extern void set_check (char const *const *) gccattr_noreturn ;
 extern void set_commit (char const *const *) gccattr_noreturn ;

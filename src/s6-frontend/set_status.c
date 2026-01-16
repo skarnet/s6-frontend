@@ -47,12 +47,9 @@ void set_status (char const *const *argv)
   }
 #endif
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-status" ;
-  if (g->verbosity != 1)
-  {
-    fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
-    newargv[m++] = "-v" ;
-    newargv[m++] = fmtv ;
-  }
+  fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
+  newargv[m++] = "-v" ;
+  newargv[m++] = fmtv ;
   newargv[m++] = "-r" ;
   newargv[m++] = g->dirs.repo ;
   newargv[m++] = wgolb & GOLB_IGNORE_ESSENTIALS ? "--without-essentials" : "--with-essentials" ;

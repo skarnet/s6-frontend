@@ -49,7 +49,7 @@ static void set_change (char const *const *argv, char const *newsub, char const 
   }
 
   char fmtv[UINT_FMT] ;
-  char const *newargv[13 + argc] ;
+  char const *newargv[14 + argc] ;
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-change" ;
   if (g->verbosity != 1)
   {
@@ -68,6 +68,7 @@ static void set_change (char const *const *argv, char const *newsub, char const 
     newargv[m++] = "-I" ;
     newargv[m++] = wgola[GOLA_FORCELEVEL] ;
   }
+  if (!strcmp(newsub, "always")) newargv[m++] = "-e" ;
   newargv[m++] = "--" ;
   newargv[m++] = "current" ;
   newargv[m++] = newsub ;
@@ -95,4 +96,9 @@ void set_mask (char const *const *argv)
 void set_unmask (char const *const *argv)
 {
   set_change(argv, "usable", "unmask") ;
+}
+
+void set_make_essential (char const *const *argv)
+{
+  set_change(argv, "always", "make-essential") ;
 }

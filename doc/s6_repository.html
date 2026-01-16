@@ -117,18 +117,18 @@ the current working set, which always exists. </li>
 <h4> Interface </h4>
 
 <pre>
-     s6 repository check [ -f ] [ -d | -u ] [ -E | -e ]
+     s6 repository check [ -F ] [ -d | -u ] [ -E | -e ]
 </pre>
 
 <ul>
- <li> <tt>s6 repository check</tt> checks all the services in the set for
+ <li> <tt>s6 repository check</tt> checks all the sets in the repository for
 inconsistencies, and prints anything it finds to stdout. </li>
 </ul>
 
 <h4> Options </h4>
 
 <dl>
-<dt> -f, --fix </dt>
+<dt> -F, --fix </dt>
 <dd> Also attempt to fix the inconsistencies. </dd>
 
 <dt> -E, --no-force-essential </dt>

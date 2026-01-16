@@ -30,6 +30,7 @@ void set (char const *const *argv)
     { .s = "help", .f = &set_help },
     { .s = "list", .f = &set_list },
     { .s = "load", .f = &set_load },
+    { .s = "make-essential", .f = &set_make_essential },
     { .s = "mask", .f = &set_mask },
     { .s = "save", .f = &set_save },
     { .s = "status", .f = &set_status },

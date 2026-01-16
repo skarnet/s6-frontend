@@ -33,7 +33,7 @@ s6 set enable|disable|mask|unmask options:
 s6 set check options:
   -E		--no-force-essential		do not allow manual changes to essential services (default)
   -e		--force-essential		allow manual changes to essential services
-  -f		--fix				try to fix inconsistencies automatically
+  -F		--fix				try to fix inconsistencies automatically
   -d		--down				fix by disabling or masking services if necessary (default)
   -u		--up				fix by enabling services if necessary
 

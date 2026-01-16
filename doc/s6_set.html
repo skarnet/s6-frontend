@@ -1,0 +1,347 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 set command</title>
+    <meta name="Description" content="s6-frontend: the s6 set command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software repository repo working set load save s6-rc" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 set</tt> command </h1>
+
+<p>
+ <tt>s6 set</tt> regroups actions on
+<a href="//skarnet.org/software/s6-rc/repodefs.html#set>service sets</a>,
+telling the service manager what service should be enabled or disabled
+at boot time, or even should be masked, i.e. should not even appear in
+the list of services available at next boot.
+</p>
+
+<p>
+ Unlike <tt>s6 live</tt>, which deals with starting and stopping services
+that are currently running, <tt>s6 set</tt> is an <em>offline</em> tool,
+setting services in a state that remains theoretical until the user
+<em>commits</em> to it and <em>installs</em> the set, making it live.
+</p>
+
+<p>
+ <tt>s6 set</tt> commands always operate on a "working set" of services,
+which is internally named <tt>current</tt>. It is not the set that is
+currently live; it is the set that is currently worked on.
+</p>
+
+<div id="interface">
+<h2> Interface </h2>
+</div>
+
+<pre>
+     s6 set <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<div id="subcommands">
+<h2> Subcommands </h2>
+</div>
+
+<div id="help">
+<h3> help </h3>
+</div>
+
+<p>
+ <tt>s6 set help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 set</tt> command. It is not as detailed as this page.
+</p>
+
+<div id="save">
+<h3> save </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set save [ -f ] <em>name</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 set save</tt> saves a copy of the current working set into a
+set named <em>name</em>. </li>
+ <li> <em>name</em> can be loaded by <a href="#load"><tt>s6 set load <em>name</em></a>. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -f, --force </dt>
+<dd> If a set named <em>name</em> already exists, overwrite it with a copy
+of the current working set. By default, the command exits with an error
+instead of overwriting. </dd>
+
+<div id="load">
+<h3> load </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set load <em>name</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 set load</tt> replaces the current working set with the set stored
+as <em>name</em>. </li>
+ <li> No options are defined. </li>
+</ul>
+
+<div id="list">
+<h3> list </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set list [ -E | -e ]
+</pre>
+
+<ul>
+ <li> <tt>s6 set list</tt> lists all the services in the current set,
+printing their names on stdout, one per line.
+the current working set, which always exists. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -E, --with-essentials </dt>
+<dd> List all the services, including the essential ones. This is the
+default. </dd>
+
+<dt> -e, --without-essentials </dt>
+<dd> Do not list essential services. </dd>
+</dl>
+
+<div id="status">
+<h3> list </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set status [ -E | -e ] [ <em>names...</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 set status</tt> lists the services named <em>names...</em>
+in the working set with their current
+<a href="//skarnet.org/software/s6-rc/repodefs.html#sub">sub</a>, i.e.
+the state that they should be in at boot time: masked, disabled (listed
+as <tt>usable</tt>), enabled (listed as <tt>active</tt>), or essential
+(listed as <tt>always</tt>).
+  <ul>
+   <li> <tt>masked</tt> means that the service will not even appear
+in the live service database, it will be entirely omitted. If a
+service depends on a masked service, it should be masked too, else
+the set is said to be <em>inconsistent</em>. </li>
+   <li> <tt>usable</tt> means that the service will be listed in the
+live service database, but will not be brought up by default at boot
+time. It can later be brought up manually via the
+<a href="s6_live.html#start"><tt>s6 live start</tt></a> command. </li>
+   <li> <tt>active</tt> means that the service will be brought up by
+default at boot time. It can later be brought down manually via the
+<a href="s6_live.html#stop"><tt>s6 live stop</tt></a> command. </li>
+   <li> <tt>always</tt> means that the service is considered essential:
+it will always be brought up at boot time, and it cannot be brought down
+without special options to force it down; it normally stays up until
+the machine is shut down. Essential services are marked as such in the
+stores, and should generally not be tampered with via <tt>s6 set</tt>
+commands. </li>
+  </ul> </li>
+ <li> The service name is normally followed by a slash (<tt>/</tt>)
+followed by the name of the sub the service is in. On a terminal,
+with util-linux support, every line is pretty-printed into columns
+instead. </li>
+ <li> If <em>names...</em> is empty, all the services in the set
+are printed, along with their subs. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -E, --with-essentials </dt>
+<dd> Prints all the listed services, including the essential ones. This is the
+default. </dd>
+
+<dt> -e, --without-essentials </dt>
+<dd> Do not print essential services. </dd>
+</dl>
+
+<div id="enable">
+<div id="disable">
+<div id="mask">
+<div id="unmask">
+<div id="make-essential">
+<h3> enable, disable, mask, unmask, make-essential </h3>
+</div></div></div></div></div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set enable|disable|mask|unmask|make-essential [ -f ] [ -n ] [ -I fail|warn|pull ] [ <em>services...</em> ]
+</pre>
+
+<ul>
+ <li> These subcommands are build with the same model and do the same
+thing: they move the services listed in <em>services...</em> from their
+current subs to another.
+  <ul>
+   <li> <tt>mask</tt> masks the services. </li>
+   <li> <tt>unmask</tt> and <tt>disable</tt> put the services in the <tt>usable</tt> sub, i.e. unmasked and disabled. </li>
+   <li> <tt>enable</tt> enables the services. </li>
+   <li> <tt>make-essential</tt> enables the services and marks them as essential. This command should normally not
+be used: essential services are marked as such in the stores and should not be touched. The command exists for
+troubleshooting purposes. </li>
+  </ul> </li>
+ <li> Dependencies across services are computed, and the command will print a message if the change would
+make the set inconsistent. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -f, --ignore-dependencies </dt>
+<dd> Only change the services listed in <em>services</em>, don't compute dependencies </dd>
+
+<dt> -n, --dry-run </dt>
+<dd> Do not perform the change; only show what would be done and check whether the set
+would be made inconsistent. </dd>
+
+<dt> -I <em>what</tt>, --if-dependencies-found=<em>what</em> </dt>
+<dd> What to do when services have dependencies, or reverse dependencies, that are not
+listed in <em>services...</em>. <em>what</em> can be <tt>fail</tt>, <tt>warn</tt>,
+or <tt>pull</tt>.
+ <ul>
+  <li> <tt>fail</tt>: abort the operation with an error message. </li>
+  <li> <tt>warn</tt>: perform the operation with a warning message. The set might
+be inconsistent afterwards, that can be changed by manually changing the dependencies
+or by fixing the set (see below). </li>
+  <li> <tt>pull</tt>: pull the dependencies into the
+same sub as the listed service, so there is no inconsistency. For <tt>enable</tt>,
+service dependencies are made <em>active</em> as well. For <tt>disable</tt>, reverse
+dependencies are disabled as well. For <tt>mask</tt>, reverse dependencies are
+masked as well. </li>
+ </ul>
+</dl>
+
+<h4> Notes </h4>
+
+<p>
+ These subcommands are the bread and butter of the <tt>s6 set</tt> commands. They
+allow the user to tailor the boot sequence to their needs without touching the
+currently running database.
+</p>
+
+<div id="check">
+<h3> check </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set check [ -F ] [ -d | -u ] [ -E | -e ]
+</pre>
+
+<ul>
+ <li> <tt>s6 set check</tt> checks the current working set for
+inconsistencies, and prints anything it finds to stdout. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -F, --fix </dt>
+<dd> Also attempt to fix the inconsistencies. </dd>
+
+<dt> -E, --no-force-essential </dt>
+<dd> If fixing the set involves changing a service flagged as essential
+to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> sub, print an error message
+and exit. This is the default. </dd>
+
+<dt> -e, --force-essential </dt>
+<dd> If fixing the set involves changing a service flagged as essential
+to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> sub, perform the change
+and continue. This is normally not necessary with a list of stores
+providing consistent services. </dd>
+
+<dt> -d, --down </dt>
+<dd> Fix the set by disabling or masking services. If service <tt>A</tt>
+depends on service <tt>B</tt> and <tt>B</tt> is masked or disabled,
+change <tt>A</tt> to be masked or disabled as well. This is the
+default. </dd>
+
+<dt> -u, --up </dt>
+<dd> Fix the set by enabling or unmasking services. If service <tt>A</tt>
+depends on service <tt>B</tt> and <tt>A</tt> is unmasked or enabled,
+change <tt>B</tt> to be unmasked or enabled as well. </dd>
+</dl>
+
+<div id="commit">
+<h3> commit </h3>
+</div>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set commit [ -f ] [ -K ] [ -D <em>defaultbundle</em> [ -h <em>fdhuser</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 set commit</tt>
+<a href="//skarnet.org/software/s6-rc/repodefs.html#commit">commits</a>
+the current set: it attempts to
+<a href="//skarnet.org/software/s6-rc/s6-rc-compile.html">compile</a> a
+service database out of the set. </li>
+ <li> This command must be run once all desired modifications have been
+done to the set and that its consistency has been ensured, for instance
+by a <a href="#check"><tt>s6 set check -F</tt></a> command. </li>
+ <li> Once the set has been committed, in order to actually be used, it must
+be installed via the <a href="s6_live.html#install"><tt>s6 live install</tt></a>
+command. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> -f, --force </dt>
+<dd> Compile the database even if no change has been performed since the
+last time the set was committed. </dd>
+
+<dt> -K, --keep-old </dt>
+<dd> If an old compiled database exists for the set, do not delete it,
+but print its path to stdout. By default, the old database is deleted
+when the set is successfully committed. </dd>
+
+<dt> -D <em>defaultbundle</em>, --default-bundle=<em>defaultbundle</em> </dt>
+<dd> The name of the bundle that will hold all <tt>active</tt> and <tt>always</tt>
+services, and that will be started at boot time. There is generally no reason
+to change the default, which depends on the distribution and is probably called
+<tt>default</tt>. </dd>
+
+<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
+<dd> Specify the fdholder user for the compiled database built from
+the set. This must be a user name defined in the <tt>/etc/passwd</tt>
+file or whatever user database the system uses. The default is <tt>root</tt>
+and that is fine. </dd>
+</dl>
+
+</body>
+</html>

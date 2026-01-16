@@ -26,7 +26,7 @@ void set_check (char const *const *argv)
     { .so = 'e', .lo = "force-essential", .clear = 0, .set = GOLB_FORCE_ESSENTIAL },
     { .so = 'd', .lo = "down", .clear = GOLB_FIXUP, .set = 0 },
     { .so = 'u', .lo = "up", .clear = 0, .set = GOLB_FIXUP },
-    { .so = 'f', .lo = "fix", .clear = 0, .set = GOLB_FIX },
+    { .so = 'F', .lo = "fix", .clear = 0, .set = GOLB_FIX },
   } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
