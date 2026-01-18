@@ -188,7 +188,11 @@ default. </dd>
 thing: they move the services listed in <em>services...</em> from their
 current subs to another.
   <ul>
-   <li> <tt>mask</tt> masks the services. </li>
+   <li> <tt>mask</tt> masks the services. Masking means that the service will not appear in the live
+service database <em>at all</em>, it will not be listed, it will not be usable until it is unmasked in
+a new working set that is subsequently committed and installed. Masking is useful when the stores
+provide services that come from random installed packages, and the user never wants to run these
+services and it's just better not to see them. </li>
    <li> <tt>unmask</tt> and <tt>disable</tt> put the services in the <tt>usable</tt> sub, i.e. unmasked and disabled. </li>
    <li> <tt>enable</tt> enables the services. </li>
    <li> <tt>make-essential</tt> enables the services and marks them as essential. This command should normally not
