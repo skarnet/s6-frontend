@@ -24,9 +24,7 @@
 the system.
 </p>
 
-<div id="interface">
-<h2> Interface </h2>
-</div>
+<h2 id="interface"> Interface </h2>
 
 <pre>
      s6 system <em>subcommand</em>
@@ -36,22 +34,16 @@ the system.
  <li> No subcommand takes any options. </li>
 </ul>
 
-<div id="subcommands">
-<h2> Subcommands </h2>
-</div>
+<h2 id="subcommands"> Subcommands </h2>
 
-<div id="help">
-<h3> help </h3>
-</div>
+<h3 id="help"> help </h3>
 
 <p>
  <tt>s6 system help</tt> prints a short help message summarizing the options
 and usage of the <tt>s6 system</tt> command. It is not as detailed as this page.
 </p>
 
-<div id="boot">
-<h3> boot </h3>
-</div>
+<h3 id="boot"> boot </h3>
 
 <h4> Interface </h4>
 
@@ -68,18 +60,40 @@ a state where everything the user wants is running. </li>
 program hands off duties.
   <ul>
    <li> On a system making use of
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a>,
-<tt>s6 system boot</tt> should be the sole command defined in the
-<tt>/etc/rc.init</tt> script. </li>
-   <li> On a system using <tt>/etc/inittab</tt>, the first line
-of the inittab should be: <tt>::wait:/usr/bin/s6 system boot</tt> </li>
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a>,
+<tt>s6 system boot</tt> should be run by the
+<tt>/etc/rc.init</tt> script. No other command needs to appear in
+that script. </li>
+   <li> On a system using <tt>/etc/inittab</tt>, you need to add
+two lines at the beginning of <tt>/etc/inittab</tt>:
+    <ul>
+     <li> The first line should be a command that runs and respawns
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>,
+ideally with a catch-all logger. This could be something like
+<tt>::respawn:/usr/lib/s6/s6-svscanboot</tt>, with <tt>/usr/lib/s6/s6-svscanboot</tt>
+being similar to the script used
+<a href="https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/s6/s6-svscanboot?ref_type=heads">in
+Alpine Linux</a> to start an instance of s6-svscan supervising its own
+catch-all logger. </li>
+     <li> The second line should be <tt>::wait:/usr/bin/s6 system boot</tt>. </li>
+     <li> For complete safety, there should be a synchronization mechanism so
+that the second line never starts before s6-svscan is ready. A quick and (very) dirty
+way to synchronize is polling on s6-svscan before running the
+command: <tt>::wait:until s6-svscanctl /run/service 2&gt;/dev/null; do :; done &amp;&amp; exec /usr/bin/s6 system boot</tt> </li>
+    </ul> </li>
+ <li> It is also possible to run a complete s6 ecosystem under systemd, but it is redundant,
+so it's unlikely that anyone would want to do it. For the sake of completeness,
+the way would be to define two unit files: the first one to launch s6-svscan, as
+documented <a href="//skarnet.org/software/s6/s6-svscan-not-1.html">here</a>,
+and the second one, specified to run <em>after</em> the first one, to run
+the <tt>s6 system boot</tt> command as a one-shot. </li>
   </ul> </li>
 </ul>
 
 <p>
  The rest of the subcommands are shutdown subcommands, and they
 only work if the machine makes use of
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> and
 s6-frontend has been configured to support it. On a machine that
 does not boot via s6-linux-init, a shutdown should be executed via
 the shutdown commands provided by your init system. In order for
@@ -90,9 +104,7 @@ following line should appear in <tt>/etc/inittab</tt>:
 <code>::shutdown:/usr/bin/s6 live stop_everything -E</code>
 </p>
 
-<div id="reboot">
-<h3> reboot </h3>
-</div>
+<h3 id="reboot"> reboot </h3>
 
 <h4> Interface </h4>
 
@@ -103,13 +115,11 @@ following line should appear in <tt>/etc/inittab</tt>:
 <ul>
  <li> <tt>s6 system reboot</tt> reboots the machine.
  <li> This only works if the machine makes use of
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> and
 s6-frontend has been configured to support it. </li>
 </ul>
 
-<div id="poweroff">
-<h3> poweroff </h3>
-</div>
+<h3 id="poweroff"> poweroff </h3>
 
 <h4> Interface </h4>
 
@@ -121,13 +131,11 @@ s6-frontend has been configured to support it. </li>
  <li> <tt>s6 system poweroff</tt> halts the system and turns the
 power off. </li>
  <li> This only works if the machine makes use of
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> and
 s6-frontend has been configured to support it. </li>
 </ul>
 
-<div id="halt">
-<h3> halt </h3>
-</div>
+<h3 id="halt"> halt </h3>
 
 <h4> Interface </h4>
 
@@ -139,7 +147,7 @@ s6-frontend has been configured to support it. </li>
  <li> <tt>s6 system halt</tt> halts the system without turning
 the power off. </li>
  <li> This only works if the machine makes use of
-<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init/a> and
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> and
 s6-frontend has been configured to support it. </li>
 </ul>
 

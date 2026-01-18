@@ -26,9 +26,7 @@ interact with a system managed by the
 <a href="//skarnet.org/software/s6-linux-init/">s6-linux-init boot program</a>.
 </p>
 
-<div id="interface">
-<h2> Interface </h2>
-</div>
+<h2 id="interface"> Interface </h2>
 
 <pre>
      s6 [ <em>global_options...</em> ] <em>command</em> <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
@@ -44,16 +42,7 @@ various parts of the s6 ecosystem, depending on the given command and
 subcommand. </li>
 </ul>
 
-<div id="commonusage">
-<h2> Common usage </h2>
-</div>
-
-<p>
-</p>
-
-<div id="exitcodes">
-<h2> Exit codes </h2>
-</div>
+<h2 id="exitcodes"> Exit codes </h2>
 
 <p>
  s6 always exits 0 on success, 100 on bad usage, and 111 on a system call
@@ -73,9 +62,7 @@ command, and on the linked documentation page, you can find the interpretation
 of its various exit codes.
 </p>
 
-<div id="environment">
-<h2> Environment variables </h2>
-</div>
+<h2 id="env"> Environment variables </h2>
 
 <ul>
  <li> s6 reads the <code>S6_FRONTEND_CONF</code> environment variable. This
@@ -86,9 +73,7 @@ possibly overridden by the <tt>--conffile</tt> build-time configure option to
 s6-frontend. </li>
 </ul>
 
-<div id="options">
-<h2> Global options </h2>
-</div>
+<h2 id="options"> Global options </h2>
 
 <p>
  <em>global_options...</em> is a list of options that modify s6's behaviour
@@ -164,13 +149,9 @@ have built s6-frontend with util-linux support. </dd>
 </dl>
 
 
-<div id="commands">
-<h2> Commands </h2>
-</div>
+<h2 id="commands"> Commands </h2>
 
-<div id="s6_help">
-<h3> help </h3>
-</div>
+<h3 id="help"> help </h3>
 
 <p>
  <tt>s6 help</tt> prints a short help message summarizing the options
@@ -181,9 +162,7 @@ and usage of the s6 command. It is not as detailed as this page.
  No subcommands are defined.
 </p>
 
-<div id="s6_version">
-<h3> version </h3>
-</div>
+<h3 id="version"> version </h3>
 
 <p>
  <tt>s6 version</tt> prints the current version of s6-frontend, on one line.
@@ -193,9 +172,7 @@ and usage of the s6 command. It is not as detailed as this page.
  No subcommands are defined.
 </p>
 
-<div id="s6_process">
-<h3> process </h3>
-</div>
+<h3 id="process"> process </h3>
 
 <p>
  <tt>s6 process</tt> sends commands to long-running processes supervised by the
@@ -209,9 +186,7 @@ needs to be restarted or otherwise addressed without involvement from the servic
 manager, i.e. without having to start or stop dependencies.
 </p>
 
-<div id="s6_live">
-<h3> live </h3>
-</div>
+<h3 id="live"> live </h3>
 
 <p>
  <tt>s6 live</tt> controls the live state of the machine, starting and stopping
@@ -221,9 +196,7 @@ around the
 available <a href="s6_live.html">here</a>.
 </p>
 
-<div id="s6_repository">
-<h3> repository </h3>
-</div>
+<h3 id="repository"> repository </h3>
 
 <p>
  <tt>s6 repository</tt> regroups administrative tasks related to the repository
@@ -237,9 +210,7 @@ the initial layout, run their package manager, etc.
 The details are available <a href="s6_repository.html">here</a>.
 </p>
 
-<div id="s6_set">
-<h3> set </h3>
-</div>
+<h3 id="set"> set </h3>
 
 <p>
  <tt>s6 set</tt> is the interface to the creation and manipulation of service sets by
@@ -251,9 +222,7 @@ the live state of the machine, accessible via <a href="#s6_live"><tt>s6 live</tt
 The details are available <a href="s6_set.html">here</a>.
 </p>
 
-<div id="s6_system">
-<h3> system </h3>
-</div>
+<h3 id="system"> system </h3>
 
 <p>
  <tt>s6 system</tt> provides commands to run at boot and, on systems fully managed by s6,
@@ -261,9 +230,7 @@ to shut the system down.
 The details are available <a href="s6_system.html">here</a>.
 </p>
 
-<div id="notes">
-<h2> Notes </h2>
-</div>
+<h2 id="notes"> Notes </h2>
 
 <ul>
  <li> <tt>s6</tt> does not perform real operations itself. Instead, after

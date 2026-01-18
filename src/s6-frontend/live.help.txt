@@ -22,6 +22,7 @@ s6 live install options:
   -b		--block			on contention, wait rather than fail
   -K		--keep-old		keep the old db and write its path to stdout
   -f FILE	--conversion-file=FILE	use a conversion file from current to new set
+		--init			install the initial db. DO NOT USE WHEN LIVE.
 
 s6 live start-everything options:
   -n		--dry-run		only show what would be done, don't do it

@@ -33,30 +33,22 @@ without knowledge of the service manager, and thus can only address longruns,
 as well as longruns, and always respects the dependency graph.
 </p>
 
-<div id="interface">
-<h2> Interface </h2>
-</div>
+<h2 id="interface"> Interface </h2>
 
 <pre>
      s6 live <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
 </pre>
 
-<div id="subcommands">
-<h2> Subcommands </h2>
-</div>
+<h2 id="subcommands"> Subcommands </h2>
 
-<div id="help">
-<h3> help </h3>
-</div>
+<h3 id="help"> help </h3>
 
 <p>
  <tt>s6 live help</tt> prints a short help message summarizing the options
 and usage of the <tt>s6 live</tt> command. It is not as detailed as this page.
 </p>
 
-<div id="status">
-<h3> status </h3>
-</div>
+<h3 id="status"> status </h3>
 
 <h4> Interface </h4>
 
@@ -89,9 +81,7 @@ This is the default. </dd>
 <dd> List all services, including essential ones. </dd>
 </dl>
 
-<div id="start">
-<h3> start </h3>
-</div>
+<h3 id="start"> start </h3>
 
 <h4> Interface </h4>
 
@@ -118,9 +108,7 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
-<div id="stop">
-<h3> stop </h3>
-</div>
+<h3 id="stop"> stop </h3>
 
 <h4> Interface </h4>
 
@@ -147,9 +135,7 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
-<div id="restart">
-<h3> restart </h3>
-</div>
+<h3 id="restart"> restart </h3>
 
 <h4> Interface </h4>
 
@@ -180,9 +166,7 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
-<div id="start_everything">
-<h3> start_everything </h3>
-</div>
+<h3 id="start_everything"> start_everything </h3>
 
 <h4> Interface </h4>
 
@@ -217,9 +201,7 @@ The default is <tt>default</tt>, possibly overridden by the
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>. </dd>
 </dl>
 
-<div id="stop_everything">
-<h3> stop_everything </h3>
-</div>
+<h3 id="stop_everything"> stop_everything </h3>
 
 <h4> Interface </h4>
 
@@ -259,14 +241,12 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
-<div id="install">
-<h3> install </h3>
-</div>
+<h3 id="install"> install </h3>
 
 <h4> Interface </h4>
 
 <pre>
-     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ]
+     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ] [ --init ]
 </pre>
 
 <ul>
@@ -297,6 +277,16 @@ Instead, print its path to stdout. </dd>
 invocation, i.e. a file translating service names and states between
 the old service database and the one being installed. This option should
 never be necessary if the services in the stores are properly managed. </dd>
+
+<dt> --init </dt>
+<dd>
+ Copy the compiled database of the current working set to the place where it
+can be booted on, but do not call
+<a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>.
+This is only useful for a <em>first</em> installation of s6-frontend, when
+s6-rc is not managing the live services yet. Once a reboot has been done
+and the machine is successfully running with s6-rc, this option should
+never be used again. </dd>
 </dl>
 
 </body>

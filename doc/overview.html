@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: overview</title>
+    <meta name="Description" content="s6-frontend: overview" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software overview" />
+    <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" />
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> s6-frontend: an overview </h1>
+
+<h2 id="contents"> Contents of the s6-frontend package </h2>
+
+<p>
+ The <tt>s6-frontend</tt> package does not itself contain much. The only binary
+that users will interact with directly is the
+<a href="s6.html"><tt>s6</tt></a> binary, which is a wrapper around the
+<a href="s6-frontend.html"><tt>s6-frontend</tt></a> binary (which users
+should not have to call directly), which is itself a wrapper around
+various commands of the s6 ecosystem that users also need to have
+installed in order for s6-frontend to work. That means:
+</p>
+
+<ul>
+ <li> <a href="//skarnet.org/software/s6/">s6</a>, the <em>package</em>,
+not the <em>command</em>: a process supervisor. Yes, the
+<a href="s6.html"><tt>s6</tt></a> binary is provided by the s6-frontend
+package (this package) and not the s6 package. Because the "s6" name,
+which was originally meant for "the supervision system", evolved to mean
+"the skarnet.org ecosystem of programs", and <tt>s6</tt> was the natural
+name to use for a command interfacing with all of it. </li>
+ <li> <a href="//skarnet.org/software/s6-rc/">s6-rc</a>: a service manager
+working on top of the s6 process supervisor. </li>
+ <li> optionally, <a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a>:
+a set of programs to make a Linux system <em>boot</em> and use
+<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>, the cornerstone
+of the s6 process supervisor, as pid 1. This makes s6 a full init system, by
+eliminating the need to pair s6 with something like busybox init, sysvinit,
+openrc-init or systemd, which provide a pid 1. </li>
+ <li> Future packages may be added to the ecosystem to add functionality,
+for instance: a package with turnkey essential service definitions that downstream
+can use,  a package to handle namespaces and cgroups, a package to handle
+capabilities, etc. </li>
+</ul>
+
+<h2 id="installation"> Installing s6-frontend </h2>
+
+<p>
+ In addition to the s6-frontend package and its dependencies, in order to
+make use of the <a href="s6.html"><tt>s6</tt></a> command, you will need
+<em>service definitions</em>: a set of directories, in a format understandable
+by <a href="//skarnet.org/software/s6-rc/s6-rc-compile.html">s6-rc-compile</a>,
+describing various services that can run on a machine &mdash; long-running
+daemons, one-shot scripts, and "bundles" aliasing to a group of these services.
+</p>
+
+<p>
+ If you are running s6-frontend from a distribution, the packages that provide
+these services should already have them defined, and the service definition
+directories should already made available in some pre-configured
+<a href="//skarnet.org/software/s6-rc/repodefs#store">stores</a>. Your
+distribution should also have pre-installed everything you need in order
+for yo to be able to use the <a href="s6.html"><tt>s6</tt></a> command to
+control the system. But if you are installing s6-frontend manually, or are
+the person <em>building</em> the distribution, here is what you need to do:
+</p>
+
+<ul>
+ <li> Define one or more places where your service directories will
+be hosted: it's the equivalent of <tt>/etc/init.d</tt> for OpenRC or sysv-rc,
+the place where they store their scripts; or the equivalent of the places where
+systemd looks for its unit files, namely:
+<tt>/etc/systemd/system.control</tt>,
+<tt>/run/systemd/system.control</tt>,
+<tt>/run/systemd/transient</tt>,
+<tt>/run/systemd/generator.early</tt>,
+<tt>/etc/systemd/system</tt>,
+<tt>/etc/systemd/system.attached</tt>,
+<tt>/run/systemd/system</tt>,
+<tt>/run/systemd/system.attached</tt>,
+<tt>/run/systemd/generator</tt>,
+<tt>/usr/local/lib/systemd/system</tt>,
+<tt>/usr/lib/systemd/system</tt>, and
+<tt>/run/systemd/generator.late</tt>.
+ <ul>
+  <li> Yes, we think systemd <em>might</em> be overdoing it just a little.
+But who are we to criticize if it works for them? &#x1F92D; </li>
+  <li> We recommend having <em>two or three</em> stores: one for packages
+installed by the package manager, one for local modifications, and possibly
+one that is managed by the distribution outside of any package. The default
+<em>store list</em> for s6-frontend is
+<tt>/usr/share/s6-frontend/s6-rc/sources:/etc/s6-frontend/s6-rc/sources</tt>,
+which means that the package manager should install service definition
+directories in <tt>/usr/share/s6-frontend/s6-rc/sources</tt>, and that
+administrators should do their local modifications in
+<tt>/etc/s6-frontend/s6-rc/sources</tt>. You can modify this store list
+in the configuration file, see below. </li>
+ </ul> </li>
+ <li> And then you need the service definitions themselves.
+  <ul>
+   <li> Service definitions for a given daemon such as e.g. sshd should
+be written by the distribution that packages sshd and provided by the
+package manager when it installs sshd. Alternatively, they
+could be provided by the sshd upstream, but service definitions are
+<em>policy</em>, not <em>mechanism</em>, and we think policy is the realm
+of distributions, not of software authors. </li>
+   <li> Essential services, i.e. how to boot a machine and bring it to
+the state where it can accept logins and run services provided by packages,
+should be provided by the distribution in a specific package. </li>
+    <ul>
+     <li> systemd comes with a big list of unit files: it provides some policy
+itself. </li>
+     <li> OpenRC also comes with a set of basic services: it provides some policy
+itself as well. </li>
+     <li> s6-frontend <em>does not</em> provides policy, but since basic service
+files is essential for people to use it, work is underway to write these. They
+will be provided in a separate package. In the meantime, you can find service
+definitions contributed by the community pretty much everywhere s6-rc is used.
+The s6-rc package comes with some
+<a href="https://git.skarnet.org/cgi-bin/cgit.cgi/s6-rc/tree/examples/source">example
+service definitions</a>. </li>
+    </ul> </li>
+  </ul> </li>
+ <li> Define a <a href="s6-frontend.conf.html">configuration file</a>,
+located at <tt>/etc/s6-frontend.conf</tt> unless you modified the default at
+build time. If you go with all the defaults for all the packages in the s6
+ecosystem, the configuration file can basically be empty; but you will probably
+at least want to define the <tt>storelist</tt> variable. </li>
+ <li> Once your configuration file is ready, and all your services are in the
+store, you need to initialize the repository:
+<a href="s6_repository.html#init"><tt>s6 repository init</tt></a>. This command
+will create the repository and make a reference database with all the services
+in your stores. If it succeeds, congratulations! Your stores are <em>consistent</em>,
+i.e. they define a full set of services that can be used by the s6-rc service manager. </li>
+ <li> Check that the default states of the service are what you want, with
+<a href="s6_set.html#status"><tt>s6 set status</tt></a>. If they're not, make the
+changes you need with various <a href="s6_set.html#enable"><tt>s6 set</tt></a> commands. </li>
+ <li> Once you're happy with the set, commit your changes with
+<a href="s6_set.html#commit"><tt>s6 set commit</tt></a>. This will make an s6-rc
+compiled service database. </li>
+ <li> Install this service database as the one that will be run at boot time.
+This is done by <a href="s6_live.html#install"><tt>s6 live install --init</tt></a>.
+Note that the <tt>--init</tt> option should only be given for this first installation
+when the machine isn't managed by s6-rc yet. </li>
+ <li> Make sure your init system will actually boot the service database you have
+just installed. The command that should be run at boot time is:
+<a href="s6_system.html#boot"><tt>s6 system boot</tt></a>. Check the link to see
+how to configure your init system to run it. </li>
+ <li> If everything is ready, reboot the machine. Congratulations! It is now
+running under a full s6 init system. </li>
+ <li> If you are using <a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a>,
+the way to reboot your system will be
+<a href="s6_system.html#reboot"><tt>s6 system reboot</tt></a> from now on. </li>
+</ul>
+
+
+<h2 id="concepts"> Concepts </h2>
+
+<p>
+ s6-frontend does not come with any innovating concepts &mdash; it's just a series
+of user-friendly wrappers around various commands in the s6 ecosystem, hiding
+the details of various options and installation directories. For instance:
+</p>
+
+<ul>
+ <li> Instead of running <tt>s6-svc -r /run/service/foobar</tt>, you run
+<tt>s6 process restart foobar</tt> </li>
+ <li> Instead of running <tt>s6-rc -d change foobar</tt>, you run
+<tt>s6 live stop foobar</tt> </li>
+ <li> Instead of running <tt>s6-rc-init /run/service &amp;&amp; s6-rc change default</tt>
+at boot time, you run <tt>s6 system boot</tt> </li>
+</ul>
+
+<p>
+ The most innovating change comes from the
+<a href="//skarnet.org/software/s6-rc/repodefs.html">repo</a> commands, in the
+version of <a href="//skarnet.org/software/s6-rc/">s6-rc</a> that is released at the
+same time as the first release of s6-frontend. The goals of the <em>repo</em> commands, which
+are wrapped by the <a href="s6_repository.html"><tt>s6 repository</tt></a> and
+<a href="s6_set.html"><tt>s6 set</tt></a> commands, are:
+</p>
+
+<ul>
+ <li> To provide a framework for distributions and system administrators to organize their
+text-format source definition directories, by defining places where service definitions
+should be stored </li>
+ <li> To allow local administrators to tailor what services they want to see in their
+live database, by providing an intermediary between the stores and the live database:
+offline sets. With <a href="s6_set.html#mask"><tt>s6 set mask</tt></a>, an administrator
+can make it so a service, though defined in a store, will not appear in the service
+database at all. <em>Unmasked</em> services appear in the live database, but are only started
+at boot time when they are <em>enabled</em> (or <em>essential</em>, but that property
+is best set in the service definition itself and never overridden). </li>
+ <li> To allow easy replacement of the current live database by a set that has been
+worked on. </li>
+</ul>
+
+<h2 id="openrc"> Comparison with OpenRC </h2>
+
+<p>
+ One of the design goals of s6-frontend is to provide a user interface to service
+management that is comparable to the one provided by OpenRC.
+</p>
+
+<p>
+ A fundamental difference between s6-frontend and OpenRC is that OpenRC always
+works on <em>live services</em>, the ones that are currently running on the
+user's machine. It only has one <em>live database</em>, comprising several
+"runlevels" (sets of services meant to be run together), and manages its
+dependency tree dynamically.
+</p>
+
+<p>
+ s6-frontend, on the other hand (and more accurately, this is the domain of
+the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> service manager and its
+<a href="//skarnet.org/software/s6-rc/repodefs.html">repo</a> commands),
+separates the notion of <em>live database</em> and of <em>working set</em>
+entirely. The <em>working set</em> is worked on <em>offline</em>, without
+impacting the current machine state. You can <em>start</em> and <em>stop</em>
+live services, but you can only <em>enable</em> or <em>disable</em>
+&mdash; or <em>mask</em> &mdash; services on the working set. Enabling a
+service means that <em>next time you boot on the service database you are
+working on</em>, that service will be automatically started. <br>
+ Once you have worked on a set of services, you can replace the live
+database with it; the old live database disappears entirely, and your
+working set (well, a copy of it) is now <em>live</em>.
+</p>
+
+<p>
+ A corollary of that is that s6-frontend does not have runlevels. It does
+not need them. The <em>default bundle</em> specifies what services should
+be started at boot; other bundles (in the sense of s6-rc) can be defined
+in the stores, and the user can start and stop them at will, as well as
+start and stop individual services, dependencies notwithstanding. By
+default, all the services are accessible in the live database, but the
+user can choose to exclude certain services by <em>masking them</em> in
+a working set and then installing that set.
+</p>
+
+<p>
+ These differences being given, s6-frontend should be very comparable to
+OpenRC in its everyday usage. Here is a table showing some correspondences;
+it is not meant to be exhaustive, but to show a representative enough sample
+of the kind of commands that can be worked with.
+</p>
+
+<table>
+  <thead>
+   <tr>
+    <th> OpenRC command </th>
+    <th> s6-frontend equivalent </th>
+    <th> Notes </th>
+   </tr>
+  </thead>
+  <tbody>
+   <tr>
+    <td> <tt>rc-service foobar start</tt> </td>
+    <td> <tt>s6 live start foobar</tt> </td>
+    <td> Starts a service in the live database. </td>
+   </tr>
+   <tr>
+    <td> <tt>rc-service foobar status</tt> </td>
+    <td> <tt>s6 live status foobar</tt> or <tt>s6 process status foobar</tt> </td>
+    <td> <tt>s6 process status foobar</tt> only works if foobar is a longrun,
+in which case it will give detailed information on its supervised instance. </td>
+   </tr>
+   <tr>
+    <td> <tt>rc-status default</tt> </td>
+    <td> <tt>s6 live status</tt> or <tt>s6 set status</tt> </td>
+    <td> <tt>s6 live status</tt> shows the status of the current live database,
+<tt>s6 set status</tt> the status of the offline working set. </td>
+   </tr>
+   <tr>
+    <td> <tt>rc-update add foobar</tt> </td>
+    <td> <tt>s6 set enable foobar</tt> </td>
+    <td> See below. </td>
+   </tr>
+   <tr>
+    <td> <tt>rc-update del foobar</tt> </td>
+    <td> <tt>s6 set disable foobar</tt> </td>
+    <td> See below. </td>
+   </tr>
+   <tr>
+    <td> <tt>rc-update show</tt> </td>
+    <td> <tt>s6 set status</tt> </td>
+    <td> Shows the enabled, disabled and masked services, but to make the
+changes effective, the user needs to run <tt>s6 set commit</tt> then
+<tt>s6 live install</tt>. </td>
+   </tr>
+   <tr>
+    <td> <tt>openrc sysinit &amp;&amp; openrc boot &amp;&amp; openrc default</tt> </td>
+    <td> <tt>s6 system boot</tt> </td>
+    <td> The existence of the <tt>sysinit</tt> and <tt>boot</tt> runlevels are a
+historical wart that OpenRC still has to deal with; s6-frontend does not. </td>
+   </tr>
+   <tr>
+    <td> <tt>reboot</tt> </td>
+    <td> <tt>reboot</tt> or <tt>s6 system reboot</tt> </td>
+    <td> Just like OpenRC's <tt>reboot</tt> command will only work if the system
+is using <tt>openrc-init</tt>, <tt>s6 system reboot</tt> command will only work
+if the system is using <a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a>. </td>
+   </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

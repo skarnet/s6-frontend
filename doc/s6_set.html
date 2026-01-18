@@ -21,8 +21,8 @@
 
 <p>
  <tt>s6 set</tt> regroups actions on
-<a href="//skarnet.org/software/s6-rc/repodefs.html#set>service sets</a>,
-telling the service manager what service should be enabled or disabled
+<a href="//skarnet.org/software/s6-rc/repodefs.html#set">service sets</a>,
+telling the service manager what services should be enabled or disabled
 at boot time, or even should be masked, i.e. should not even appear in
 the list of services available at next boot.
 </p>
@@ -40,30 +40,22 @@ which is internally named <tt>current</tt>. It is not the set that is
 currently live; it is the set that is currently worked on.
 </p>
 
-<div id="interface">
-<h2> Interface </h2>
-</div>
+<h2 id="interface"> Interface </h2>
 
 <pre>
      s6 set <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
 </pre>
 
-<div id="subcommands">
-<h2> Subcommands </h2>
-</div>
+<h2 id="subcommands"> Subcommands </h2>
 
-<div id="help">
-<h3> help </h3>
-</div>
+<h3 id="help"> help </h3>
 
 <p>
  <tt>s6 set help</tt> prints a short help message summarizing the options
 and usage of the <tt>s6 set</tt> command. It is not as detailed as this page.
 </p>
 
-<div id="save">
-<h3> save </h3>
-</div>
+<h3 id="save"> save </h3>
 
 <h4> Interface </h4>
 
@@ -74,7 +66,7 @@ and usage of the <tt>s6 set</tt> command. It is not as detailed as this page.
 <ul>
  <li> <tt>s6 set save</tt> saves a copy of the current working set into a
 set named <em>name</em>. </li>
- <li> <em>name</em> can be loaded by <a href="#load"><tt>s6 set load <em>name</em></a>. </li>
+ <li> <em>name</em> can be loaded by <a href="#load"><tt>s6 set load <em>name</em></tt></a>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -85,9 +77,7 @@ set named <em>name</em>. </li>
 of the current working set. By default, the command exits with an error
 instead of overwriting. </dd>
 
-<div id="load">
-<h3> load </h3>
-</div>
+<h3 id="load"> load </h3>
 
 <h4> Interface </h4>
 
@@ -101,9 +91,7 @@ as <em>name</em>. </li>
  <li> No options are defined. </li>
 </ul>
 
-<div id="list">
-<h3> list </h3>
-</div>
+<h3 id="list"> list </h3>
 
 <h4> Interface </h4>
 
@@ -128,9 +116,7 @@ default. </dd>
 <dd> Do not list essential services. </dd>
 </dl>
 
-<div id="status">
-<h3> list </h3>
-</div>
+<h3 id="status"> status </h3>
 
 <h4> Interface </h4>
 
@@ -188,7 +174,7 @@ default. </dd>
 <div id="mask">
 <div id="unmask">
 <div id="make-essential">
-<h3> enable, disable, mask, unmask, make-essential </h3>
+<h3 id="change"> enable, disable, mask, unmask, make-essential </h3>
 </div></div></div></div></div>
 
 <h4> Interface </h4>
@@ -223,7 +209,7 @@ make the set inconsistent. </li>
 <dd> Do not perform the change; only show what would be done and check whether the set
 would be made inconsistent. </dd>
 
-<dt> -I <em>what</tt>, --if-dependencies-found=<em>what</em> </dt>
+<dt> -I <em>what</em>, --if-dependencies-found=<em>what</em> </dt>
 <dd> What to do when services have dependencies, or reverse dependencies, that are not
 listed in <em>services...</em>. <em>what</em> can be <tt>fail</tt>, <tt>warn</tt>,
 or <tt>pull</tt>.
@@ -248,9 +234,7 @@ allow the user to tailor the boot sequence to their needs without touching the
 currently running database.
 </p>
 
-<div id="check">
-<h3> check </h3>
-</div>
+<h3 id="check"> check </h3>
 
 <h4> Interface </h4>
 
@@ -294,9 +278,7 @@ depends on service <tt>B</tt> and <tt>A</tt> is unmasked or enabled,
 change <tt>B</tt> to be unmasked or enabled as well. </dd>
 </dl>
 
-<div id="commit">
-<h3> commit </h3>
-</div>
+<h3 id="commit"> commit </h3>
 
 <h4> Interface </h4>
 
