@@ -27,7 +27,7 @@ void live_install (char const *const *argv)
   {
     { .so = 'b', .lo = "block", .clear = 0, .set = GOLB_BLOCK },
     { .so = 'K', .lo = "keep-old", .clear = 0, .set = GOLB_KEEPOLD },
-    { .so = 0, .lo = "init", .clear = 0, .set = GOLA_INIT },
+    { .so = 0, .lo = "init", .clear = 0, .set = GOLB_INIT },
   } ;
   static gol_arg const rgola[] =
   {
