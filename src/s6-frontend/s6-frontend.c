@@ -67,8 +67,8 @@ void main_pretty_exec (char const *const *argv)
     newargv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
     newargv[m++] = "--" ;
     m += s6f_equote(newargv + m, argv, argc, 0, espace) ;
-    newargv[m++] = " column" ;
-    newargv[m++] = " -ts/" ;
+    newargv[m++] = "column" ;
+    newargv[m++] = "-ts/" ;
     newargv[m++] = 0 ;
     main_exec(newargv) ;
   }

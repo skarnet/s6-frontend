@@ -102,7 +102,7 @@ void process_kill (char const *const *argv)
   char svcopt[5] = "-!\0\0\0" ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
-  if (!argv) dieusage() ;
+  if (!*argv) dieusage() ;
   if (wgola[GOLA_SIGNAL])
   {
     if (!sig0_scan(wgola[GOLA_SIGNAL], &sig))

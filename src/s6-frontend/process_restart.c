@@ -39,7 +39,7 @@ void process_restart (char const *const *argv)
   unsigned int timeout = 0 ;
   unsigned int argc ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
-  if (!argv) dieusage() ;
+  if (!*argv) dieusage() ;
   if (wgola[GOLA_TIMEOUT])
   {
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))

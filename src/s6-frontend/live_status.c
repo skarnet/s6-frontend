@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -27,24 +28,33 @@
 static void live_status_all (int withe) gccattr_noreturn ;
 static void live_status_all (int withe)
 {
-  char const *argv[17] ;
   unsigned int m = 0 ;
+  size_t llen = strlen(g->dirs.live) ;
+  char const *argv[21] ;
+  char llivedir[llen + 3] ;
+  llivedir[0] = ' ' ; llivedir[1] = ' ' ;
+  memcpy(llivedir + 2, g->dirs.live, llen + 1) ;
+
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = "  " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = "  -l" ;
+  argv[m++] = llivedir ;
   argv[m++] = withe ? "  -buaE" : "  -buae" ;
   argv[m++] = "  list" ;
   argv[m++] = " " ;
   argv[m++] = " sed" ;
-  argv[m++] = " s|$|/up" ;
+  argv[m++] = " s|$|/up|" ;
   argv[m++] = "" ;
   argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = " " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = " -l" ;
+  argv[m++] = llivedir + 1 ;
   argv[m++] = withe ? " -bdaE" : " -bdae" ;
   argv[m++] = " list" ;
   argv[m++] = "" ;
   argv[m++] = "sed" ;
-  argv[m++] = "s|$|/down" ;
+  argv[m++] = "s|$|/down|" ;
   argv[m++] = 0 ;
   main_pretty_exec(argv) ;
 }
@@ -163,7 +173,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = "  /dev/fd/3" ;
   argv[m++] = " " ;
   argv[m++] = " sed" ;
-  argv[m++] = " s|$|/up" ;
+  argv[m++] = " s|$|/up|" ;
   argv[m++] = "" ;
   argv[m++] = EXECLINE_EXTBINPREFIX "piperw" ;
   argv[m++] = "3" ;
@@ -189,7 +199,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = " /dev/fd/3" ;
   argv[m++] = "" ;
   argv[m++] = "sed" ;
-  argv[m++] = "s|$|/down" ;
+  argv[m++] = "s|$|/down|" ;
   argv[m++] = 0 ;
   main_pretty_exec(argv) ;
 }
@@ -209,6 +219,6 @@ void live_status (char const *const *argv)
   uint64_t wgolb = 0 ;
 
   argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
-  if (!argv) live_status_all(wgolb & GOLB_INCLUDE_ESSENTIALS) ;
+  if (!*argv) live_status_all(wgolb & GOLB_INCLUDE_ESSENTIALS) ;
   else live_status_some(argv, wgolb & GOLB_INCLUDE_ESSENTIALS) ;
 }

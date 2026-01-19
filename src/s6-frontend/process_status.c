@@ -90,7 +90,7 @@ void process_status (char const *const *argv)
   int e = 0 ;
 
   argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
-  if (!argv) dieusage() ;
+  if (!*argv) dieusage() ;
   process_check_services(argv, env_len(argv)) ;
   for (; *argv ; argv++)
   {

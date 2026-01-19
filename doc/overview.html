@@ -103,7 +103,8 @@ which means that the package manager should install service definition
 directories in <tt>/usr/share/s6-frontend/s6-rc/sources</tt>, and that
 administrators should do their local modifications in
 <tt>/etc/s6-frontend/s6-rc/sources</tt>. You can modify this store list
-in the configuration file, see below. </li>
+at build time with the <tt>--storelist</tt> configure option, or after
+installation in the s6-frontend configuration file, see below. </li>
  </ul> </li>
  <li> And then you need the service definitions themselves.
   <ul>
@@ -122,7 +123,7 @@ itself. </li>
      <li> OpenRC also comes with a set of basic services: it provides some policy
 itself as well. </li>
      <li> s6-frontend <em>does not</em> provides policy, but since basic service
-files is essential for people to use it, work is underway to write these. They
+files are essential for people to use it, work is underway to write them; they
 will be provided in a separate package. In the meantime, you can find service
 definitions contributed by the community pretty much everywhere s6-rc is used.
 The s6-rc package comes with some
