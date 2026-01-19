@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/gol.h>
 
 #include <s6-rc/config.h>
 
@@ -42,5 +42,5 @@ void repository_sync (char const *const *argv)
   }
   newargv[m++] = "--" ;
   newargv[m++] = 0 ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }

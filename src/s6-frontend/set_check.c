@@ -2,7 +2,7 @@
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/gol.h>
 
 #include <execline/config.h>
 
@@ -51,5 +51,5 @@ void set_check (char const *const *argv)
   newargv[m++] = "current" ;
   newargv[m++] = 0 ;
 
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }

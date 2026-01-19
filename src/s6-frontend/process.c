@@ -8,7 +8,8 @@
 #include <skalibs/stat.h>
 #include <skalibs/types.h>
 #include <skalibs/posixplz.h>
-#include <skalibs/envexec.h>
+#include <skalibs/strerr.h>
+#include <skalibs/gol.h>
 #include <skalibs/djbunix.h>
 
 #include <s6/config.h>
@@ -73,7 +74,7 @@ void process_send_svc (char const *svcopt, char const *const *argv, unsigned int
     memcpy(s + len, argv[i], l + 1) ; len += l + 1 ;
   }
   newargv[m++] = 0 ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }
 
 void process (char const *const *argv)

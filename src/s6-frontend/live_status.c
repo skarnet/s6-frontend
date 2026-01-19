@@ -4,7 +4,10 @@
 #include <sys/wait.h>
 
 #include <skalibs/gccattributes.h>
-#include <skalibs/envexec.h>
+#include <skalibs/posixplz.h>
+#include <skalibs/env.h>
+#include <skalibs/gol.h>
+#include <skalibs/strerr.h>
 #include <skalibs/cspawn.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
@@ -24,19 +27,8 @@
 static void live_status_all (int withe) gccattr_noreturn ;
 static void live_status_all (int withe)
 {
-  char const *argv[23] ;
+  char const *argv[17] ;
   unsigned int m = 0 ;
-#ifdef S6_FRONTEND_USE_UTIL_LINUX
-  if (g->color)
-  {
-    argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
-    argv[m++] = "-w" ;
-    argv[m++] = "--" ;
-    argv[m++] = " column" ;
-    argv[m++] = " -ts/" ;
-    argv[m++] = "" ;
-  }
-#endif
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = "  " S6RC_EXTBINPREFIX "s6-rc" ;
@@ -54,7 +46,7 @@ static void live_status_all (int withe)
   argv[m++] = "sed" ;
   argv[m++] = "s|$|/down" ;
   argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_pretty_exec(argv) ;
 }
 
 static int get_list_of_up (stralloc *storage, int withe)
@@ -136,7 +128,7 @@ static void live_status_some (char const *const *services, int withe)
   unsigned int m = 0 ;
   size_t uplistpos ;
   int e ;
-  char const *argv[59] ;
+  char const *argv[53] ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa, withe) ;
   if (e) _exit(e) ;
@@ -146,17 +138,6 @@ static void live_status_some (char const *const *services, int withe)
   if (e) _exit(e) ;
   if (!stralloc_0(&sa)) dienomem() ;
 
-#ifdef S6_FRONTEND_USE_UTIL_LINUX
-  if (g->color)
-  {
-    argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
-    argv[m++] = "-w" ;
-    argv[m++] = "--" ;
-    argv[m++] = " column" ;
-    argv[m++] = " -ts/" ;
-    argv[m++] = "" ;
-  }
-#endif
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "piperw" ;
   argv[m++] = " 3" ;
@@ -210,14 +191,13 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = "sed" ;
   argv[m++] = "s|$|/down" ;
   argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_pretty_exec(argv) ;
 }
 
 enum golb_e
 {
   GOLB_INCLUDE_ESSENTIALS = 0x01,
 } ;
-
 
 void live_status (char const *const *argv)
 {
@@ -231,5 +211,4 @@ void live_status (char const *const *argv)
   argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
   if (!argv) live_status_all(wgolb & GOLB_INCLUDE_ESSENTIALS) ;
   else live_status_some(argv, wgolb & GOLB_INCLUDE_ESSENTIALS) ;
-  _exit(0) ;
 }

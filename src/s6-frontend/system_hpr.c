@@ -5,8 +5,6 @@
 
 #ifdef S6_FRONTEND_USE_S6LI
 
-#include <skalibs/exec.h>
-
 static void system_hpr (char const *arg) gccattr_noreturn ;
 static void system_hpr (char const *arg)
 {
@@ -16,7 +14,7 @@ static void system_hpr (char const *arg)
   argv[m++] = arg ;
   argv[m++] = "--" ;
   argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(argv) ;
 }
 
 void system_halt (char const *const *argv)

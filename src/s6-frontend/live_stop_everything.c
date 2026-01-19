@@ -2,7 +2,8 @@
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/strerr.h>
+#include <skalibs/gol.h>
 
 #include "s6-frontend-internal.h"
 
@@ -64,5 +65,5 @@ void live_stop_everything (char const *const *argv)
   newargv[m++] = "change" ;
   newargv[m++] = 0 ;
 
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }

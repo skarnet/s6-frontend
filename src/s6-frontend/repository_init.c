@@ -78,8 +78,7 @@ void repository_init (char const *const *argv)
     len += strlen(storage + len) + 1 ;
   }
   newargv[m++] = 0 ;
-  if (wgolb & GOLB_UPDATE)
-    xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  if (wgolb & GOLB_UPDATE) main_exec(newargv) ;
   else
   {
     int wstat ;
@@ -98,6 +97,6 @@ void repository_init (char const *const *argv)
     newargv[m++] = "--" ;
     newargv[m++] = "current" ;
     newargv[m++] = 0 ;
-    xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+    main_exec(newargv) ;
   }
 }

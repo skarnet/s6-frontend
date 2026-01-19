@@ -5,7 +5,8 @@
 #include <skalibs/gccattributes.h>
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/strerr.h>
+#include <skalibs/gol.h>
 
 #include <s6-rc/config.h>
 
@@ -36,7 +37,7 @@ static void set_copy (char const *from, char const *to, int force)
   argv[m++] = from ;
   argv[m++] = to ;
   argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(argv) ;
 }
 
 void set_save (char const *const *argv)

@@ -8,8 +8,8 @@
 #include <skalibs/uint64.h>
 #include <skalibs/posixplz.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
 #include <skalibs/sig.h>
+#include <skalibs/envexec.h>
 
 #include <s6/config.h>
 #include <s6/supervise.h>
@@ -67,7 +67,7 @@ static void process_kill_hack_kill (int sig, char const *const *argv, unsigned i
     }
   }
   newargv[m++] = 0 ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }
 
 enum golb_e

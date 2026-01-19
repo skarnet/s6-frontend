@@ -75,7 +75,7 @@ static void set_change (char const *const *argv, char const *newsub, char const 
   for (unsigned int i = 0 ; i < argc ; i++)
     newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }
 
 void set_disable (char const *const *argv)

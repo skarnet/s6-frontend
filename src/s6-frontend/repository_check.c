@@ -2,7 +2,7 @@
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/gol.h>
 
 #include <execline/config.h>
 
@@ -48,6 +48,5 @@ void repository_check (char const *const *argv)
   newargv[m++] = wgolb & GOLB_FIXUP ? "--fix-up" : "--fix-down" ;
   if (!(wgolb & GOLB_FIX)) newargv[m++] = "--dry-run" ;
   newargv[m++] = 0 ;
-
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }

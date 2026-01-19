@@ -5,7 +5,8 @@
 
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
-#include <skalibs/envexec.h>
+#include <skalibs/strerr.h>
+#include <skalibs/gol.h>
 #include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
@@ -52,7 +53,7 @@ void exec_live_start_everything (unsigned int timeout, int dryrun, char const *d
   argv[m++] = "start" ;
   argv[m++] = defbundle ;
   argv[m++] = 0 ;
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(argv) ;
 }
 
 void live_start_everything (char const *const *argv)

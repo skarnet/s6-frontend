@@ -104,6 +104,8 @@ extern void system_reboot (char const *const *) gccattr_noreturn ;
 
 extern void main_help (char const *const *) gccattr_noreturn ;
 extern void main_version (char const *const *) gccattr_noreturn ;
+extern void main_exec (char const *const *) gccattr_noreturn ;
+extern void main_pretty_exec (char const *const *) gccattr_noreturn ;
 
 struct global_s
 {

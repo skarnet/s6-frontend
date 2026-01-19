@@ -1,6 +1,5 @@
 /* ISC license. */
 
-#include <skalibs/envexec.h>
 #include <skalibs/types.h>
 
 #include <s6-rc/config.h>
@@ -26,5 +25,5 @@ void repository_list (char const *const *argv)
   newargv[m++] = "--" ;
   newargv[m++] = 0 ;
 
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }

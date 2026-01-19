@@ -61,7 +61,7 @@ void system_init (char const *const *argv)
   char const *newargv[13] ;
   argv += gol_argv(argv, 0, 0, rgola, 1, 0, wgola) ;
   system_init_fill(newargv, wgola[GOLA_PREFIX]) ;
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_exec(newargv) ;
 }
 
 static void system_init_spawn (char const *prefix)

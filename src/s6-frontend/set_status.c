@@ -33,19 +33,7 @@ void set_status (char const *const *argv)
   if (!set_check_service_names(argv, argc))
     strerr_dief1x(100, "invalid service name") ;
 
-  char const *newargv[15 + argc] ;
-
-#ifdef S6_FRONTEND_USE_UTIL_LINUX
-  if (g->color)
-  {
-    newargv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
-    newargv[m++] = "-w" ;
-    newargv[m++] = "--" ;
-    newargv[m++] = " column" ;
-    newargv[m++] = " -ts/" ;
-    newargv[m++] = "" ;
-  }
-#endif
+  char const *newargv[9 + argc] ;
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-status" ;
   fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
   newargv[m++] = "-v" ;
@@ -58,5 +46,5 @@ void set_status (char const *const *argv)
   for (unsigned int i = 0 ; i < argc ; i++) newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;
 
-  xmexec_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  main_pretty_exec(newargv) ;
 }

@@ -6,13 +6,14 @@
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/buffer.h>
-#include <skalibs/prog.h>
-#include <skalibs/strerr.h>
-#include <skalibs/gol.h>
+#include <skalibs/envexec.h>
+
+#include <execline/config.h>
 
 #include <s6/config.h>
 #include <s6-rc/config.h>
 
+#include "s6f.h"
 #include "s6-frontend-internal.h"
 
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
@@ -47,6 +48,34 @@ enum gola_e
 } ;
 
 struct global_s *g ;
+
+void main_exec (char const *const *argv)
+{
+  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+}
+
+void main_pretty_exec (char const *const *argv)
+{
+#ifdef S6_FRONTEND_USE_UTIL_LINUX
+  if (g->color)
+  {
+    unsigned int m = 0 ;
+    unsigned int argc = env_len(argv) ;
+    size_t len = s6f_equote_space(argv, argc, 0) ;
+    char const *newargv[argc + 6] ;
+    char espace[len] ;
+    newargv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
+    newargv[m++] = "--" ;
+    m += s6f_equote(newargv + m, argv, argc, 0, espace) ;
+    newargv[m++] = " column" ;
+    newargv[m++] = " -ts/" ;
+    newargv[m++] = 0 ;
+    main_exec(newargv) ;
+  }
+  else
+#endif
+  main_exec(argv) ;
+}
 
 int main (int argc, char const *const *argv)
 {
