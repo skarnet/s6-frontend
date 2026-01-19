@@ -154,7 +154,7 @@ static void live_status_some (char const *const *services, int withe)
     argv[m++] = "--" ;
     argv[m++] = " column" ;
     argv[m++] = " -ts/" ;
-    argv[m++] = "",
+    argv[m++] = "" ;
   }
 #endif
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
