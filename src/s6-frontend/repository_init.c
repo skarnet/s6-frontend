@@ -7,7 +7,6 @@
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/envexec.h>
-#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <s6-rc/config.h>
@@ -82,7 +81,7 @@ void repository_init (char const *const *argv)
   else
   {
     int wstat ;
-    pid_t pid = xmspawn_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n, 0, 0, 0) ;
+    pid_t pid = main_spawn(newargv) ;
     if (wait_pid(pid, &wstat) == -1) strerr_diefu1sys(111, "wait_pid") ;
     if (wait_estatus(wstat)) _exit(wait_estatus(wstat)) ;
     m = 0 ;

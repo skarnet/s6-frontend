@@ -66,6 +66,7 @@ static int get_list_of_up (stralloc *storage, int withe)
   int fd ;
   int wstat ;
   char const *argv[7] = { S6RC_EXTBINPREFIX "s6-rc", "-l", g->dirs.live, withe ? "-baE" : "-bae", "--", "list", 0 } ;
+   /* XXX: runs with a modified env, but we know it doesn't matter for s6-rc */
   pid_t pid = child_spawn1_pipe(argv[0], argv, (char const *const *)environ, &fd, 1) ;
   if (!pid) { strerr_warnfu2sys("spawn ", argv[0]) ; return 111 ; }
   if (!slurpn(fd, storage, 0)) { strerr_warnfu2sys("read output from ", argv[0]) ; return 111 ; }
@@ -107,6 +108,7 @@ static int get_atomics (char const *const *services, unsigned int n, stralloc *s
   argv[m++] = "atomics" ;
   for (unsigned int i = 0 ; i < n ; i++) argv[m++] = services[i] ;
   argv[m++] = 0 ;
+   /* XXX: runs with a modified env, but we know it doesn't matter for s6-rc-db */
   pid = child_spawn1_pipe(argv[0], argv, (char const *const *)environ, &fd, 1) ;
   if (!pid) { strerr_warnfu2sys("spawn ", argv[0]) ; return 111 ; }
   if (!slurpn(fd, storage, 0)) { strerr_warnfu2sys("read output from ", argv[0]) ; return 111 ; }
@@ -138,7 +140,7 @@ static void live_status_some (char const *const *services, int withe)
   unsigned int m = 0 ;
   size_t uplistpos ;
   int e ;
-  char const *argv[55] ;
+  char const *argv[57] ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa, withe) ;
   if (e) _exit(e) ;
@@ -159,6 +161,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = "  1" ;
   argv[m++] = "  4" ;
   argv[m++] = "  " S6_FRONTEND_LIBEXECPREFIX "s6-frontend-helper-echo" ;
+  argv[m++] = "  -n" ;
   argv[m++] = "  --" ;
   argv[m++] = sa.s + uplistpos - 2 ;
   argv[m++] = " " ;
@@ -186,6 +189,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = " 1" ;
   argv[m++] = " 4" ;
   argv[m++] = " " S6_FRONTEND_LIBEXECPREFIX "s6-frontend-helper-echo" ;
+  argv[m++] = " -n" ;
   argv[m++] = " --" ;
   argv[m++] = sa.s + uplistpos - 1 ;
   argv[m++] = "" ;
@@ -196,7 +200,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = sa.s + 1 ;
   argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = " grep" ;
-  argv[m++] = " -Fx" ;
+  argv[m++] = " -vFx" ;
   argv[m++] = " -f" ;
   argv[m++] = " /dev/fd/3" ;
   argv[m++] = "" ;

@@ -7,6 +7,7 @@
 #include <skalibs/types.h>
 #include <skalibs/buffer.h>
 #include <skalibs/envexec.h>
+#include <skalibs/cspawn.h>
 
 #include <execline/config.h>
 
@@ -19,19 +20,13 @@
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0verbosity\0defaultbundle"
-struct modif_s const cleanup_modif =
-{
-  .s = CLEANUP_MODIF,
-  .len = sizeof(CLEANUP_MODIF),
-  .n = 6
-} ;
+#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0storelist\0verbosity"
 
 enum golb_e
 {
   GOLB_HELP = 0x01,
   GOLB_VERSION = 0x02,
-  GOLB_USER = 0x04,
+//  GOLB_USER = 0x04,
 } ;
 
 enum gola_e
@@ -49,9 +44,14 @@ enum gola_e
 
 struct global_s *g ;
 
+pid_t main_spawn (char const *const *argv)
+{
+  return xmspawn_m(argv, CLEANUP_MODIF, sizeof(CLEANUP_MODIF), 0, 0, 0) ;
+}
+
 void main_exec (char const *const *argv)
 {
-  xmexec_n(argv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n) ;
+  xmexec_m(argv, CLEANUP_MODIF, sizeof(CLEANUP_MODIF)) ;
 }
 
 void main_pretty_exec (char const *const *argv)
@@ -133,7 +133,7 @@ int main (int argc, char const *const *argv)
 
   if (wgolb & GOLB_VERSION) main_version(argv) ;
   if (wgolb & GOLB_HELP) main_help(argv) ;
-  if (wgolb & (GOLB_VERSION | GOLB_HELP)) return 0 ;
+  if (wgolb & (GOLB_VERSION | GOLB_HELP)) _exit(0) ;
 
   if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;
   if (wgola[GOLA_LIVEDIR]) g->dirs.live = wgola[GOLA_LIVEDIR] ;
@@ -170,4 +170,5 @@ int main (int argc, char const *const *argv)
   cmd = BSEARCH(struct command_s, *argv, commands) ;
   if (!cmd) dieusage() ;
   (*cmd->f)(++argv) ;
+  _exit(101) ;  /* not reached */
 }

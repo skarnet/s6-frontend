@@ -11,7 +11,6 @@
 #include <skalibs/buffer.h>
 #include <skalibs/strerr.h>
 #include <skalibs/gol.h>
-#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <s6/config.h>
@@ -25,7 +24,7 @@ static int spawn_and_wait (char const *const *argv)
 {
   int wstat ;
   pid_t r ;
-  pid_t pid = cspawn(argv[0], argv, (char const *const *)environ, 0, 0, 0) ;
+  pid_t pid = main_spawn(argv) ;
   if (!pid)
   {
     if (g->verbosity) strerr_warnwu2sys("spawn ", argv[0]) ;

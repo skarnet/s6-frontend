@@ -3,8 +3,8 @@
 #ifndef S6_FRONTEND_INTERNAL_H
 #define S6_FRONTEND_INTERNAL_H
 
-#include <stddef.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <stdlib.h>
 
 #include <skalibs/gccattributes.h>
@@ -102,11 +102,6 @@ extern void system_reboot (char const *const *) gccattr_noreturn ;
 
  /* main */
 
-extern void main_help (char const *const *) gccattr_noreturn ;
-extern void main_version (char const *const *) gccattr_noreturn ;
-extern void main_exec (char const *const *) gccattr_noreturn ;
-extern void main_pretty_exec (char const *const *) gccattr_noreturn ;
-
 struct global_s
 {
   unsigned int verbosity ;
@@ -134,15 +129,6 @@ struct global_s
   .color = 0 \
 }
 
-struct modif_s
-{
-  char const *s ;
-  size_t len ;
-  unsigned int n ;
-} ;
-
-extern struct modif_s const cleanup_modif ;
-
 typedef void command_func (char const *const *) ;
 typedef command_func *command_func_ref ;
 
@@ -154,5 +140,12 @@ struct command_s
 #define COMMAND_ZERO { .s = 0, .f = 0 }
 
 extern struct global_s *g ;
+
+extern void main_exec (char const *const *) gccattr_noreturn ;
+extern void main_pretty_exec (char const *const *) gccattr_noreturn ;
+extern pid_t main_spawn (char const *const *argv) ;
+
+extern void main_help (char const *const *) gccattr_noreturn ;
+extern void main_version (char const *const *) gccattr_noreturn ;
 
 #endif

@@ -10,7 +10,6 @@
 #include <skalibs/strerr.h>
 #include <skalibs/gol.h>
 #include <skalibs/env.h>
-#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <s6-rc/config.h>
@@ -83,7 +82,7 @@ static int run_s6rc_change (char const *const *services, unsigned int n, int h, 
   argv[m++] = h ? "start" : "stop" ;
   while (*services) argv[m++] = *services++ ;
   argv[m++] = 0 ;
-  pid = cspawn(argv[0], argv, (char const *const *)environ, CSPAWN_FLAGS_SIGBLOCKNONE, 0, 0) ;
+  pid = main_spawn(argv) ;
   if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
   if (wait_pid(pid, &wstat) <= 0) strerr_diefu1sys(111, "wait for s6-rc") ;
   if (wait_estatus(wstat) && g->verbosity)

@@ -6,7 +6,6 @@
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/envexec.h>
-#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <s6-frontend/config.h>
@@ -70,7 +69,7 @@ static void system_init_spawn (char const *prefix)
   int wstat ;
   char const *newargv[13] ;
   system_init_fill(newargv, prefix) ;
-  pid = xmspawn_n(newargv, cleanup_modif.s, cleanup_modif.len, cleanup_modif.n, 0, 0, 0) ;
+  pid = main_spawn(newargv) ;
   if (wait_pid(pid, &wstat) == -1)
     strerr_diefu2sys(111, "wait for ", newargv[0]) ;
   if (wait_estatus(wstat))

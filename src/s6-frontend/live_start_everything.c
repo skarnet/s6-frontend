@@ -1,14 +1,9 @@
 /* ISC license. */
 
-#include <unistd.h>
-#include <sys/wait.h>
-
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr.h>
 #include <skalibs/gol.h>
-#include <skalibs/cspawn.h>
-#include <skalibs/djbunix.h>
 
 #include <s6-frontend/config.h>
 #include "s6-frontend-internal.h"
