@@ -7,7 +7,6 @@ src/helpers/s6-frontend-helper-echo.o src/helpers/s6-frontend-helper-echo.lo: sr
 src/helpers/s6-frontend-helper-kill.o src/helpers/s6-frontend-helper-kill.lo: src/helpers/s6-frontend-helper-kill.c
 src/libs6f/s6f_confdir_open.o src/libs6f/s6f_confdir_open.lo: src/libs6f/s6f_confdir_open.c src/include-local/s6f.h
 src/libs6f/s6f_equote.o src/libs6f/s6f_equote.lo: src/libs6f/s6f_equote.c src/include-local/s6f.h
-src/libs6f/s6f_lock.o src/libs6f/s6f_lock.lo: src/libs6f/s6f_lock.c src/include-local/s6f.h
 src/libs6f/s6f_report_state_change.o src/libs6f/s6f_report_state_change.lo: src/libs6f/s6f_report_state_change.c src/include-local/s6f.h
 src/libs6f/s6f_user_get_confdirs.o src/libs6f/s6f_user_get_confdirs.lo: src/libs6f/s6f_user_get_confdirs.c src/include-local/s6f.h
 src/s6-frontend/live.o src/s6-frontend/live.lo: src/s6-frontend/live.c src/s6-frontend/s6-frontend-internal.h
@@ -45,9 +44,9 @@ s6-frontend-helper-echo: src/helpers/s6-frontend-helper-echo.o -lskarnet
 s6-frontend-helper-kill: EXTRA_LIBS :=
 s6-frontend-helper-kill: src/helpers/s6-frontend-helper-kill.o -lskarnet
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
-libs6f.a.xyzzy: src/libs6f/s6f_confdir_open.o src/libs6f/s6f_equote.o src/libs6f/s6f_lock.o src/libs6f/s6f_report_state_change.o src/libs6f/s6f_user_get_confdirs.o
+libs6f.a.xyzzy: src/libs6f/s6f_confdir_open.o src/libs6f/s6f_equote.o src/libs6f/s6f_report_state_change.o src/libs6f/s6f_user_get_confdirs.o
 else
-libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_equote.lo src/libs6f/s6f_lock.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo
+libs6f.a.xyzzy:src/libs6f/s6f_confdir_open.lo src/libs6f/s6f_equote.lo src/libs6f/s6f_report_state_change.lo src/libs6f/s6f_user_get_confdirs.lo
 endif
 s6: EXTRA_LIBS :=
 s6: src/s6-frontend/s6.o -lskarnet

@@ -11,6 +11,7 @@
 #include <skalibs/gol.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/lolstdio.h>
 
 #include <s6-rc/config.h>
 #include <s6-rc/s6rc-utils.h>
@@ -53,29 +54,26 @@ static int run_s6rc_change (char const *const *services, unsigned int n, int h, 
   pid_t pid ;
   int wstat ;
   unsigned int m = 0 ;
-  char const *argv[13 + n] ;
+  char const *argv[12 + n] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
   unsigned char oldstate[nstate] ;
   if (!s6rc_live_state_read(g->dirs.live, oldstate, nstate))
     strerr_diefu2sys(111, "read state in ", g->dirs.live) ;
 
+  LOLDEBUG("n is %u, h is %d, dryrun is %d, timeout is %u, nstate is %u", n, h, dryrun, timeout, nstate) ;
   argv[m++] = S6RC_EXTBINPREFIX "s6-rc" ;
   argv[m++] = "-X" ;  /* we already hold the lock */
   argv[m++] = "-v" ;
-  argv[m++] = fmtv ;
   fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
+  argv[m++] = fmtv ;
   if (timeout)
   {
     argv[m++] = "-t" ;
-    argv[m++] = fmtt ;
     fmtt[uint_fmt(fmtt, timeout)] = 0 ;
+    argv[m++] = fmtt ;
   }
-  if (dryrun)
-  {
-    argv[m++] = "-n" ;
-    argv[m++] = "1" ;
-  }
+  if (dryrun) argv[m++] = "-n1" ;
   argv[m++] = "-l" ;
   argv[m++] = g->dirs.live ;
   argv[m++] = "--" ;
@@ -107,7 +105,6 @@ static int live_startstop (char const *const *argv, int h)
   argv += parse_options(argv, &wgolb, &timeout) ;
   if (!*argv) strerr_dieusage(100, h ? "s6 live start services..." : "s6 live stop services...") ;
 
-  s6f_lock(g->dirs.stmp, 0) ;  /* leaks, it's fine */
   char dbfn[livelen + 10] ;
   memcpy(dbfn, g->dirs.live, livelen) ;
   memcpy(dbfn + livelen, "/compiled", 10) ;
@@ -143,7 +140,6 @@ void live_restart (char const *const *argv)
   if (!*argv) strerr_dieusage(100, "s6 live restart services...") ;
 
   argc = env_len(argv) ;
-  s6f_lock(g->dirs.stmp, 0) ;
   char dbfn[livelen + 10] ;
   memcpy(dbfn, g->dirs.live, livelen) ;
   memcpy(dbfn + livelen, "/compiled", 10) ;
