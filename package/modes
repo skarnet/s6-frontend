@@ -1,3 +1,4 @@
 s6				0755
 s6-frontend			0755
 s6-frontend-helper-kill		0755
+s6-frontend-helper-echo		0755

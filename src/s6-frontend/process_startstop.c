@@ -48,7 +48,7 @@ static void process_startstop (char const *const *argv, int h, char const *usage
   }
   argc = env_len(argv) ;
   process_check_services(argv, argc) ;
-  process_send_svc(svcopts[wgolb & (GOLB_PERMANENT|GOLB_WAIT) | h], argv, argc, timeout) ;
+  process_send_svc(svcopts[(wgolb & (GOLB_PERMANENT|GOLB_WAIT)) | h], argv, argc, timeout) ;
 }
 
 void process_start (char const *const *argv)

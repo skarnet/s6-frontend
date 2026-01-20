@@ -138,7 +138,7 @@ static void live_status_some (char const *const *services, int withe)
   unsigned int m = 0 ;
   size_t uplistpos ;
   int e ;
-  char const *argv[53] ;
+  char const *argv[55] ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa, withe) ;
   if (e) _exit(e) ;
@@ -158,8 +158,8 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = "  " EXECLINE_EXTBINPREFIX "fdmove" ;
   argv[m++] = "  1" ;
   argv[m++] = "  4" ;
-  argv[m++] = "  " EXECLINE_EXTBINPREFIX "heredoc" ;
-  argv[m++] = "  0" ;
+  argv[m++] = "  " S6_FRONTEND_LIBEXECPREFIX "s6-frontend-helper-echo" ;
+  argv[m++] = "  --" ;
   argv[m++] = sa.s + uplistpos - 2 ;
   argv[m++] = " " ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "fdclose" ;
@@ -169,7 +169,8 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = sa.s ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = "  grep" ;
-  argv[m++] = "  -Fxf" ;
+  argv[m++] = "  -Fx" ;
+  argv[m++] = "  -f" ;
   argv[m++] = "  /dev/fd/3" ;
   argv[m++] = " " ;
   argv[m++] = " sed" ;
@@ -184,8 +185,8 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = " " EXECLINE_EXTBINPREFIX "fdmove" ;
   argv[m++] = " 1" ;
   argv[m++] = " 4" ;
-  argv[m++] = " " EXECLINE_EXTBINPREFIX "heredoc" ;
-  argv[m++] = " 0" ;
+  argv[m++] = " " S6_FRONTEND_LIBEXECPREFIX "s6-frontend-helper-echo" ;
+  argv[m++] = " --" ;
   argv[m++] = sa.s + uplistpos - 1 ;
   argv[m++] = "" ;
   argv[m++] = EXECLINE_EXTBINPREFIX "fdclose" ;
@@ -195,7 +196,8 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = sa.s + 1 ;
   argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = " grep" ;
-  argv[m++] = " -Fxf" ;
+  argv[m++] = " -Fx" ;
+  argv[m++] = " -f" ;
   argv[m++] = " /dev/fd/3" ;
   argv[m++] = "" ;
   argv[m++] = "sed" ;

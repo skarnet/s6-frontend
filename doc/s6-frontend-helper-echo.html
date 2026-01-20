@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6-frontend-helper-echo program</title>
+    <meta name="Description" content="s6-frontend: the s6-frontend-helper-echo program" />
+    <meta name="Keywords" content="s6 s6-frontend helper echo" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6-frontend-helper-echo</tt> internal program </h1>
+
+<p>
+ <tt>s6-frontend-helper-echo</tt> is a small utility to echo arguments to stdout.
+It is not meant to be called directly,
+although nothing bad will happen if you do. It is used in command lines crafted by
+<a href="s6_live.html#status">s6 live status</a> instead of the POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/echo.html">echo</a>
+program, because implementations of <tt>echo</tt> are infamously inconsistent with
+regards to options and arguments starting with a dash, so it's better not to rely on
+them at all.
+</p>
+
+<p>
+ <tt>s6-frontend-helper-echo</tt> is basically a copy of
+<a href="//skarnet.org/software/s6-portable-utils/s6-echo.html">s6-echo</a> and
+behaves exactly the same. The program has been included in s6-frontend in order to avoid
+a dependency to <a href="//skarnet.org/software/s6-portable-utils/">s6-portable-utils</a>.
+</p>
+
+</body>
+</html>

@@ -3,6 +3,7 @@
 #
 
 src/s6-frontend/s6-frontend-internal.h: src/include/s6-frontend/config.h src/include-local/s6f.h
+src/helpers/s6-frontend-helper-echo.o src/helpers/s6-frontend-helper-echo.lo: src/helpers/s6-frontend-helper-echo.c
 src/helpers/s6-frontend-helper-kill.o src/helpers/s6-frontend-helper-kill.lo: src/helpers/s6-frontend-helper-kill.c
 src/libs6f/s6f_confdir_open.o src/libs6f/s6f_confdir_open.lo: src/libs6f/s6f_confdir_open.c src/include-local/s6f.h
 src/libs6f/s6f_equote.o src/libs6f/s6f_equote.lo: src/libs6f/s6f_equote.c src/include-local/s6f.h
@@ -26,7 +27,7 @@ src/s6-frontend/repository_check.o src/s6-frontend/repository_check.lo: src/s6-f
 src/s6-frontend/repository_init.o src/s6-frontend/repository_init.lo: src/s6-frontend/repository_init.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
 src/s6-frontend/repository_list.o src/s6-frontend/repository_list.lo: src/s6-frontend/repository_list.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/repository_sync.o src/s6-frontend/repository_sync.lo: src/s6-frontend/repository_sync.c src/s6-frontend/s6-frontend-internal.h
-src/s6-frontend/s6-frontend.o src/s6-frontend/s6-frontend.lo: src/s6-frontend/s6-frontend.c src/s6-frontend/s6-frontend-internal.h
+src/s6-frontend/s6-frontend.o src/s6-frontend/s6-frontend.lo: src/s6-frontend/s6-frontend.c src/s6-frontend/s6-frontend-internal.h src/include-local/s6f.h
 src/s6-frontend/s6.o src/s6-frontend/s6.lo: src/s6-frontend/s6.c src/include/s6-frontend/config.h
 src/s6-frontend/set.o src/s6-frontend/set.lo: src/s6-frontend/set.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/set_change.o src/s6-frontend/set_change.lo: src/s6-frontend/set_change.c src/s6-frontend/s6-frontend-internal.h
@@ -39,6 +40,8 @@ src/s6-frontend/system.o src/s6-frontend/system.lo: src/s6-frontend/system.c src
 src/s6-frontend/system_boot.o src/s6-frontend/system_boot.lo: src/s6-frontend/system_boot.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
 src/s6-frontend/system_hpr.o src/s6-frontend/system_hpr.lo: src/s6-frontend/system_hpr.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
 
+s6-frontend-helper-echo: EXTRA_LIBS :=
+s6-frontend-helper-echo: src/helpers/s6-frontend-helper-echo.o -lskarnet
 s6-frontend-helper-kill: EXTRA_LIBS :=
 s6-frontend-helper-kill: src/helpers/s6-frontend-helper-kill.o -lskarnet
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
