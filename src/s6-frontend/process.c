@@ -40,7 +40,7 @@ void process_check_services (char const *const *argv, unsigned int argc)
     if (r == -1)
       strerr_diefu4sys(111, "stat ", g->dirs.scan, "/", argv[i]) ;
     else if (!r)
-      strerr_dief3x(100, argv[i], "is not registered as a supervised service in ", g->dirs.scan) ;
+      strerr_dief3x(100, argv[i], " is not registered as a supervised service in ", g->dirs.scan) ;
   }
 }
 
