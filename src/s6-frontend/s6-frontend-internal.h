@@ -76,6 +76,7 @@ extern void set_status (char const *const *) gccattr_noreturn ;
 
 extern void set_load (char const *const *) gccattr_noreturn ;
 extern void set_save (char const *const *) gccattr_noreturn ;
+extern void set_delete (char const *const *) gccattr_noreturn ;
 
 extern void set_mask (char const *const *) gccattr_noreturn ;
 extern void set_unmask (char const *const *) gccattr_noreturn ;

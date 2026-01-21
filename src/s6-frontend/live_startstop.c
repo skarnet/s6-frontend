@@ -11,7 +11,6 @@
 #include <skalibs/gol.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/lolstdio.h>
 
 #include <s6-rc/config.h>
 #include <s6-rc/s6rc-utils.h>
@@ -61,7 +60,6 @@ static int run_s6rc_change (char const *const *services, unsigned int n, int h, 
   if (!s6rc_live_state_read(g->dirs.live, oldstate, nstate))
     strerr_diefu2sys(111, "read state in ", g->dirs.live) ;
 
-  LOLDEBUG("n is %u, h is %d, dryrun is %d, timeout is %u, nstate is %u", n, h, dryrun, timeout, nstate) ;
   argv[m++] = S6RC_EXTBINPREFIX "s6-rc" ;
   argv[m++] = "-X" ;  /* we already hold the lock */
   argv[m++] = "-v" ;

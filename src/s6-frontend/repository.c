@@ -13,6 +13,7 @@ void repository (char const *const *argv)
 {
   static struct command_s const commands[] =
   {
+    { .s = "check", .f = &repository_check },
     { .s = "help", .f = &repository_help },
     { .s = "init", .f = &repository_init },
     { .s = "list", .f = &repository_list },

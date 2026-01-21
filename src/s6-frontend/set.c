@@ -25,6 +25,7 @@ void set (char const *const *argv)
   {
     { .s = "check", .f = &set_check },
     { .s = "commit", .f = &set_commit },
+    { .s = "delete", .f = &set_delete },
     { .s = "disable", .f = &set_disable },
     { .s = "enable", .f = &set_enable },
     { .s = "help", .f = &set_help },

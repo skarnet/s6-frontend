@@ -166,16 +166,16 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
-<h3 id="start_everything"> start_everything </h3>
+<h3 id="start-everything"> start-everything </h3>
 
 <h4> Interface </h4>
 
 <pre>
-     s6 live start_everything [ -n ] [ -t <em>timeout</em> ] [ -D <em>bundle</em> ]
+     s6 live start-everything [ -n ] [ -t <em>timeout</em> ] [ -D <em>bundle</em> ]
 </pre>
 
 <ul>
- <li> <tt>s6 live start_everything</tt> brings up all the services
+ <li> <tt>s6 live start-everything</tt> brings up all the services
 defined in the current live database and in the default bundle, i.e.
 the bundle of services that are enabled at boot time. </li>
 </ul>
@@ -201,16 +201,16 @@ The default is <tt>default</tt>, possibly overridden by the
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>. </dd>
 </dl>
 
-<h3 id="stop_everything"> stop_everything </h3>
+<h3 id="stop-everything"> stop-everything </h3>
 
 <h4> Interface </h4>
 
 <pre>
-     s6 live stop_everything [ -n ] [ -e | -E ] [ -t <em>timeout</em> ]
+     s6 live stop-everything [ -n ] [ -e | -E ] [ -t <em>timeout</em> ]
 </pre>
 
 <ul>
- <li> <tt>s6 live stop_everything</tt> brings down all the services,
+ <li> <tt>s6 live stop-everything</tt> brings down all the services,
 except the essential ones. This is not the command that can
 reboot a machine; for that, check <a href="s6_system.html"><tt>s6 system</tt></a>.</li>
 </ul>
@@ -228,10 +228,10 @@ bare state. This is the default. </dd>
 
 <dt> -E, --with-essentials </dt>
 <dd> Also stop essential services. After this command, the machine
-isn't good for much except a reboot. <code>s6 live stop_everything -E</code>
+isn't good for much except a reboot. <code>s6 live stop-everything -E</code>
 is the command that should be run right before a shutdown when the
 system is not using s6-linux-init. To that end, the line
-<code>::shutdown:/usr/bin/s6 live stop_everything -E</code> should be
+<code>::shutdown:/usr/bin/s6 live stop-everything -E</code> should be
 added to <tt>/etc/inittab</tt>, if that is what the init uses. </dd>
 
 <dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>

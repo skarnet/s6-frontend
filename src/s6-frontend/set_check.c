@@ -33,7 +33,7 @@ void set_check (char const *const *argv)
   char const *newargv[11] ;
   char fmtv[UINT_FMT] = " " ;
 
-  argv += gol_argv(argv, rgolb, 4, 0, 0, &wgolb, 0) ;
+  argv += gol_argv(argv, rgolb, 5, 0, 0, &wgolb, 0) ;
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-fix" ;
   if (g->verbosity != 1)

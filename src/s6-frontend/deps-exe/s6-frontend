@@ -24,6 +24,7 @@ set_change.o
 set_check.o
 set_commit.o
 set_copy.o
+set_delete.o
 set_help.o
 set_list.o
 set_status.o

@@ -97,11 +97,11 @@ only work if the machine makes use of
 s6-frontend has been configured to support it. On a machine that
 does not boot via s6-linux-init, a shutdown should be executed via
 the shutdown commands provided by your init system. In order for
-the shutdown to be clean, the <code>s6 live stop_everything -E</code>
+the shutdown to be clean, the <code>s6 live stop-everything -E</code>
 should be run before the init system performs a hard shutdown. For
 instance, if the system uses <tt>/etc/inittab</tt>, then the
 following line should appear in <tt>/etc/inittab</tt>:
-<code>::shutdown:/usr/bin/s6 live stop_everything -E</code>
+<code>::shutdown:/usr/bin/s6 live stop-everything -E</code>
 </p>
 
 <h3 id="reboot"> reboot </h3>
