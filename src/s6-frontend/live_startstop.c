@@ -61,7 +61,7 @@ static int run_s6rc_change (char const *const *services, unsigned int n, int h, 
     strerr_diefu2sys(111, "read state in ", g->dirs.live) ;
 
   argv[m++] = S6RC_EXTBINPREFIX "s6-rc" ;
-  argv[m++] = "-X" ;  /* we already hold the lock */
+  argv[m++] = "--no-lock" ;  /* we already hold the lock */
   argv[m++] = "-v" ;
   fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
   argv[m++] = fmtv ;
