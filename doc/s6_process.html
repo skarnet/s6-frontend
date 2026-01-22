@@ -20,9 +20,14 @@
 <h1> The <tt>s6 process</tt> command </h1>
 
 <p>
- <tt>s6 process</tt> regroups actions that target services that are managed
+ <tt>s6 process</tt> groups actions that target services that are managed
 by an instance of <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
 running on the <a href="s6-frontend.conf.html">configured</a> <em>scandir</em>.
+All commands (other than help) require the services in <em>servicenames...</em>
+to be a valid reference to a <a
+href="//skarnet.org/software/s6/servicedir.html">service directory</a> with an
+instance of <a
+href="//skarnet.org/software/s6/s6-supervise.html">s6-supervise</a> supervising it.
 </p>
 
 <h2 id="interface"> Interface </h2>
@@ -50,15 +55,11 @@ and usage of the <tt>s6 process</tt> command. It is not as detailed as this page
 
 <ul>
  <li> <tt>s6 process kill <em>servicenames...</em></tt> sends a signal to every
-supervised daemon listed by name in <em>servicenames</em>. If
-<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
-<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
-<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
-a <tt>foobard</tt> daemon, then <code>s6 process kill foobar</code> will send a
-signal to the current running instance of <tt>foobard</tt>. </li>
- <li> Note that even if the daemon dies as a consequence of receiving the signal,
-it will normally be restarted by it supervisor. To kill a daemon and not having
-it restart, you need <a href="#stop"><tt>s6 process stop</tt></a>. </li>
+supervised daemon listed by name in <em>servicenames</em>. </li>
+
+ <li> Note that if the daemon dies as a consequence of receiving the signal,
+it will normally be restarted by its supervisor. To kill a daemon and keep it
+from restarting you need to use <a href="#stop"><tt>s6 process stop</tt></a>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -94,12 +95,7 @@ command can wait forever. This option is only effective when paired with the
 <ul>
  <li> <tt>s6 process status <em>servicenames...</em></tt> prints a line of
 status for every
-supervised daemon listed by name in <em>servicenames</em>. If
-<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
-<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
-<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
-a <tt>foobard</tt> daemon, then <code>s6 process status foobar</code> will print
-a status line describing the current state of <tt>foobard</tt>. </li>
+supervised daemon listed by name in <em>servicenames</em>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -130,12 +126,7 @@ s6-rc. </dd>
 
 <ul>
  <li> <tt>s6 process start <em>servicenames...</em></tt> brings up every
-supervised daemon listed by name in <em>servicenames</em>. If
-<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
-<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
-<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
-a <tt>foobard</tt> daemon, then <code>s6 process start foobar</code> will make sure
-an instance of <tt>foobard</tt> is running. </li>
+supervised daemon listed by name in <em>servicenames</em>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -145,14 +136,14 @@ an instance of <tt>foobard</tt> is running. </li>
 <dd> Only change the current state of the service, not its default state.
 If there is a <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
 in <tt>/run/service/foobar</tt>, then <tt>s6 process start foobar</tt> will
-bring the service up, but will not restart it if <tt>foobard</tt> dies. This
+bring the service up, but it will not be restarted if <tt>foobard</tt> dies. This
 is the default. </dd>
 
 <dt> -p, --permanent </dt>
-<dd> Also change the default state of the service.
+<dd> Change the current and default states of the service.
 If there is a <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
 in <tt>/run/service/foobar</tt>, then <tt>s6 process start foobar</tt> will
-delete it, and the service will be automatically restart it
+delete it, and the service will be automatically be restarted
 if <tt>foobard</tt> dies. </dd>
 
 <dt> -W, --no-wait </dt>
@@ -179,12 +170,7 @@ command can wait forever. This option is only effective when paired with the
 
 <ul>
  <li> <tt>s6 process stop <em>servicenames...</em></tt> brings down every
-supervised daemon listed by name in <em>servicenames</em>. If
-<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
-<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
-<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
-a <tt>foobard</tt> daemon, then <code>s6 process stop foobar</code> will make sure the
-currently running instance of <tt>foobard</tt> is stopped. </li>
+supervised daemon listed by name in <em>servicenames</em>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -198,7 +184,7 @@ stop the service, but it will still be started whenever its supervisor is starte
 This is the default. </dd>
 
 <dt> -p, --permanent </dt>
-<dd> Also change the default state of the service.
+<dd> Change the current and default states of the service.
 If there is no <a href="//skarnet.org/software/s6/servicedir.html">down file</a>
 in <tt>/run/service/foobar</tt>, then <tt>s6 process stop foobar</tt> will
 create one, and the service will not be automatically started whenever its
@@ -228,12 +214,8 @@ command can wait forever. This option is only effective when paired with the
 
 <ul>
  <li> <tt>s6 process restart <em>servicenames...</em></tt> restarts every
-supervised daemon listed by name in <em>servicenames</em>. If
-<a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> is running on
-<tt>/run/service</tt>, and <tt>/run/service/foobar</tt> is a valid
-<a href="//skarnet.org/software/s6/servicedir.html">service directory</a> supervising
-a <tt>foobard</tt> daemon, then <code>s6 process restart foobar</code> will make sure the
-currently running instance of <tt>foobard</tt> is killed and a new one is brought up. </li>
+supervised daemon listed by name in <em>servicenames</em>. This is achieved by
+issuing a stop followed by a start command on the targeted service(s). </li>
 </ul>
 
 <h4> Options </h4>
