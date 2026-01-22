@@ -20,7 +20,7 @@
 <h1> The <tt>s6 live</tt> command </h1>
 
 <p>
- <tt>s6 live</tt> regroups actions that target the live <em>machine state</em>
+ <tt>s6 live</tt> groups actions that target the live <em>machine state</em>
 managed by the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> service manager,
 hosted in the <a href="s6-frontend.conf.html">configured</a> <em>livedir</em>.
 </p>
@@ -28,9 +28,10 @@ hosted in the <a href="s6-frontend.conf.html">configured</a> <em>livedir</em>.
 <p>
  Where <a href="s6_process.html"><tt>s6 process</tt></a> directly targets instances
 of services supervised by <a href="//skarnet.org/software/s6/">s6-supervision</a>,
-without knowledge of the service manager, and thus can only address longruns,
-<tt>s6 live</tt> targets services defined in the current live database, oneshots
-as well as longruns, and always respects the dependency graph.
+without knowledge of the service manager it can only address longruns. On the
+other hand, <tt>s6 live</tt> targets services defined in the current live
+database, oneshots as well as longruns, and will always respect the dependency
+graph.
 </p>
 
 <h2 id="interface"> Interface </h2>
@@ -211,7 +212,7 @@ The default is <tt>default</tt>, possibly overridden by the
 
 <ul>
  <li> <tt>s6 live stop-everything</tt> brings down all the services,
-except the essential ones. This is not the command that can
+except essential services. This is not the command that can
 reboot a machine; for that, check <a href="s6_system.html"><tt>s6 system</tt></a>.</li>
 </ul>
 
@@ -227,7 +228,7 @@ it can more or less run and be interacted with, even if in a completely
 bare state. This is the default. </dd>
 
 <dt> -E, --with-essentials </dt>
-<dd> Also stop essential services. After this command, the machine
+<dd> Also stop essential services. After this command the machine
 isn't good for much except a reboot. <code>s6 live stop-everything -E</code>
 is the command that should be run right before a shutdown when the
 system is not using s6-linux-init. To that end, the line
@@ -254,10 +255,9 @@ command can wait forever. </dd>
 of services, that has been crafted and committed via
 <a href="s6_set.html"><tt>s6 set</tt></a> commands, replacing the current
 live service database. </li>
- <li> Services that are not defined in the new set are stopped before the
-live database is replaced. </li>
- <li> The state of services defined in the old live database is preserved
-as much as possible. </li>
+ <li> The state of services defined in the old live database is preserved as
+much as possible, though services that are not defined in the new set are
+stopped before the live database is replaced. </li>
 </ul>
 
 <h4> Options </h4>
@@ -272,10 +272,9 @@ database. The default is to fail with an error message instead. </dd>
 Instead, print its path to stdout. </dd>
 
 <dt> -f <em>convfile</em>, --conversion-file=<em>convfile</em> </dt>
-<dd> Use <em>convfile</em> as a conversion file for the underlying
+<dd> Use <em>convfile</em> as a <a href="//skarnet.org/software/s6-rc/s6-rc-update.html#conversion">conversion file</a> for the underlying
 <a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>
-invocation, i.e. a file translating service names and states between
-the old service database and the one being installed. This option should
+invocation. This option should
 never be necessary if the services in the stores are properly managed. </dd>
 
 <dt> --init </dt>
@@ -283,10 +282,9 @@ never be necessary if the services in the stores are properly managed. </dd>
  Copy the compiled database of the current working set to the place where it
 can be booted on, but do not call
 <a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>.
-This is only useful for a <em>first</em> installation of s6-frontend, when
-s6-rc is not managing the live services yet. Once a reboot has been done
-and the machine is successfully running with s6-rc, this option should
-never be used again. </dd>
+This is only useful for a <em>first</em> installation of s6-frontend, before
+s6-rc is managing live services. This option should never be used once a reboot
+has been performed and the machine is successfully running with s6-rc. </dd>
 </dl>
 
 </body>
