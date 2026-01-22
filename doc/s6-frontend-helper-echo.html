@@ -22,11 +22,10 @@
  <tt>s6-frontend-helper-echo</tt> is a small utility to echo arguments to stdout.
 It is not meant to be called directly,
 although nothing bad will happen if you do. It is used in command lines crafted by
-<a href="s6_live.html#status">s6 live status</a> instead of the POSIX
-<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/echo.html">echo</a>
-program, because implementations of <tt>echo</tt> are infamously inconsistent with
-regards to options and arguments starting with a dash, so it's better not to rely on
-them at all.
+<a href="s6_live.html#status">s6 live status</a> due to unreliable and
+inconsistent handling of options and dash arguments in the various POSIX <a
+href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/echo.html">echo</a>
+implementations.
 </p>
 
 <p>
