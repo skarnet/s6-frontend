@@ -33,22 +33,23 @@ to address every part of the init system.
 
 <ul>
  <li> The <a href="//skarnet.org/software/s6/">s6 process supervision suite</a>,
-which is the foundation of the s6 ecosystem. This package is named <em>s6</em>,
-but that name is generally used to mean "the whole thing", so we will refer to it
+which is the foundation of the s6 ecosystem. While this package is named <em>s6</em>,
+that name is generally used to mean "the whole thing", so we will refer to it
 as <em>s6-supervision</em> when the context makes it necessary. The goal of a
 process supervision suite is to give administrators an environment to start and
 control daemons in a reliable and flexible way. </li>
- <li> The <a href="//skarnet.org/software/s6-rc/">s6-rc service manager</a>, that
-works on top of s6-supervision. The goal of a service manager is to start and stop
-services on a system while managing dependencies between services. </li>
+ <li> The <a href="//skarnet.org/software/s6-rc/">s6-rc service manager</a>,
+which is a management framework built on top of s6-supervision.  The goal of a
+service manager is to start and stop services on a system while managing
+dependencies between those services. </li>
  <li> The <a href="//skarnet.org/software/s6-linux-init">s6-linux-init init package</a>,
-which is an add-on to s6-supervision that makes it usable not only to supervise
-daemons, but also to boot a Linux system and serve as its pid 1. </li>
+which is an add-on to s6-supervision, making it usable as an init system for
+Linux in addition to a process supervisor. </li>
 </ul>
 
 <p>
  The separation in different packages is purposeful: the goal is to keep the
-system entirely modular, and not tie it to a particular use. s6-supervision
+system entirely modular and not tie it to a particular use. s6-supervision
 is often used on its own, in environments that already have an init system
 (no need for s6-linux-init) and a service manager (no need for s6-rc).
 For the same purpose of modularity, s6 follows an approach of "one functionality,
@@ -156,12 +157,22 @@ the previous versions of s6-frontend and the current one. </li>
 <li> <a href="s6.html">The <tt>s6</tt> program</a> </li>
 </ul>
 
+<h3> s6 subcommands </h3>
+
+<ul>
+<li> <a href="s6_live.html">s6 live</a> </li>
+<li> <a href="s6_process.html">s6 process</a> </li>
+<li> <a href="s6_repository.html">s6 repository</a> </li>
+<li> <a href="s6_set.html">s6 set</a> </li>
+<li> <a href="s6_system.html">s6 system</a> </li>
+</ul>
+
 <h3> Internal programs </h3>
 
 <ul>
 <li> <a href="s6-frontend.html">The <tt>s6-frontend</tt> program</a> </li>
-<li> <a href="s6-frontend-helper-kill.html">The <tt>s6-frontend-helper-kill</tt> program</a> </li>
 <li> <a href="s6-frontend-helper-echo.html">The <tt>s6-frontend-helper-echo</tt> program</a> </li>
+<li> <a href="s6-frontend-helper-kill.html">The <tt>s6-frontend-helper-kill</tt> program</a> </li>
 </ul>
 
 <h3> Configuration </h3>
