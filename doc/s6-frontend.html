@@ -55,19 +55,18 @@ performs the work described in the documents linked from the <a href="s6.html">s
 <p>
  The separation between <a href="s6.html">s6</a> and s6-frontend is really just a
 trick to avoid writing an additional parser for the <a href="s6-frontend.conf.html">s6-frontend.conf</a>
-configuration file. The <a href="//skarnet.org/software/execline/">execline</a>
-set of tools is a dependency of s6-frontend anyway, because s6-frontend uses
-some if these tools to build complex command lines calling various parts of the
-s6 ecosystem; so using the
-<a href="//skarnet.org/software/execline/envfile.html">envfile</a> tool as well
-to read the configuration was a natural fit.
+configuration file. Using <a
+href="//skarnet.org/software/execline/envfile.html">envfile</a> to read the
+configuration was a natural fit because the <a href="//skarnet.org/software/execline/">execline</a> set of tools is used by
+s6-frontend to build complex command lines.
 </p>
 
 <p>
  That is why <em>usage</em> messages given by the various <code>s6 foobar help</code>
 commands print <code>Usage: s6 foobar subcommand...</code> but error messages, if
 they happen, print <code>s6-frontend: fatal: error condition</code>, because
-the program where the error occurred is s6-frontend, not s6. </p>
+the program where the error occurred is s6-frontend, not s6.
+</p>
 
 <p>
 Note that most error messages will print the name of <em>another command</em>,
@@ -89,8 +88,8 @@ name of the program that prepends the error messages.
 various parts of the s6 ecosystem </li>
  <li> Various programs from the <a href="//skarnet.org/software/s6/">s6 supervision
 suite</a> or the <a href="//skarnet.org/software/s6-rc/">s6-rc service manager</a>,
-invoked by s6-frontend, perform the work. When they succeed, it is transparent;
-when they fail, they prepend the error message with their name. </li>
+invoked by s6-frontend, perform the work. When they succeed it is transparent;
+when they fail they prepend the error message with their name. </li>
 </ul>
 
 </body>
