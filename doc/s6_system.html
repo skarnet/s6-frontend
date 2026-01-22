@@ -20,7 +20,7 @@
 <h1> The <tt>s6 system</tt> command </h1>
 
 <p>
- <tt>s6 system</tt> regroups actions related to booting or shutting down
+ <tt>s6 system</tt> groups actions related to booting or shutting down
 the system.
 </p>
 
@@ -97,7 +97,7 @@ only work if the machine makes use of
 s6-frontend has been configured to support it. On a machine that
 does not boot via s6-linux-init, a shutdown should be executed via
 the shutdown commands provided by your init system. In order for
-the shutdown to be clean, the <code>s6 live stop-everything -E</code>
+the shutdown to be clean, the command <code>s6 live stop-everything -E</code>
 should be run before the init system performs a hard shutdown. For
 instance, if the system uses <tt>/etc/inittab</tt>, then the
 following line should appear in <tt>/etc/inittab</tt>:
