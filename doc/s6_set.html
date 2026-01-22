@@ -20,10 +20,10 @@
 <h1> The <tt>s6 set</tt> command </h1>
 
 <p>
- <tt>s6 set</tt> regroups actions on
+ <tt>s6 set</tt> groups actions on
 <a href="//skarnet.org/software/s6-rc/repodefs.html#set">service sets</a>,
 telling the service manager what services should be enabled or disabled
-at boot time, or even should be masked, i.e. should not even appear in
+at boot time, and which should be masked, i.e. should not even appear in
 the list of services available at next boot.
 </p>
 
@@ -31,7 +31,7 @@ the list of services available at next boot.
  Unlike <tt>s6 live</tt>, which deals with starting and stopping services
 that are currently running, <tt>s6 set</tt> is an <em>offline</em> tool,
 setting services in a state that remains theoretical until the user
-<em>commits</em> to it and <em>installs</em> the set, making it live.
+<em>commits</em> it and <em>installs</em> the set, making it live.
 </p>
 
 <p>
@@ -100,7 +100,7 @@ as <em>name</em>. </li>
 </pre>
 
 <ul>
- <li> <tt>s6 set delete</tt> delete the saved sets named <em>names...</em> </li>
+ <li> <tt>s6 set delete</tt> deletes the saved sets named <em>names...</em> </li>
  <li> No options are defined. </li>
 </ul>
 
@@ -114,8 +114,7 @@ as <em>name</em>. </li>
 
 <ul>
  <li> <tt>s6 set list</tt> lists all the services in the current set,
-printing their names on stdout, one per line.
-the current working set, which always exists. </li>
+printing their names on stdout, one per line. </li>
 </ul>
 
 <h4> Options </h4>
@@ -145,30 +144,30 @@ the state that they should be in at boot time: masked, disabled (listed
 as <tt>usable</tt>), enabled (listed as <tt>active</tt>), or essential
 (listed as <tt>always</tt>).
   <ul>
-   <li> <tt>masked</tt> means that the service will not even appear
+   <li> <tt>masked</tt>: the service will not even appear
 in the live service database, it will be entirely omitted. If a
-service depends on a masked service, it should be masked too, else
+service depends on a masked service, it should be masked too, otherwise
 the set is said to be <em>inconsistent</em>. </li>
-   <li> <tt>usable</tt> means that the service will be listed in the
-live service database, but will not be brought up by default at boot
+   <li> <tt>usable</tt>: the service will be listed in the
+live service database but will not be brought up by default at boot
 time. It can later be brought up manually via the
 <a href="s6_live.html#start"><tt>s6 live start</tt></a> command. </li>
-   <li> <tt>active</tt> means that the service will be brought up by
+   <li> <tt>active</tt>: the service will be brought up by
 default at boot time. It can later be brought down manually via the
 <a href="s6_live.html#stop"><tt>s6 live stop</tt></a> command. </li>
-   <li> <tt>always</tt> means that the service is considered essential:
-it will always be brought up at boot time, and it cannot be brought down
+   <li> <tt>always</tt>: the service is considered essential:
+it will always be brought up at boot time and it cannot be brought down
 without special options to force it down; it normally stays up until
 the machine is shut down. Essential services are marked as such in the
-stores, and should generally not be tampered with via <tt>s6 set</tt>
+stores and generally should not be tampered with via <tt>s6 set</tt>
 commands. </li>
   </ul> </li>
  <li> The service name is normally followed by a slash (<tt>/</tt>)
-followed by the name of the sub the service is in. On a terminal,
-with util-linux support, every line is pretty-printed into columns
+then the name of the sub the service is in. On a terminal
+with util-linux support every line is pretty-printed into columns
 instead. </li>
  <li> If <em>names...</em> is empty, all the services in the set
-are printed, along with their subs. </li>
+are printed along with their subs. </li>
 </ul>
 
 <h4> Options </h4>
@@ -189,6 +188,11 @@ default. </dd>
 <div id="make-essential">
 <h3 id="change"> enable, disable, mask, unmask, make-essential </h3>
 </div></div></div></div></div>
+<p>
+ These subcommands are the bread and butter of the <tt>s6 set</tt> commands. They
+allow the user to tailor the boot sequence to their needs without touching the
+currently running database.
+</p>
 
 <h4> Interface </h4>
 
@@ -197,22 +201,22 @@ default. </dd>
 </pre>
 
 <ul>
- <li> These subcommands are build with the same model and do the same
+ <li> These subcommands are built with the same model and do the same
 thing: they move the services listed in <em>services...</em> from their
 current subs to another.
   <ul>
-   <li> <tt>mask</tt> masks the services. Masking means that the service will not appear in the live
+   <li> <tt>mask</tt> hides the services. Masking means that the service will not appear in the live
 service database <em>at all</em>, it will not be listed, it will not be usable until it is unmasked in
 a new working set that is subsequently committed and installed. Masking is useful when the stores
-provide services that come from random installed packages, and the user never wants to run these
-services and it's just better not to see them. </li>
+provide services that come from random installed packages, the user never wants to run these
+services, and it's just better not to see them. </li>
    <li> <tt>unmask</tt> and <tt>disable</tt> put the services in the <tt>usable</tt> sub, i.e. unmasked and disabled. </li>
-   <li> <tt>enable</tt> enables the services. </li>
+   <li> <tt>enable</tt> puts the services in the <tt>enabled</tt> sub. </li>
    <li> <tt>make-essential</tt> enables the services and marks them as essential. This command should normally not
 be used: essential services are marked as such in the stores and should not be touched. The command exists for
 troubleshooting purposes. </li>
   </ul> </li>
- <li> Dependencies across services are computed, and the command will print a message if the change would
+ <li> Dependencies across services are computed and the command will print a message if the change would
 make the set inconsistent. </li>
 </ul>
 
@@ -235,21 +239,13 @@ or <tt>pull</tt>.
   <li> <tt>warn</tt>: perform the operation with a warning message. The set might
 be inconsistent afterwards, that can be changed by manually changing the dependencies
 or by fixing the set (see below). </li>
-  <li> <tt>pull</tt>: pull the dependencies into the
-same sub as the listed service, so there is no inconsistency. For <tt>enable</tt>,
+  <li> <tt>pull</tt>: resolve inconsistencies by pulling the dependencies into the
+same sub as the listed service. For <tt>enable</tt>,
 service dependencies are made <em>active</em> as well. For <tt>disable</tt>, reverse
 dependencies are disabled as well. For <tt>mask</tt>, reverse dependencies are
 masked as well. </li>
  </ul>
 </dl>
-
-<h4> Notes </h4>
-
-<p>
- These subcommands are the bread and butter of the <tt>s6 set</tt> commands. They
-allow the user to tailor the boot sequence to their needs without touching the
-currently running database.
-</p>
 
 <h3 id="check"> check </h3>
 
@@ -261,7 +257,7 @@ currently running database.
 
 <ul>
  <li> <tt>s6 set check</tt> checks the current working set for
-inconsistencies, and prints anything it finds to stdout. </li>
+inconsistencies, printing anything it finds to stdout. </li>
 </ul>
 
 <h4> Options </h4>
@@ -312,7 +308,7 @@ service database out of the set. </li>
  <li> This command must be run once all desired modifications have been
 done to the set and that its consistency has been ensured, for instance
 by a <a href="#check"><tt>s6 set check -F</tt></a> command. </li>
- <li> Once the set has been committed, in order to actually be used, it must
+ <li> Once the set has been committed, in order to actually be used it must
 be installed via the <a href="s6_live.html#install"><tt>s6 live install</tt></a>
 command. </li>
 </ul>
@@ -325,13 +321,13 @@ command. </li>
 last time the set was committed. </dd>
 
 <dt> -K, --keep-old </dt>
-<dd> If an old compiled database exists for the set, do not delete it,
-but print its path to stdout. By default, the old database is deleted
+<dd> If an old compiled database exists for the set, do not delete it
+and instead print its path to stdout. By default the old database is deleted
 when the set is successfully committed. </dd>
 
 <dt> -D <em>defaultbundle</em>, --default-bundle=<em>defaultbundle</em> </dt>
-<dd> The name of the bundle that will hold all <tt>active</tt> and <tt>always</tt>
-services, and that will be started at boot time. There is generally no reason
+<dd> The name of the bundle that holds all <tt>active</tt> and <tt>always</tt>
+services and that will be started at boot time. There is generally no reason
 to change the default, which depends on the distribution and is probably called
 <tt>default</tt>. </dd>
 
