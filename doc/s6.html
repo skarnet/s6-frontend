@@ -50,25 +50,25 @@ failure.
 </p>
 
 <p>
- Since it can exec into a wide variety of commands belonging to various
-parts of the s6 family of programs, it is difficult to list all its possible
-exit codes exhaustively. However, in case of an error, the name of the
+ It is difficult to exhaustively list all of the possible exit codes since it
+can exec into a wide variety of commands belonging to different parts of the s6
+family of programs.  However, in case of an error, the name of the
 subprogram where the error occurred is always printed on stderr; you can then
 consult the documentation for said subprogram, which will have the explanation
 for all its exit codes. For instance, if an invocation of <tt>s6</tt> prints
 a message such as <code>s6-rc: fatal: unable to start service foobar</code>,
 it means that s6 invoked the <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a>
-command, and on the linked documentation page, you can find the interpretation
+command, and on the linked documentation page you can find the interpretation
 of its various exit codes.
 </p>
 
 <h2 id="env"> Environment variables </h2>
 
 <ul>
- <li> s6 reads the <code>S6_FRONTEND_CONF</code> environment variable. This
-variable contains the absolute path to the
+ <li> s6 reads the <code>S6_FRONTEND_CONF</code> environment variable
+containing the absolute path to the
 <a href="s6-frontend.conf.html">configuration file</a> for the s6 command. </li>
- <li> If this variable is unset, the default is <tt>/etc/s6-frontend.conf</tt>
+ <li> If this variable is unset, the default is <tt>/etc/s6-frontend.conf</tt>,
 possibly overridden by the <tt>--conffile</tt> build-time configure option to
 s6-frontend. </li>
 </ul>
@@ -95,50 +95,35 @@ Any given command or subcommand is ignored. </dd>
  <dt> -s <em>scandir</em>, --scandir=<em>scandir</em> </dt>
  <dd> Use <em>scandir</em> as scan directory (i.e. the directory where
 <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> runs
-and supervises service directories),
-overriding the value of <em>scandir</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+and supervises service directories). </dd>
 
  <dt> -l <em>livedir</em>, --livedir=<em>livedir</em> </dt>
  <dd> Use <em>livedir</em> as live directory (i.e. the directory where
 <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> keeps tabs
-on the machine state and stores its runtime information),
-and supervises service directories),
-overriding the value of <em>livedir</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+on the machine state and stores its runtime information). </dd>
 
  <dt> -r <em>repodir</em>, --repodir=<em>repodir</em> </dt>
  <dd> Use <em>repodir</em> as s6-rc repository (i.e. the directory where
 the <a href="//skarnet.org/software/s6-rc/repodefs.html">repo</a> commands
 of the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> package store
-and manipulate their service sets),
-overriding the value of <em>repodir</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+and manipulate their service sets). </dd>
 
  <dt> -c <em>bootdb</em>, --bootdb=<em>bootdb</em> </dt>
  <dd> Use <em>bootdb</em> as the name of the compiled service database
 used by s6-rc at boot time (i.e. the directory where
 the <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> reads
-information on how to start all the wanted services)
-overriding the value of <em>bootdb</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+information on how to start all the wanted services). </dd>
 
  <dt> --stmpdir=<em>stmpdir</em> </dt>
  <dd> Use <em>stmpdir</em> to store runtime s6-frontend data and
-temporary files,
-overriding the value of <em>stmpdir</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+temporary files. </dd>
 
  <dt> --storelist=<em>storelist</em> </dt>
  <dd> Use <em>storelist</em> as list of
-<a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a>,
-overriding the value of <em>storelist</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+<a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a>. </dd>
 
  <dt> -v <em>verbosity</em>, --verbosity=<em>verbosity</em> </dt>
- <dd> Use <em>verbosity</em> as numerical verbosity value,
-overriding the value of <em>verbosity</em>
-defined in <a href="s6-frontend.conf.html">s6-frontend.conf</a>. </dd>
+ <dd> Use <em>verbosity</em> as numerical verbosity value. </dd>
 
  <dt> --color=yes|no|auto </dt>
  <dd> Use fancy output (which may or may not involve color): always if
@@ -199,7 +184,7 @@ available <a href="s6_live.html">here</a>.
 <h3 id="repository"> repository </h3>
 
 <p>
- <tt>s6 repository</tt> regroups administrative tasks related to the repository
+ <tt>s6 repository</tt> groups administrative tasks related to the repository
 of service sets, typically synchronization with the service stores when the
 package manager updates service definitions. It is not often directly used by
 sysadmins, but is an essential part of distribution scripts, when they create
