@@ -20,18 +20,18 @@
 <h1> The <tt>s6 repository</tt> command </h1>
 
 <p>
- <tt>s6 repository</tt> regroups actions that target the repository of source
+ <tt>s6 repository</tt> groups actions that target the repository of <a href="//skarnet.org/software/s6-rc/">s6-rc</a>source
 definition directories for services managed by the
-<a href="//skarnet.org/software/s6-rc/repodefs.html">repo commands</a> of the
-s6-rc service manager. The repository is hosted in the
-<a href="s6-frontend.conf.html">configured</a> <em>repodir</em>.
+<a href="//skarnet.org/software/s6-rc/repodefs.html">repo commands</a>. The
+repository is hosted in the <a href="s6-frontend.conf.html">configured</a>
+<em>repodir</em>.
 </p>
 
 <p>
- This set of commands is not intended for day-to-day use, since they involve
+ This set of commands is not intended for day-to-day use since they involve
 serious actions on the repository which is supposed to be stable. Rather,
 they are likely to be a part of automated procedures written by the distribution
-and triggered by specific events like installation or package updates.
+and triggered by specific events like package installation or updates.
 </p>
 
 <h2 id="interface"> Interface </h2>
@@ -76,7 +76,7 @@ This is a dangerous option and should only be used as a last resort
 if the repository seems hopelessly broken. </dd>
 
 <dt> -U, --update-stores </dt>
-<dd> Do not recreate the repository from scratch, but update the list
+<dd> Do not recreate the repository from scratch, instead update the list
 of stores. This commands needs to be run when the storelist variable
 has changed. </dd>
 
@@ -110,7 +110,7 @@ the current working set, which always exists. </li>
 
 <ul>
  <li> <tt>s6 repository check</tt> checks all the sets in the repository for
-inconsistencies, and prints anything it finds to stdout. </li>
+inconsistencies, printing anything it finds to stdout. </li>
 </ul>
 
 <h4> Options </h4>
