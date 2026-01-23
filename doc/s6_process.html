@@ -30,6 +30,14 @@ instance of <a
 href="//skarnet.org/software/s6/s6-supervise.html">s6-supervise</a> supervising it.
 </p>
 
+<p>
+ The point of <tt>s6 process</tt> is to make it easier to send commands to
+supervised services, by not requiring the user to know where the <em>scandir</em>
+is or the details of <a href="//skarnet.org/software/s6/s6-svc.html"></a>.
+Instead of <code>s6-svc -r /run/service/foobar</code>, the user can type
+<code>s6 process restart foobar</code> for the same effect.
+</p>
+
 <h2 id="interface"> Interface </h2>
 
 <pre>
