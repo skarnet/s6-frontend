@@ -21,8 +21,8 @@ enum gola_e
   GOLA_N
 } ;
 
-static void set_change (char const *const *argv, char const *newsub, char const *cmd) gccattr_noreturn ;
-static void set_change (char const *const *argv, char const *newsub, char const *cmd)
+static void set_change (char const *const *argv, char const *newrx, char const *cmd) gccattr_noreturn ;
+static void set_change (char const *const *argv, char const *newrx, char const *cmd)
 {
   static gol_bool const rgolb[] =
   {
@@ -68,10 +68,10 @@ static void set_change (char const *const *argv, char const *newsub, char const 
     newargv[m++] = "-I" ;
     newargv[m++] = wgola[GOLA_FORCELEVEL] ;
   }
-  if (!strcmp(newsub, "always")) newargv[m++] = "-e" ;
+  if (!strcmp(newrx, "always")) newargv[m++] = "-e" ;
   newargv[m++] = "--" ;
   newargv[m++] = "current" ;
-  newargv[m++] = newsub ;
+  newargv[m++] = newrx ;
   for (unsigned int i = 0 ; i < argc ; i++)
     newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;

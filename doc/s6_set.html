@@ -139,7 +139,7 @@ default. </dd>
 <ul>
  <li> <tt>s6 set status</tt> lists the services named <em>names...</em>
 in the working set with their current
-<a href="//skarnet.org/software/s6-rc/repodefs.html#sub">sub</a>, i.e.
+<a href="//skarnet.org/software/s6-rc/repodefs.html#rx">prescription</a>, i.e.
 the state that they should be in at boot time: masked, disabled (listed
 as <tt>usable</tt>), enabled (listed as <tt>active</tt>), or essential
 (listed as <tt>always</tt>).
@@ -163,11 +163,11 @@ stores and generally should not be tampered with via <tt>s6 set</tt>
 commands. </li>
   </ul> </li>
  <li> The service name is normally followed by a slash (<tt>/</tt>)
-then the name of the sub the service is in. On a terminal
+then the name of the prescription the service is in. On a terminal
 with util-linux support every line is pretty-printed into columns
 instead. </li>
  <li> If <em>names...</em> is empty, all the services in the set
-are printed along with their subs. </li>
+are printed along with their prescriptions. </li>
 </ul>
 
 <h4> Options </h4>
@@ -203,15 +203,15 @@ currently running database.
 <ul>
  <li> These subcommands are built with the same model and do the same
 thing: they move the services listed in <em>services...</em> from their
-current subs to another.
+current prescriptions to another.
   <ul>
    <li> <tt>mask</tt> hides the services. Masking means that the service will not appear in the live
 service database <em>at all</em>, it will not be listed, it will not be usable until it is unmasked in
 a new working set that is subsequently committed and installed. Masking is useful when the stores
 provide services that come from random installed packages, the user never wants to run these
 services, and it's just better not to see them. </li>
-   <li> <tt>unmask</tt> and <tt>disable</tt> put the services in the <tt>usable</tt> sub, i.e. unmasked and disabled. </li>
-   <li> <tt>enable</tt> puts the services in the <tt>enabled</tt> sub. </li>
+   <li> <tt>unmask</tt> and <tt>disable</tt> put the services in the <tt>usable</tt> prescription, i.e. unmasked and disabled. </li>
+   <li> <tt>enable</tt> puts the services in the <tt>enabled</tt> prescription. </li>
    <li> <tt>make-essential</tt> enables the services and marks them as essential. This command should normally not
 be used: essential services are marked as such in the stores and should not be touched. The command exists for
 troubleshooting purposes. </li>
@@ -240,7 +240,7 @@ or <tt>pull</tt>.
 be inconsistent afterwards, that can be changed by manually changing the dependencies
 or by fixing the set (see below). </li>
   <li> <tt>pull</tt>: resolve inconsistencies by pulling the dependencies into the
-same sub as the listed service. For <tt>enable</tt>,
+same prescription as the listed service. For <tt>enable</tt>,
 service dependencies are made <em>active</em> as well. For <tt>disable</tt>, reverse
 dependencies are disabled as well. For <tt>mask</tt>, reverse dependencies are
 masked as well. </li>
@@ -268,14 +268,14 @@ inconsistencies, printing anything it finds to stdout. </li>
 
 <dt> -E, --no-force-essential </dt>
 <dd> If fixing the set involves changing a service flagged as essential
-to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
-flagged as essential to the <tt>always</tt> sub, print an error message
+to a prescription that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> prescription, print an error message
 and exit. This is the default. </dd>
 
 <dt> -e, --force-essential </dt>
 <dd> If fixing the set involves changing a service flagged as essential
-to a sub that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
-flagged as essential to the <tt>always</tt> sub, perform the change
+to a prescription that is <em>not</em> <tt>always</tt>, or a service <em>not</em>
+flagged as essential to the <tt>always</tt> prescription, perform the change
 and continue. This is normally not necessary with a list of stores
 providing consistent services. </dd>
 

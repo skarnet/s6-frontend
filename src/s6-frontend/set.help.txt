@@ -5,7 +5,7 @@ Subcommands:
   save		save the current set under a user-provided name
   load		load a previously saved set
   list		list services in the working set
-  status	list services in the working set with their sub
+  status	list services in the working set with their rx
   enable	enable services
   disable	disable services
   mask		mask services (hide them from the db entirely)
@@ -28,7 +28,7 @@ s6 set status options:
 s6 set enable|disable|mask|unmask options:
   -f		--ignore-dependencies		only change listed services
   -n		--dry-run			show what would happen, don't do
-  -I WHAT	--if-dependencies-found=WHAT	WHAT=warn (default) | fail | pull (dependencies will be brought to the same sub)
+  -I WHAT	--if-dependencies-found=WHAT	WHAT=warn (default) | fail | pull (dependencies will be brought to the same rx)
 
 s6 set check options:
   -E		--no-force-essential		do not allow manual changes to essential services (default)
