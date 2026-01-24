@@ -36,8 +36,8 @@ void system_reboot (char const *const *argv)
 
 #include <skalibs/strerr.h>
 
-static void system_hpr (char const *const *arg) gccattr_noreturn ;
-static void system_hpr (char const *const *arg)
+static void system_hpr (char const *arg) gccattr_noreturn ;
+static void system_hpr (char const *arg)
 {
   strerr_dief3x(100, "s6 system ", arg, " needs s6-frontend to be built with s6-linux-init support") ;
 }
