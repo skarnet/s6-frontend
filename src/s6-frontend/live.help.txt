@@ -21,11 +21,13 @@ s6 live start, s6 live stop, s6 live restart, s6 live stop-everything options:
 s6 live install options:
   -b		--block			on contention, wait rather than fail
   -K		--keep-old		keep the old db and write its path to stdout
+  -e		--force-essentials	stop old essential services if needed (default)
+  -E		--no-force-essentials	keep obsolete essential services up
   -f FILE	--conversion-file=FILE	use a conversion file from current to new set
 		--init			install the initial db. DO NOT USE WHEN LIVE.
 
 s6 live start-everything options:
   -n		--dry-run		only show what would be done, don't do it
   -t TIMEOUT	--timeout=TIMEOUT	if not done after TIMEOUT milliseconds, abort
-  -D BUN	--default-bundle=BUN	name of the bundle to start
+  -D BUN	--default-bundle=BUN	name of the bundle to start ("default")
 

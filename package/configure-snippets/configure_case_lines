@@ -3,7 +3,7 @@
     --repodir=*) repodir=${arg#*=} ;;
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
-    --with-conf-file=*) conffile=${arg#*=} ;;
+    --conffile=*) conffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;

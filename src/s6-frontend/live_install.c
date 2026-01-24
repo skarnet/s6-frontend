@@ -13,6 +13,7 @@ enum golb_e
   GOLB_BLOCK = 0x01,
   GOLB_KEEPOLD = 0x02,
   GOLB_INIT = 0x04,
+  GOLB_NOFORCEESSENTIALS = 0x08,
 } ;
 
 enum gola_e
@@ -28,6 +29,8 @@ void live_install (char const *const *argv)
     { .so = 'b', .lo = "block", .clear = 0, .set = GOLB_BLOCK },
     { .so = 'K', .lo = "keep-old", .clear = 0, .set = GOLB_KEEPOLD },
     { .so = 0, .lo = "init", .clear = 0, .set = GOLB_INIT },
+    { .so = 'e', .lo = "force-essentials", .clear = GOLB_NOFORCEESSENTIALS, .set = 0 },
+    { .so = 'E', .lo = "no-force-essentials", .clear = 0, .set = GOLB_NOFORCEESSENTIALS },
   } ;
   static gol_arg const rgola[] =
   {
@@ -36,7 +39,7 @@ void live_install (char const *const *argv)
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   char const *wgola[GOLA_N] = { 0 } ;
-  char const *newargv[17] ;
+  char const *newargv[18] ;
   char fmtv[UINT_FMT] ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
@@ -57,6 +60,7 @@ void live_install (char const *const *argv)
   
   if (wgolb & GOLB_BLOCK) newargv[m++] = "-b" ;
   if (wgolb & GOLB_KEEPOLD) newargv[m++] = "-K" ;
+  newargv[m++] = wgolb & GOLB_NOFORCEESSENTIALS ? "-E" : "-e" ;
   if (wgola[GOLA_CONVFILE])
   {
     newargv[m++] = "-f" ;

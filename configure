@@ -57,7 +57,6 @@ Optional features:
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
 
-  --with-conf-file=FILE         default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
   --with-store-list=LIST        list of service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
 
@@ -234,7 +233,7 @@ for arg ; do
     --repodir=*) repodir=${arg#*=} ;;
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
-    --with-conf-file=*) conffile=${arg#*=} ;;
+    --conffile=*) conffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
