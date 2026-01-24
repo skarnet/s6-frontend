@@ -109,6 +109,10 @@ parts of an s6-based system.
 the shared version of the skarnet library. </li>
   </ul> </li>
   <li> util-linux is a run-time dependency only. </li>
+  <li> It is currently possible to use s6-frontend on non-Linux systems if the dependencies to
+util-linux and to s6-linux-init are disabled at build time, but there is no guarantee that it
+will remain possible in the future. Unfortunately, APIs for init systems have diverged too much
+across operating systems. </li>
 </ul>
 
 <h3> Licensing </h3>
