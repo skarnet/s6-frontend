@@ -90,7 +90,7 @@ Any given command or subcommand is ignored. </dd>
 
  <dt> -V, --version </dt>
  <dd> Run the <a href="#version"><tt>s6 version</tt></a> command.
- <dd> Any given command or subcommand is ignored. </dd>
+Any given command or subcommand is ignored. </dd>
 
  <dt> -s <em>scandir</em>, --scandir=<em>scandir</em> </dt>
  <dd> Use <em>scandir</em> as scan directory (i.e. the directory where
@@ -111,7 +111,7 @@ and manipulate their service sets). </dd>
  <dt> -c <em>bootdb</em>, --bootdb=<em>bootdb</em> </dt>
  <dd> Use <em>bootdb</em> as the name of the compiled service database
 used by s6-rc at boot time (i.e. the directory where
-the <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> reads
+<a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> reads
 information on how to start all the wanted services). </dd>
 
  <dt> --stmpdir=<em>stmpdir</em> </dt>
@@ -220,7 +220,7 @@ The details are available <a href="s6_system.html">here</a>.
 <ul>
  <li> <tt>s6</tt> does not perform real operations itself. Instead, after
 finding the path to its <a href="s6-frontend.conf.html">configuration file</a>
-<em>conf</em>, it rewrites itself into <code>envfile -I <em>conf</em></code> -- s6-frontend
+<em>conf</em>, it rewrites itself into <code>envfile -I <em>conf</em> -- s6-frontend
 <em>global_options...</em> <em>command</em> <em>subcommand</em> <em>subcommand_options...</em> <em>args...</em></code>
   <ul>
    <li> <a href="//skarnet.org/software/execline/envfile.html">envfile</a> reads and parses <em>conf</em> </li>

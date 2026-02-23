@@ -30,7 +30,7 @@ are located).
 
 <p>
  For instance, this is what allows the
-<a href="s6_process_restart">s6 process restart foobar</a> command to send
+<a href="s6_process_restart#restart">s6 process restart foobar</a> command to send
 <a href="//skarnet.org/software/s6/s6-svc.html">s6-svc -r</a> to the
 <em>foobar</em> service without the user needing to type, or even remember,
 what the full path to the <em>foobar</em> service directory is.
@@ -57,27 +57,27 @@ simple <code>key = value</code> lines, comments permitted.
 <dd> The directory where <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>
 is running.
 The default is <tt>/run/service</tt> (possibly overridden by the <tt>--scandir</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-linux-init/"></a> or to
+<a href="//skarnet.org/software/s6-linux-init/">s6-linux-init</a> or to
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
 <dt> livedir </dt>
 <dd> The directory hosting the live service database managed by
 <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a>.
 The default is <tt>/run/s6-rc</tt> (possibly overridden by the <tt>--livedir</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-rc/">s6-rc</a> or to
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
 <dt> repodir </dt>
 <dd> The directory hosting the repository of service sets managed by the
 <a href="//skarnet.org/software/s6-rc/repodefs.html">s6-rc <em>repo</em> commands</a>.
 The default is <tt>/var/lib/s6-rc/repository</tt> (possibly overridden by the <tt>--repodir</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-rc/">s6-rc</a> or to
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
 <dt> bootdb </dt>
 <dd> The path to the boot-time compiled service database.
 The default is <tt>/etc/s6-rc/compiled/current</tt> (possibly overridden by the <tt>--bootdb</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-rc/"></a> or to
+<a href="//skarnet.org/software/s6-rc/">s6-rc</a> or to
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 
 <dt> stmpdir </dt>
