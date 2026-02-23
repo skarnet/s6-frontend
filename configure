@@ -27,7 +27,7 @@ Fine tuning of the installation directories:
   --pkgconfdir=DIR              pkg-config .pc files [PREFIX/lib/pkgconfig]
   --scandir=DIR                 assume s6-svscan is running on DIR [s6li default: /run/service]
   --livedir=DIR                 run s6-rc live directory in DIR [s6-rc default: /run/s6-rc]
-  --repodir=DIR                 default s6-rc repository [s6-rc default: /var/lib/s6-frontend/repository]
+  --repodir=DIR                 default s6-rc repository [s6-rc default: /var/lib/s6-rc/repository]
   --bootdb=LINK                 location of the bootable s6-rc compiled db [s6-rc default: /etc/s6-rc/compiled/current]
   --stmpdir=DIR                 secure location for temporary s6-frontend files [/run/s6-frontend]
   --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
