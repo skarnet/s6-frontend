@@ -1,5 +1,13 @@
 Changelog for s6-frontend.
 
+In 0.0.1.2
+----------
+
+ - Documentation updates.
+ - Adaptation to skalibs-2.15.0.0.
+ - Support for disabling RPATH at configure time.
+
+
 In 0.0.1.1
 ----------
 
