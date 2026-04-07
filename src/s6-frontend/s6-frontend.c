@@ -99,8 +99,13 @@ int main (int argc, char const *const *argv)
   static struct command_s const commands[] =
   {
     { .s = "help", .f = &main_help },
+    { .s = "l", .f = &live },
     { .s = "live", .f = &live },
+    { .s = "p", .f = &process },
+    { .s = "proc", .f = &process },
     { .s = "process", .f = &process },
+    { .s = "r", .f = &repository },
+    { .s = "repo", .f = &repository },
     { .s = "repository", .f = &repository },
     { .s = "set", .f = &set },
     { .s = "system", .f = &s6system },
