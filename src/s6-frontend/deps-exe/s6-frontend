@@ -6,7 +6,6 @@ live_status.o
 live_start_everything.o
 live_stop_everything.o
 main_help.o
-main_version.o
 process.o
 process_help.o
 process_kill.o
@@ -32,6 +31,10 @@ system.o
 system_boot.o
 system_help.o
 system_hpr.o
+version.o
+version_export.o
+version_help.o
+version_show.o
 libs6f.a.xyzzy
 ${LIBNSSS}
 -ls6rc

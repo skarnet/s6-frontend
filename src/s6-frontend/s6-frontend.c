@@ -26,7 +26,7 @@ enum golb_e
 {
   GOLB_HELP = 0x01,
   GOLB_VERSION = 0x02,
-//  GOLB_USER = 0x04,
+  GOLB_USER = 0x04,
 } ;
 
 enum gola_e
@@ -82,8 +82,7 @@ int main (int argc, char const *const *argv)
   static gol_bool const rgolb[] =
   {
     { .so = 'h', .lo = "help", .clear = 0, .set = GOLB_HELP },
-    { .so = 'V', .lo = "version", .clear = 0, .set = GOLB_VERSION },
-//    { .so = 0, .lo = "user", .clear = 0, .set = GOLB_USER },
+    { .so = 'u', .lo = "user", .clear = 0, .set = GOLB_USER },
   } ;
   static gol_arg const rgola[] =
   {
@@ -109,7 +108,7 @@ int main (int argc, char const *const *argv)
     { .s = "repository", .f = &repository },
     { .s = "set", .f = &set },
     { .s = "system", .f = &s6system },
-    { .s = "version", .f = &main_version },
+    { .s = "version", .f = &version },
   } ;
 
   struct global_s globals_in_the_stack = GLOBAL_ZERO ;
@@ -136,9 +135,10 @@ int main (int argc, char const *const *argv)
   if (wgola[GOLA_VERBOSITY] && !uint0_scan(wgola[GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (wgolb & GOLB_VERSION) main_version(argv) ;
-  if (wgolb & GOLB_HELP) main_help(argv) ;
-  if (wgolb & (GOLB_VERSION | GOLB_HELP)) _exit(0) ;
+  if (wgolb & GOLB_HELP)  { main_help(argv) ; _exit(0) ; }
+
+  g->isuser = !!(wgolb & GOLB_USER) ;
+  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;
   if (wgola[GOLA_LIVEDIR]) g->dirs.live = wgola[GOLA_LIVEDIR] ;
@@ -167,9 +167,6 @@ int main (int argc, char const *const *argv)
     }
     if (!force_color) g->color = g->istty ;
   }
-
-//  g->isuser = !!(wgolb & GOLB_USER) ;
-//  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
 
   if (!*argv) dieusage() ;
   cmd = BSEARCH(struct command_s, *argv, commands) ;

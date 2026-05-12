@@ -13,7 +13,7 @@ Commands:
 
 Global options:
   -h		--help			equivalent to "s6 help"
-  -V		--version		equivalent to "s6 version"
+  -u		--user			override config values with XDG environment
 
 		--color=yes|no|auto	display fancy or boring-but-parsable text.
 					auto is the default: fancy if in a terminal.

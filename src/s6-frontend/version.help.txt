@@ -1,0 +1,13 @@
+Usage: s6 version subcommand [ options ] [ arguments... ]
+
+Subcommands:
+  help		this message
+  show		show the current version (default if no subcommand)
+  export	export version and config values to stdout
+
+
+s6 version show options: none
+
+s6 version export options:
+  -q, --quote	quote printed paths (e.g. for use in a shell script)
+

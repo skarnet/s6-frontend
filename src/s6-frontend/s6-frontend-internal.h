@@ -101,6 +101,15 @@ extern void system_poweroff (char const *const *) gccattr_noreturn ;
 extern void system_reboot (char const *const *) gccattr_noreturn ;
 
 
+ /* version */
+
+extern void version (char const *const *) gccattr_noreturn ;
+extern void version_help (char const *const *) gccattr_noreturn ;
+
+extern void version_export (char const *const *) gccattr_noreturn ;
+extern void version_show (char const *const *) gccattr_noreturn ;
+
+
  /* main */
 
 struct global_s
@@ -147,6 +156,5 @@ extern void main_pretty_exec (char const *const *) gccattr_noreturn ;
 extern pid_t main_spawn (char const *const *argv) ;
 
 extern void main_help (char const *const *) gccattr_noreturn ;
-extern void main_version (char const *const *) gccattr_noreturn ;
 
 #endif
