@@ -85,49 +85,56 @@ reason, here you go.
 </p>
 
 <dl>
- <dt> -h, --help </dt>
+ <dt> <tt>-h</tt>, <tt>--help</tt> </dt>
  <dd> Run the <a href="#help"><tt>s6 help</tt></a> command.
 Any given command or subcommand is ignored. </dd>
 
- <dt> -s <em>scandir</em>, --scandir=<em>scandir</em> </dt>
+ <dt> <tt>-s <em>scandir</em></tt>, <tt>--scandir=<em>scandir</em></tt> </dt>
  <dd> Use <em>scandir</em> as scan directory (i.e. the directory where
 <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a> runs
 and supervises service directories). </dd>
 
- <dt> -l <em>livedir</em>, --livedir=<em>livedir</em> </dt>
+ <dt> <tt>-l <em>livedir</em></tt>, <tt>--livedir=<em>livedir</em></tt> </dt>
  <dd> Use <em>livedir</em> as live directory (i.e. the directory where
 <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> keeps tabs
 on the machine state and stores its runtime information). </dd>
 
- <dt> -r <em>repodir</em>, --repodir=<em>repodir</em> </dt>
+ <dt> <tt>-r <em>repodir</em></tt>, <tt>--repodir=<em>repodir</em></tt> </dt>
  <dd> Use <em>repodir</em> as s6-rc repository (i.e. the directory where
 the <a href="//skarnet.org/software/s6-rc/repodefs.html">repo</a> commands
 of the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> package store
 and manipulate their service sets). </dd>
 
- <dt> -c <em>bootdb</em>, --bootdb=<em>bootdb</em> </dt>
+ <dt> <tt>-c <em>bootdb</em></tt>, <tt>--bootdb=<em>bootdb</em></tt> </dt>
  <dd> Use <em>bootdb</em> as the name of the compiled service database
 used by s6-rc at boot time (i.e. the directory where
 <a href="//skarnet.org/software/s6-rc/s6-rc.html">s6-rc</a> reads
 information on how to start all the wanted services). </dd>
 
- <dt> --stmpdir=<em>stmpdir</em> </dt>
+ <dt> <tt>--stmpdir=<em>stmpdir</em></tt> </dt>
  <dd> Use <em>stmpdir</em> to store runtime s6-frontend data and
 temporary files. </dd>
 
- <dt> --storelist=<em>storelist</em> </dt>
+ <dt> <tt>--storelist=<em>storelist</em></tt> </dt>
  <dd> Use <em>storelist</em> as list of
 <a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a>. </dd>
 
- <dt> -v <em>verbosity</em>, --verbosity=<em>verbosity</em> </dt>
+ <dt> <tt>-v <em>verbosity</em></tt>, <tt>--verbosity=<em>verbosity</em></tt> </dt>
  <dd> Use <em>verbosity</em> as numerical verbosity value. </dd>
 
- <dt> --color=yes|no|auto </dt>
+ <dt> <tt>--color=yes|no|auto</tt> </dt>
  <dd> Use fancy output (which may or may not involve color): always if
 <tt>yes</tt>, never if <tt>no</tt>, and only when stdout is a terminal
 if <tt>auto</tt>. Not all commands and subcommands will use this
 setting. Also, for pretty-printing of columns, it is recommended to
 have built s6-frontend with util-linux support. </dd>
+
+ <dt> <tt>-u</tt>, <tt>--user</tt> </dt>
+ <dd> Override the variables defined in the configuration file with values
+built from XDG environment variables. This option only works if the XDG
+environment variables are present in the environment. This option is
+useful to address user services. You can see what values are used by
+running <tt>s6 -u version export</tt>. </dd>
 </dl>
 
 
