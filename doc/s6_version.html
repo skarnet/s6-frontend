@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>s6-frontend: the s6 version command</title>
+    <meta name="Description" content="s6-frontend: the s6 version command" />
+    <meta name="Keywords" content="s6 ecosystem supervision service manager user interface init skarnet.org skarnet software version configuration" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="s6.html">The s6 command</a><br />
+<a href="index.html">s6-frontend</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>s6 version</tt> command </h1>
+
+<p>
+ <tt>s6 version</tt> groups actions related to printing information about the
+current version and configuration of s6-frontend.
+</p>
+
+<h2 id="interface"> Interface </h2>
+
+<pre>
+     s6 version <em>subcommand</em> [ <em>subcommand_options...</em> ] [ <em>args...</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 v</tt> is accepted as an alias for <tt>s6 version</tt>. </li>
+ <li> <tt>s6 version</tt> without a subcommand is equivalent to <tt>s6 version show</tt>. </li>
+</ul>
+
+<h2 id="subcommands"> Subcommands </h2>
+
+<h3 id="help"> help </h3>
+
+<p>
+ <tt>s6 process help</tt> prints a short help message summarizing the options
+and usage of the <tt>s6 process</tt> command. It is not as detailed as this page.
+</p>
+
+<h3 id="show"> show </h3>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 version show
+</pre>
+
+<ul>
+ <li> <tt>s6 version show</tt> prints <tt>s6-frontend v</tt> followed by the
+current running version of s6-frontend, then a newline. </li>
+</ul>
+
+<h3 id="export"> export </h3>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 version export [ -q ]
+</pre>
+
+<ul>
+ <li> <tt>s6 version export</tt> prints a series of <em>key=value</em> lines,
+representing the version and configuration data for the current running version
+of s6-frontend. </li>
+ <li> Keys are: <tt>version</tt>, then all the variables that are supported in
+the <a href="s6-frontend.conf.html">configuration file</a>. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> <tt>-q</tt>, <tt>--quote</tt> </dt>
+<dd> Quote the printed paths. This is useful e.g. if the paths contain spaces
+and you're reading the output of <tt>s6 version export</tt> in a shell. </dd>
+</dl>
+
+</body>
+</html>

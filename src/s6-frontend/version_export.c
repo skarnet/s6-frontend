@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 
+#include <skalibs/types.h>
 #include <skalibs/buffer.h>
 #include <skalibs/gol.h>
 #include <skalibs/stralloc.h>
@@ -50,6 +51,9 @@ void version_export (char const *const *argv)
   stralloc sa = STRALLOC_ZERO ;
   uint64_t wgolb = 0 ;
   out_func_ref f = &print_unquoted ;
+  size_t len ;
+  char fmt[UINT_FMT] ;
+
   argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
   if (wgolb & GOLB_QUOTE) f = &print_quoted ;
 
@@ -60,6 +64,8 @@ void version_export (char const *const *argv)
   (*f)("bootdb", g->dirs.scan, &sa) ;
   (*f)("stmpdir", g->dirs.stmp, &sa) ;
   (*f)("storelist", g->dirs.stol, &sa) ;
-  if (!buffer_flush(buffer_1)) dieout() ;
+  len = uint_fmt(fmt, g->verbosity) ; fmt[len++] = '\n' ;
+  if (!buffer_puts(buffer_1, "verbosity=")
+   || !buffer_putflush(buffer_1, fmt, len)) dieout() ;
   _exit(0) ;
 }
