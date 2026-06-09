@@ -3,8 +3,8 @@ livedir=
 repodir=
 bootdb=
 stmpdir=/run/s6-frontend
-conffile='$sysconfdir/s6-frontend.conf'
-storelist='$prefix/share/s6-frontend/s6-rc/sources:$sysconfdir/s6-frontend/s6-rc/sources'
+conffile='$sysconfdir/s6.conf'
+storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
 defbundle=
 
 usensss=false

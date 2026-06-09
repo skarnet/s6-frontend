@@ -39,10 +39,10 @@ users should call <a href="s6.html">s6</a> instead.
 
 <ul>
  <li> <a href="s6.html">s6</a> gets the name of its configuration file from the
-<tt>S6_FRONTEND_CONF</tt> environment variable, or from the compiled-in default if
-this variable is unset. Normally this default is <tt>/etc/s6-frontend.conf</tt>. </li>
+<tt>S6_CONF</tt> environment variable, or from the compiled-in default if
+this variable is unset. Normally this default is <tt>/etc/s6.conf</tt>. </li>
  <li> This configuration file (let's call it <em>conf</em>) contains
-<a href="s6-frontend.conf.html">variable definitions</a> that set the default for
+<a href="s6.conf.html">variable definitions</a> that set the default for
 all the parts of the s6 system. </li>
  <li> <a href="s6.html">s6</a> rewrites itself into
 <code>envfile -I <em>conf</em> -- s6-frontend <em>args...</em></code> </li>
@@ -55,7 +55,7 @@ performs the work described in the documents linked from the <a href="s6.html">s
 
 <p>
  The separation between <a href="s6.html">s6</a> and s6-frontend is really just a
-trick to avoid writing an additional parser for the <a href="s6-frontend.conf.html">s6-frontend.conf</a>
+trick to avoid writing an additional parser for the <a href="s6.conf.html">s6.conf</a>
 configuration file. Using <a
 href="//skarnet.org/software/execline/envfile.html">envfile</a> to read the
 configuration was a natural fit because the <a href="//skarnet.org/software/execline/">execline</a> set of tools is used by

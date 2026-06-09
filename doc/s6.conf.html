@@ -4,9 +4,9 @@
     <meta name="color-scheme" content="dark light" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>s6-frontend: the s6-frontend.conf configuration file</title>
-    <meta name="Description" content="s6-frontend: the s6-frontend.conf configuration file" />
-    <meta name="Keywords" content="s6-frontend.conf s6-frontend configuration file execline variable" />
+    <title>s6-frontend: the s6.conf configuration file</title>
+    <meta name="Description" content="s6-frontend: the s6.conf configuration file" />
+    <meta name="Keywords" content="s6.conf s6-frontend configuration file execline variable" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -17,12 +17,12 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>/etc/s6-frontend.conf</tt> configuration file </h1>
+<h1> The <tt>/etc/s6.conf</tt> configuration file </h1>
 
 <h2 id="goal"> Goal and usage </h2>
 
 <p>
- <tt>/etc/s6-frontend.conf</tt> is a configuration file provided by the
+ <tt>/etc/s6.conf</tt> is a configuration file provided by the
 distribution, or written by the system administrator, defining various
 settings for the <a href="s6.html">s6</a> commands, as well as the default
 policies of an s6-based system (i.e. where various directories and files
@@ -40,7 +40,7 @@ what the full path to the <em>foobar</em> service directory is.
 <h2 id="description"> Description </h2>
 
 <p>
-The <tt>/etc/s6-frontend.conf</tt> file follows the
+The <tt>/etc/s6.conf</tt> file follows the
 <a href="//skarnet.org/software/execline/envfile.html#syntax">envfile syntax</a>:
 simple <code>key = value</code> lines, comments permitted.
 </p>
@@ -90,7 +90,7 @@ The default is <tt>/run/s6-frontend</tt> (possibly overridden by the <tt>--stmpd
 <dd> A colon-separated (<tt>:</tt>) list of directories containing the
 <a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a> of s6-rc service
 definition directories.
-The default is <tt>/usr/share/s6-frontend/s6-rc/sources:/etc/s6-frontend/s6-rc/sources</tt>
+The default is <tt>/usr/share/s6/sources:/etc/s6/sources</tt>
 (possibly overridden by the <tt>--storelist</tt> build-time configure option to
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
 

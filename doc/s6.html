@@ -66,10 +66,10 @@ of its various exit codes.
 <h2 id="env"> Environment variables </h2>
 
 <ul>
- <li> s6 reads the <code>S6_FRONTEND_CONF</code> environment variable
+ <li> s6 reads the <code>S6_CONF</code> environment variable
 containing the absolute path to the
-<a href="s6-frontend.conf.html">configuration file</a> for the s6 command. </li>
- <li> If this variable is unset, the default is <tt>/etc/s6-frontend.conf</tt>,
+<a href="s6.conf.html">configuration file</a> for the s6 command. </li>
+ <li> If this variable is unset, the default is <tt>/etc/s6.conf</tt>,
 possibly overridden by the <tt>--conffile</tt> build-time configure option to
 s6-frontend. </li>
 </ul>
@@ -79,7 +79,7 @@ s6-frontend. </li>
 <p>
  <em>global_options...</em> is a list of options that modify s6's behaviour
 and policies. They should generally not be used; instead, the behaviour should
-be set in the <a href="s6-frontend.conf.html">configuration file</a>.
+be set in the <a href="s6.conf.html">configuration file</a>.
 Nevertheless, if you need to override the configuration file settings for some
 reason, here you go.
 </p>
@@ -224,7 +224,7 @@ The details are available <a href="s6_system.html">here</a>.
 
 <ul>
  <li> <tt>s6</tt> does not perform real operations itself. Instead, after
-finding the path to its <a href="s6-frontend.conf.html">configuration file</a>
+finding the path to its <a href="s6.conf.html">configuration file</a>
 <em>conf</em>, it rewrites itself into <code>envfile -I <em>conf</em> -- s6-frontend
 <em>global_options...</em> <em>command</em> <em>subcommand</em> <em>subcommand_options...</em> <em>args...</em></code>
   <ul>

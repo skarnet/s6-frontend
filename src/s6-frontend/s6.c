@@ -10,7 +10,7 @@
 
 int main (int argc, char const *const *argv)
 {
-  char const *conffile = getenv("S6_FRONTEND_CONF") ;
+  char const *conffile = getenv("S6_CONF") ;
   PROG = "s6" ;
   if (!conffile) conffile = S6_FRONTEND_CONF ;
   if (!argc--) strerr_dief1x(103, "invalid argc/argv") ;
