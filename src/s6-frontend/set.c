@@ -25,15 +25,14 @@ void set (char const *const *argv)
   {
     { .s = "check", .f = &set_check },
     { .s = "commit", .f = &set_commit },
+    { .s = "copy", .f = &set_copy },
     { .s = "delete", .f = &set_delete },
     { .s = "disable", .f = &set_disable },
     { .s = "enable", .f = &set_enable },
     { .s = "help", .f = &set_help },
     { .s = "list", .f = &set_list },
-    { .s = "load", .f = &set_load },
     { .s = "make-essential", .f = &set_make_essential },
     { .s = "mask", .f = &set_mask },
-    { .s = "save", .f = &set_save },
     { .s = "status", .f = &set_status },
     { .s = "unmask", .f = &set_unmask },
   } ;

@@ -8,7 +8,7 @@
 
 void repository_list (char const *const *argv)
 {
-  char const *newargv[9] ;
+  char const *newargv[7] ;
   unsigned int m = 0 ;
   char fmtv[UINT_FMT] ;
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-repo-list" ;
@@ -20,8 +20,6 @@ void repository_list (char const *const *argv)
   }
   newargv[m++] = "-r" ;
   newargv[m++] = g->dirs.repo ;
-  newargv[m++] = "-x" ;
-  newargv[m++] = "current" ;
   newargv[m++] = "--" ;
   newargv[m++] = 0 ;
 

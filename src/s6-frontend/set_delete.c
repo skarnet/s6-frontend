@@ -17,9 +17,11 @@ void set_delete (char const *const *argv)
 
   argc = env_len(argv) ;
   for (unsigned int i = 0 ; i < argc ; i++)
-    if (argv[i][0] == '.' || strchr(argv[i], '/') || strchr(argv[i], '\n')
-     || !strcmp(argv[i], "current"))
+  {
+    if (argv[i][0] == '.' || strchr(argv[i], '/') || strchr(argv[i], '\n'))
       strerr_dief(100, "invalid set name: ", argv[i]) ;
+    if (!strcmp(argv[i], "current")) strerr_diefu(100, "delete current set") ;
+  }
 
   unsigned int m = 0 ;
   char const *newargv[7 + argc] ;

@@ -78,12 +78,12 @@ of the service from its state. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -e, --without-essentials </dt>
+<dt> <tt>-e</tt>, <tt>--without-essentials</tt> </dt>
 <dd> Do not list essential services, which can clutter the display with
 irrelevant information and are all supposed to always be up anyway.
 This is the default. </dd>
 
-<dt> -E, --with-essentials </dt>
+<dt> <tt>-E</tt>, <tt>--with-essentials</tt> </dt>
 <dd> List all services, including essential ones. </dd>
 </dl>
 
@@ -104,10 +104,10 @@ as well as their dependencies. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -n, --dry-run </dt>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually start services. </dd>
 
-<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>
 milliseconds, stop waiting and don't attempt to perform the remaining
 transitions. By default, <em>timeout</em> is 0, meaning infinite: the
@@ -131,10 +131,10 @@ as well as services that depends on them. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -n, --dry-run </dt>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually stop services. </dd>
 
-<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>
 milliseconds, stop waiting and don't attempt to perform the remaining
 transitions. By default, <em>timeout</em> is 0, meaning infinite: the
@@ -162,10 +162,10 @@ back up. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -n, --dry-run </dt>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually stop or start services. </dd>
 
-<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole restart still hasn't completed after <em>timeout</em>
 milliseconds, stop waiting and don't attempt to perform the remaining
 transitions. By default, <em>timeout</em> is 0, meaning infinite: the
@@ -189,16 +189,16 @@ the bundle of services that are enabled at boot time. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -n, --dry-run </dt>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually start services. </dd>
 
-<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>
 milliseconds, stop waiting and don't attempt to perform the remaining
 transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 
-<dt> -D <em>bundle</em>, --default-bundle=<em>bundle</em> </dt>
+<dt> <tt>-D <em>bundle</em></tt>, <tt>--default-bundle=<em>bundle</em></tt> </dt>
 <dd> Start the bundle of services named <em>bundle</em> instead.
 The default is <tt>default</tt>, possibly overridden by the
 <tt>--with-default-bundle</tt> build-time configure option in
@@ -223,15 +223,15 @@ reboot a machine; for that, check <a href="s6_system.html"><tt>s6 system</tt></a
 <h4> Options </h4>
 
 <dl>
-<dt> -n, --dry-run </dt>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually stop services. </dd>
 
-<dt> -e, --without-essentials </dt>
+<dt> <tt>-e</tt>, <tt>--without-essentials</tt> </dt>
 <dd> Do not stop essential services; keep the machine in a state where
 it can more or less run and be interacted with, even if in a completely
 bare state. This is the default. </dd>
 
-<dt> -E, --with-essentials </dt>
+<dt> <tt>-E</tt>, <tt>--with-essentials</tt> </dt>
 <dd> Also stop essential services. After this command the machine
 isn't good for much except a reboot. <code>s6 live stop-everything -E</code>
 is the command that should be run right before a shutdown when the
@@ -239,7 +239,7 @@ system is not using s6-linux-init. To that end, the line
 <code>::shutdown:/usr/bin/s6 live stop-everything -E</code> should be
 added to <tt>/etc/inittab</tt>, if that is what the init uses. </dd>
 
-<dt> -t <em>timeout</em>, --timeout=<em>timeout</em> </dt>
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>
 milliseconds, stop waiting and don't attempt to perform the remaining
 transitions. By default, <em>timeout</em> is 0, meaning infinite: the
@@ -251,11 +251,11 @@ command can wait forever. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ] [ --init ]
+     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ] [ -s <em>setname</em> ] [ --init ]
 </pre>
 
 <ul>
- <li> <tt>s6 live install</tt> installs the <em>current working set</em>
+ <li> <tt>s6 live install</tt> installs the <tt>current</tt> <em>working set</em>
 of services, that has been crafted and committed via
 <a href="s6_set.html"><tt>s6 set</tt></a> commands, replacing the current
 live service database. </li>
@@ -267,21 +267,24 @@ stopped before the live database is replaced. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -b, --block </dt>
+<dt> <tt>-b</tt>, <tt>--block</tt> </dt>
 <dd> Block if something is currently holding the lock on the live service
 database. The default is to fail with an error message instead. </dd>
 
-<dt> -K, --keep-old </dt>
+<dt> <tt>-K</tt>, <tt>--keep-old</tt> </dt>
 <dd> Do not automatically delete the old service database after a successful switch.
 Instead, print its path to stdout. </dd>
 
-<dt> -f <em>convfile</em>, --conversion-file=<em>convfile</em> </dt>
+<dt> <tt>-f <em>convfile</em></tt>, <tt>--conversion-file=<em>convfile</em></tt> </dt>
 <dd> Use <em>convfile</em> as a <a href="//skarnet.org/software/s6-rc/s6-rc-update.html#conversion">conversion file</a> for the underlying
 <a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>
 invocation. This option should
 never be necessary if the services in the stores are properly managed. </dd>
 
-<dt> --init </dt>
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> Install the compiled set named <em>setname</em>. Default is <strong><tt>current</tt></strong>. </dd>
+
+<dt> <tt>--init</tt> </dt>
 <dd>
  Copy the compiled database of the current working set to the place where it
 can be booted on, but do not call

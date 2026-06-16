@@ -37,7 +37,7 @@ setting services in a state that remains theoretical until the user
 
 <p>
  <tt>s6 set</tt> commands always operate on a "working set" of services,
-which is internally named <tt>current</tt>. It is not the set that is
+which is by default named <tt>current</tt>. It is not the set that is
 currently live; it is the set that is currently worked on.
 </p>
 
@@ -56,41 +56,27 @@ currently live; it is the set that is currently worked on.
 and usage of the <tt>s6 set</tt> command. It is not as detailed as this page.
 </p>
 
-<h3 id="save"> save </h3>
+<h3 id="copy"> copy </h3>
 
 <h4> Interface </h4>
 
 <pre>
-     s6 set save [ -f ] <em>name</em>
+     s6 set copy [ -f ] <em>source</em> <em>dest</em> 
 </pre>
 
 <ul>
- <li> <tt>s6 set save</tt> saves a copy of the current working set into a
-set named <em>name</em>. </li>
- <li> <em>name</em> can be loaded by <a href="#load"><tt>s6 set load <em>name</em></tt></a>. </li>
+ <li> <tt>s6 set copy</tt> copies the set named <em>source</em> to a new set
+named <em>dest</em>. </li>
+ <li> There is always at least one set named <tt>current</tt>. This is the set being
+operated on by default by every <tt>s6 set</tt> command. </li>
 </ul>
 
 <h4> Options </h4>
 
 <dl>
 <dt> -f, --force </dt>
-<dd> If a set named <em>name</em> already exists, overwrite it with a copy
-of the current working set. By default, the command exits with an error
-instead of overwriting. </dd>
-
-<h3 id="load"> load </h3>
-
-<h4> Interface </h4>
-
-<pre>
-     s6 set load <em>name</em>
-</pre>
-
-<ul>
- <li> <tt>s6 set load</tt> replaces the current working set with the set stored
-as <em>name</em>. </li>
- <li> No options are defined. </li>
-</ul>
+<dd> If <em>dest</em> already exists, overwrite it with a copy of <em>source</em>.
+By default, the command exits with an error instead of overwriting. </dd>
 
 <h3 id="delete"> delete </h3>
 
@@ -102,6 +88,7 @@ as <em>name</em>. </li>
 
 <ul>
  <li> <tt>s6 set delete</tt> deletes the saved sets named <em>names...</em> </li>
+ <li> The set named <tt>current</tt> cannot be deleted. </li>
  <li> No options are defined. </li>
 </ul>
 
@@ -110,11 +97,11 @@ as <em>name</em>. </li>
 <h4> Interface </h4>
 
 <pre>
-     s6 set list [ -E | -e ]
+     s6 set list [ -E | -e ] [ -s <em>setname</em> ]
 </pre>
 
 <ul>
- <li> <tt>s6 set list</tt> lists all the services in the current set,
+ <li> <tt>s6 set list</tt> lists all the services in the <tt>current</tt> set,
 printing their names on stdout, one per line. </li>
 </ul>
 
@@ -127,6 +114,9 @@ default. </dd>
 
 <dt> -e, --without-essentials </dt>
 <dd> Do not list essential services. </dd>
+
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> List the services in the set named <em>setname</em> rather than <tt>current</tt>. </dd>
 </dl>
 
 <h3 id="status"> status </h3>
@@ -134,12 +124,12 @@ default. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 set status [ -E | -e ] [ <em>names...</em> ]
+     s6 set status [ -E | -e ] [ -s <em>setname</em> ] [ <em>names...</em> ]
 </pre>
 
 <ul>
  <li> <tt>s6 set status</tt> lists the services named <em>names...</em>
-in the working set with their current
+in the <tt>current</tt> set with their current
 <a href="//skarnet.org/software/s6-rc/repodefs.html#rx">prescription</a>, i.e.
 the state that they should be in at boot time: masked, disabled (listed
 as <tt>usable</tt>), enabled (listed as <tt>active</tt>), or essential
@@ -180,6 +170,9 @@ default. </dd>
 
 <dt> -e, --without-essentials </dt>
 <dd> Do not print essential services. </dd>
+
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> List the services in the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
 </dl>
 
 <div id="enable">
@@ -198,7 +191,7 @@ currently running database.
 <h4> Interface </h4>
 
 <pre>
-     s6 set enable|disable|mask|unmask|make-essential [ -f ] [ -n ] [ -I fail|warn|pull ] [ <em>services...</em> ]
+     s6 set enable|disable|mask|unmask|make-essential [ -n ] [ -I | -i ] [ -P | -p ] [ -s <em>setname</em> ] [ <em>services...</em> ]
 </pre>
 
 <ul>
@@ -224,28 +217,33 @@ make the set inconsistent. </li>
 <h4> Options </h4>
 
 <dl>
-<dt> -f, --ignore-dependencies </dt>
-<dd> Only change the services listed in <em>services</em>, don't compute dependencies. </dd>
 
 <dt> -n, --dry-run </dt>
 <dd> Do not perform the change; only show what would be done and check whether the set
 would be made inconsistent. </dd>
 
-<dt> -I <em>what</em>, --if-dependencies-found=<em>what</em> </dt>
-<dd> What to do when services have dependencies, or reverse dependencies, that are not
-listed in <em>services...</em>. <em>what</em> can be <tt>fail</tt>, <tt>warn</tt>,
-or <tt>pull</tt>.
- <ul>
-  <li> <tt>fail</tt>: abort the operation with an error message. </li>
-  <li> <tt>warn</tt>: perform the operation with a warning message. The set might
-be inconsistent afterwards, that can be changed by manually changing the dependencies
-or by fixing the set (see below). </li>
-  <li> <tt>pull</tt>: resolve inconsistencies by pulling the dependencies into the
-same prescription as the listed service. For <tt>enable</tt>,
-service dependencies are made <em>active</em> as well. For <tt>disable</tt>, reverse
-dependencies are disabled as well. For <tt>mask</tt>, reverse dependencies are
-masked as well. </li>
- </ul>
+ <dt> <tt>-I</tt>, <tt>--no-fail-on-dependencies</tt> </dt>
+ <dd> Do not fail if a dependency (to a service that's outside the listed ones) is found.
+This is the default. Depending on the <tt>-p</tt> flag, either a warning message will be
+printed and an inconsistent set will be made, or the dependency will be pulled into the change. </dd>
+
+ <dt> <tt>-i</tt>, <tt>--fail-on-dependencies</tt> </dt>
+ <dd> If a dependency is found that would create an inconsistent set if the change was
+applied, print an error message and exit 1. </dd>
+
+ <dt> <tt>-P</tt>, <tt>--no-pull-dependencies</tt> </dt>
+ <dd> If a dependency is found that would create an inconsistent set if the change was
+applied, print a warning message (if verbosity is not 0) listing the services that
+also need to change prescriptions; then apply the change anyway. This is the default. </dd>
+
+ <dt> <tt>-p</tt>, <tt>--pull-dependencies</tt> </dt>
+ <dd> If a dependency is found that would create an inconsistent set, automatically
+extend the change to the dependencies as well so the set remain consistent. Print an
+informational message (if verbosity is 2 or more) listing the services that are being
+pulled into the change, then apply the change. </dd>
+
+ <dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+ <dd> Perform the change on set <em>setname</em>. Default is <strong>current</strong> </dd>
 </dl>
 
 <h3 id="check"> check </h3>
@@ -253,11 +251,11 @@ masked as well. </li>
 <h4> Interface </h4>
 
 <pre>
-     s6 set check [ -F ] [ -d | -u ] [ -E | -e ]
+     s6 set check [ -F ] [ -d | -u ] [ -E | -e ] [ -s <em>setname</em> ]
 </pre>
 
 <ul>
- <li> <tt>s6 set check</tt> checks the current working set for
+ <li> <tt>s6 set check</tt> checks the <tt>current</tt> set for
 inconsistencies, printing anything it finds to stdout. </li>
 </ul>
 
@@ -290,6 +288,9 @@ default. </dd>
 <dd> Fix the set by enabling or unmasking services. If service <tt>A</tt>
 depends on service <tt>B</tt> and <tt>A</tt> is unmasked or enabled,
 change <tt>B</tt> to be unmasked or enabled as well. </dd>
+
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> Check the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
 </dl>
 
 <h3 id="commit"> commit </h3>
@@ -297,7 +298,7 @@ change <tt>B</tt> to be unmasked or enabled as well. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 set commit [ -f ] [ -K ] [ -D <em>defaultbundle</em> ] [ -h <em>fdhuser</em> ]
+     s6 set commit [ -f ] [ -K ] [ -D <em>defaultbundle</em> ] [ -h <em>fdhuser</em> ] [ -s <em>setname</em> ]
 </pre>
 
 <ul>
@@ -337,6 +338,9 @@ to change the default, which depends on the distribution and is probably called
 the set. This must be a user name defined in the <tt>/etc/passwd</tt>
 file or whatever user database the system uses. The default is <tt>root</tt>
 and that is fine. </dd>
+
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> Commit the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
 </dl>
 
 </body>

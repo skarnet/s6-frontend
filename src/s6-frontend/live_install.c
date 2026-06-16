@@ -19,6 +19,7 @@ enum golb_e
 enum gola_e
 {
   GOLA_CONVFILE,
+  GOLA_SET,
   GOLA_N
 } ;
 
@@ -35,12 +36,14 @@ void live_install (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'f', .lo = "conversion-file", .i = GOLA_CONVFILE },
+    { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   char const *wgola[GOLA_N] = { 0 } ;
   char const *newargv[18] ;
   char fmtv[UINT_FMT] ;
+  wgola[GOLA_SET] = "current" ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
@@ -68,7 +71,7 @@ void live_install (char const *const *argv)
   }
   if (wgolb & GOLB_INIT) newargv[m++] = "--no-update" ;
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }

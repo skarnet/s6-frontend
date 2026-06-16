@@ -18,6 +18,7 @@ enum gola_e
 {
   GOLA_DEFBUNDLE,
   GOLA_FDHUSER,
+  GOLA_SET,
   GOLA_N
 } ;
 
@@ -31,7 +32,8 @@ void set_commit (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
-    { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER }
+    { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER },
+    { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
 
   uint64_t wgolb = 0 ;
@@ -41,6 +43,7 @@ void set_commit (char const *const *argv)
   char fmtv[UINT_FMT] ;
 
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
+  wgola[GOLA_SET] = "current" ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-commit" ;
@@ -62,7 +65,7 @@ void set_commit (char const *const *argv)
     newargv[m++] = wgola[GOLA_FDHUSER] ;
   }
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }

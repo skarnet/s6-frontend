@@ -17,50 +17,37 @@ enum golb_e
   GOLB_FORCE = 0x01,
 } ;
 
-static void set_copy (char const *from, char const *to, int force) gccattr_noreturn ;
-static void set_copy (char const *from, char const *to, int force)
+void set_copy (char const *const *argv)
 {
-  unsigned int m = 0 ;
-  char const *argv[10] ;
-  char fmtv[UINT_FMT] ;
-  argv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-copy" ;
-  if (g->verbosity != 1)
-  {
-    fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
-    argv[m++] = "-v" ;
-    argv[m++] = fmtv ;
-  }
-  argv[m++] = "-r" ;
-  argv[m++] = g->dirs.repo ;
-  if (force) argv[m++] = "-f" ;
-  argv[m++] = "--" ;
-  argv[m++] = from ;
-  argv[m++] = to ;
-  argv[m++] = 0 ;
-  main_exec(argv) ;
-}
-
-void set_save (char const *const *argv)
-{
-  static gol_bool const rgolb[] =
+ static gol_bool const rgolb[] =
   {
     { .so = 'f', .lo = "force", .clear = 0, .set = GOLB_FORCE },
   } ;
   uint64_t wgolb = 0 ;
-  argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
-  if (!*argv) strerr_die(100, "usage: ", "s6 set ", "save [ --force ] name") ;
-  if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n')
-   || !strcmp(argv[0], "current"))
-    strerr_dief1x(100, "invalid set name") ;
-  set_copy("current", argv[0], !!(wgolb & GOLB_FORCE)) ;
-}
+  unsigned int m = 0 ;
+  char const *newargv[10] ;
+  char fmtv[UINT_FMT] ;
 
-void set_load (char const *const *argv)
-{
-  argv += gol_argv(argv, 0, 0, 0, 0, 0, 0) ;
-  if (!*argv) strerr_die(100, "usage: ", "s6 set ", "load name") ;
-  if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n')
-   || !strcmp(argv[0], "current"))
-    strerr_dief1x(100, "invalid set name") ;
-  set_copy(argv[0], "current", 1) ;
+  argv += gol_argv(argv, rgolb, 1, 0, 0, &wgolb, 0) ;
+  if (!argv[0] || !argv[1]) strerr_die(100, "usage: ", "s6 set ", "copy [ --force ] source destination") ;
+  if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n'))
+    strerr_dief(100, "invalid ", "source", " set name") ;
+  if (argv[1][0] == '.' || strchr(argv[1], '/') || strchr(argv[1], '\n'))
+    strerr_dief(100, "invalid ", "destination", " set name") ;
+
+  newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-copy" ;
+  if (g->verbosity != 1)
+  {
+    fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
+    newargv[m++] = "-v" ;
+    newargv[m++] = fmtv ;
+  }
+  newargv[m++] = "-r" ;
+  newargv[m++] = g->dirs.repo ;
+  if (wgolb & GOLB_FORCE) newargv[m++] = "-f" ;
+  newargv[m++] = "--" ;
+  newargv[m++] = argv[0] ;
+  newargv[m++] = argv[1] ;
+  newargv[m++] = 0 ;
+  main_exec(newargv) ;
 }

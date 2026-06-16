@@ -14,6 +14,12 @@ enum golb_e
   GOLB_IGNORE_ESSENTIALS = 0x01,
 } ;
 
+enum gola_e
+{
+  GOLA_SET,
+  GOLA_N
+} ;
+
 void set_list (char const *const *argv)
 {
   static gol_bool const rgolb[] =
@@ -21,11 +27,16 @@ void set_list (char const *const *argv)
     { .so = 'E', .lo = "with-essentials", .clear = GOLB_IGNORE_ESSENTIALS, .set = 0 },
     { .so = 'e', .lo = "without-essentials", .clear = 0, .set = GOLB_IGNORE_ESSENTIALS },
   } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 's', .lo = "set", .i = GOLA_SET },
+  } ;
   uint64_t wgolb = 0 ;
+  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
   unsigned int m = 0 ;
   char const *newargv[10] ;
   char fmtv[UINT_FMT] ;
-  argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-status" ;
   fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;
@@ -36,7 +47,7 @@ void set_list (char const *const *argv)
   newargv[m++] = "-L" ;
   newargv[m++] = wgolb & GOLB_IGNORE_ESSENTIALS ? "--without-essentials" : "--with-essentials" ;
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }

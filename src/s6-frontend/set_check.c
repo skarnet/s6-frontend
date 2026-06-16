@@ -18,6 +18,12 @@ enum golb_e
   GOLB_FIX = 0x04,
 } ;
 
+enum gola_e
+{
+  GOLA_SET,
+  GOLA_N
+} ;
+
 void set_check (char const *const *argv)
 {
   static gol_bool const rgolb[] =
@@ -28,12 +34,17 @@ void set_check (char const *const *argv)
     { .so = 'u', .lo = "up", .clear = 0, .set = GOLB_FIXUP },
     { .so = 'F', .lo = "fix", .clear = 0, .set = GOLB_FIX },
   } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 's', .lo = "set", .i = GOLA_SET },
+  } ;
   uint64_t wgolb = 0 ;
+  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
   unsigned int m = 0 ;
   char const *newargv[11] ;
   char fmtv[UINT_FMT] = " " ;
 
-  argv += gol_argv(argv, rgolb, 5, 0, 0, &wgolb, 0) ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-fix" ;
   if (g->verbosity != 1)
@@ -48,7 +59,7 @@ void set_check (char const *const *argv)
   newargv[m++] = wgolb & GOLB_FIXUP ? "--fix-up" : "--fix-down" ;
   if (!(wgolb & GOLB_FIX)) newargv[m++] = "--dry-run" ;
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
 
   main_exec(newargv) ;

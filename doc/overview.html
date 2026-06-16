@@ -226,10 +226,10 @@ dependency tree dynamically. On the other hand, s6-frontend (and, more accuratel
 the <a href="//skarnet.org/software/s6-rc/">s6-rc</a> service manager and its
 <a href="//skarnet.org/software/s6-rc/repodefs.html">repo</a> commands),
 separates the notion of <em>live database</em> and of <em>working set</em>
-entirely. The <em>working set</em> is worked on <em>offline</em>, without
+entirely. A <em>working set</em> is worked on <em>offline</em>, without
 impacting the current machine state. You can <em>start</em> and <em>stop</em>
 live services, but you can only <em>enable</em> or <em>disable</em>
-&mdash; or <em>mask</em> &mdash; services on the working set. Enabling a
+&mdash; or <em>mask</em> &mdash; services on a working set. Enabling a
 service means that <em>next time you boot on the service database you are
 working on</em>, that service will be automatically started. <br />
  Once you have worked on a set of services you can replace the live
@@ -278,17 +278,17 @@ in which case it will give detailed information on its supervised instance. </td
     <td> <tt>rc-status default</tt> </td>
     <td> <tt>s6 live status</tt> or <tt>s6 set status</tt> </td>
     <td> <tt>s6 live status</tt> shows the status of the current live database,
-<tt>s6 set status</tt> the status of the offline working set. </td>
+<tt>s6 set status</tt> the status of the <tt>current</tt> offline working set. </td>
    </tr>
    <tr>
     <td> <tt>rc-update add foobar</tt> </td>
     <td> <tt>s6 set enable foobar</tt> </td>
-    <td> Enable service <tt>foobar</tt> in the offline working set. </td>
+    <td> Enable service <tt>foobar</tt> in the <tt>current</tt> offline working set. </td>
    </tr>
    <tr>
     <td> <tt>rc-update del foobar</tt> </td>
     <td> <tt>s6 set disable foobar</tt> </td>
-    <td> Disable service <tt>foobar</tt> in the offline working set. </td>
+    <td> Disable service <tt>foobar</tt> in the <tt>current</tt> offline working set. </td>
    </tr>
    <tr>
     <td> <tt>rc-update show</tt> </td>

@@ -16,6 +16,12 @@ enum golb_e
   GOLB_IGNORE_ESSENTIALS = 0x01,
 } ;
 
+enum gola_e
+{
+  GOLA_SET,
+  GOLA_N
+} ;
+
 void set_status (char const *const *argv)
 {
   static gol_bool const rgolb[] =
@@ -23,12 +29,17 @@ void set_status (char const *const *argv)
     { .so = 'E', .lo = "with-essentials", .clear = GOLB_IGNORE_ESSENTIALS, .set = 0 },
     { .so = 'e', .lo = "without-essentials", .clear = 0, .set = GOLB_IGNORE_ESSENTIALS },
   } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 's', .lo = "set", .i = GOLA_SET },
+  } ;
   uint64_t wgolb = 0 ;
+  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
   unsigned int m = 0 ;
   unsigned int argc ;
   char fmtv[UINT_FMT] = " " ;
 
-  argv += gol_argv(argv, rgolb, 2, 0, 0, &wgolb, 0) ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
   argc = env_len(argv) ;
   if (!set_check_service_names(argv, argc))
     strerr_dief1x(100, "invalid service name") ;
@@ -42,7 +53,7 @@ void set_status (char const *const *argv)
   newargv[m++] = g->dirs.repo ;
   newargv[m++] = wgolb & GOLB_IGNORE_ESSENTIALS ? "--without-essentials" : "--with-essentials" ;
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   for (unsigned int i = 0 ; i < argc ; i++) newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;
 

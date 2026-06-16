@@ -11,13 +11,14 @@
 
 enum golb_e
 {
-  GOLB_IGNORE_DEPENDENCIES = 0x02,
-  GOLB_DRYRUN = 0x04,
+  GOLB_DRYRUN = 0x02,
+  GOLB_FAIL_ON_DEPS = 0x04,
+  GOLB_PULL_DEPS = 0x08,
 } ;
 
 enum gola_e
 {
-  GOLA_FORCELEVEL,
+  GOLA_SET,
   GOLA_N
 } ;
 
@@ -26,30 +27,28 @@ static void set_change (char const *const *argv, char const *newrx, char const *
 {
   static gol_bool const rgolb[] =
   {
-    { .so = 'f', .lo = "ignore-dependencies", .clear = 0, .set = GOLB_IGNORE_DEPENDENCIES },
-    { .so = 'n', .lo = "dry-run", .clear = 0, .set = GOLB_DRYRUN }
+    { .so = 0, .lo = "no-dry-run", .clear = GOLB_DRYRUN, .set = 0 },
+    { .so = 'n', .lo = "dry-run", .clear = 0, .set = GOLB_DRYRUN },
+    { .so = 'I', .lo = "no-fail-on-dependencies", .clear = GOLB_FAIL_ON_DEPS, .set = 0 },
+    { .so = 'i', .lo = "fail-on-dependencies", .clear = 0, .set = GOLB_FAIL_ON_DEPS },
+    { .so = 'P', .lo = "no-pull-dependencies", .clear = GOLB_PULL_DEPS, .set = 0 },
+    { .so = 'p', .lo = "pull-dependencies", .clear = 0, .set = GOLB_PULL_DEPS },
   } ;
   static gol_arg const rgola[] =
   {
-    { .so = 'I', .lo = "if-dependencies-found", .i = GOLA_FORCELEVEL }
+    { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
   uint64_t wgolb = 0 ;
+  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
   unsigned int m = 0 ;
-  unsigned int argc ;
-  char const *wgola[GOLA_N] = { 0 } ;
-  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
-  if (!*argv) strerr_die(100, "usage: ", "s6 set ", cmd, " [ --ignore-dependencies ] [ --dry-run ] [ --if-dependencies-found=fail|warn|pull ] services...") ;
-  argc = env_len(argv) ;
-  if (wgola[GOLA_FORCELEVEL])
-  {
-    if (strcmp(wgola[GOLA_FORCELEVEL], "fail")
-     && strcmp(wgola[GOLA_FORCELEVEL], "pull")
-     && strcmp(wgola[GOLA_FORCELEVEL], "warn"))
-      strerr_dief1x(100, "--if-dependencies-found= argument must be fail, warn or pull") ;
-  }
 
+  unsigned int argc ;
+  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+
+  if (!*argv) strerr_die(100, "usage: ", "s6 set ", cmd, " [ --dry-run ] [ --fail-on-dependencies | --pull-dependencies ] [ --set=setname ] services...") ;
+  argc = env_len(argv) ;
   char fmtv[UINT_FMT] ;
-  char const *newargv[14 + argc] ;
+  char const *newargv[13 + argc] ;
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-change" ;
   if (g->verbosity != 1)
   {
@@ -59,21 +58,14 @@ static void set_change (char const *const *argv, char const *newrx, char const *
   }
   newargv[m++] = "-r" ;
   newargv[m++] = g->dirs.repo ;
-  if (wgolb & GOLB_IGNORE_DEPENDENCIES)
-    newargv[m++] = "-f" ;
-  if (wgolb & GOLB_DRYRUN)
-    newargv[m++] = "-n" ;
-  if (wgola[GOLA_FORCELEVEL])
-  {
-    newargv[m++] = "-I" ;
-    newargv[m++] = wgola[GOLA_FORCELEVEL] ;
-  }
+  if (wgolb & GOLB_DRYRUN) newargv[m++] = "-n" ;
   if (!strcmp(newrx, "always")) newargv[m++] = "-e" ;
+  if (wgolb & GOLB_FAIL_ON_DEPS) newargv[m++] = "-i" ;
+  if (wgolb & GOLB_PULL_DEPS) newargv[m++] = "-p" ;
   newargv[m++] = "--" ;
-  newargv[m++] = "current" ;
+  newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = newrx ;
-  for (unsigned int i = 0 ; i < argc ; i++)
-    newargv[m++] = argv[i] ;
+  for (unsigned int i = 0 ; i < argc ; i++) newargv[m++] = argv[i] ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }

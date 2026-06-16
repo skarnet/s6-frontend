@@ -2,8 +2,8 @@ Usage: s6 set subcommand [ options ] [ arguments... ]
 
 Subcommands:
   help		this message
-  save		save the current set under a user-provided name
-  load		load a previously saved set
+  copy		copy a set to another name (default name is "current")
+  delete	delete one or more sets
   list		list services in the working set
   status	list services in the working set with their rx
   enable	enable services
@@ -14,21 +14,27 @@ Subcommands:
   commit	commit working set (can then be installed)
 
 
-s6 set save options:
+s6 set copy options:
   -f		--force				overwrite named set if existing
 
-s6 set load options: none
+s6 set delete options: none
 
-s6 set list options: none
+s6 set list options:
+  -s SET	--set=SET			show services in set SET (default: current)
 
 s6 set status options:
   -E		--with-essentials		show all services, even essential ones (default)
   -e		--without-essentials		don't show essential services
+  -s SET	--set=SET			show services in set SET (default: current)
 
 s6 set enable|disable|mask|unmask options:
   -f		--ignore-dependencies		only change listed services
   -n		--dry-run			show what would happen, don't do
-  -I WHAT	--if-dependencies-found=WHAT	WHAT=warn (default) | fail | pull (dependencies will be brought to the same rx)
+  -I		--no-fail-on-dependencies	warn or pull unlisted dependencies if found (default)
+  -i		--fail-on-dependencies		fail if unlisted dependencies are found
+  -P		--no-pull-dependencies		warn on unlisted dependencies (default)
+  -p		--pull-dependencies		apply the rx change to unlisted dependencies as well
+  -s SET	--set=SET			change services in set SET (default: current)
 
 s6 set check options:
   -E		--no-force-essential		do not allow manual changes to essential services (default)
@@ -36,10 +42,12 @@ s6 set check options:
   -F		--fix				try to fix inconsistencies automatically
   -d		--down				fix by disabling or masking services if necessary (default)
   -u		--up				fix by enabling services if necessary
+  -s SET	--set=SET			check set SET (default: current)
 
 s6 set commit options:
   -f		--force				compile db even if up-to-date
   -K		--keep-old			keep old db if any, print its path to stdout
   -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
-  -h USER	--fdholder-user=USER		user for the s6-fdholderd process (default=root, it's fine)
+  -h USER	--fdholder-user=USER		user for the s6-fdholderd process (default: root - it's fine)
+  -s SET	--set=SET			commit set SET (default: current)
 
