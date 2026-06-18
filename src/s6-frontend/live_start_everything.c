@@ -20,10 +20,10 @@ enum gola_e
   GOLA_N
 } ;
 
-void exec_live_start_everything (unsigned int timeout, int dryrun, char const *defbundle)
+void exec_live_start_everything (unsigned int timeout, char const *defbundle, unsigned int options)
 {
   unsigned int m = 0 ;
-  char const *argv[13] ;
+  char const *argv[14] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
 
@@ -40,7 +40,8 @@ void exec_live_start_everything (unsigned int timeout, int dryrun, char const *d
     argv[m++] = "-t" ;
     argv[m++] = fmtt ;
   }
-  if (dryrun) argv[m++] = "-n1" ;
+  if (options & 1) argv[m++] = "-n1" ;
+  if (options & 2) argv[m++] = "-p" ;
   argv[m++] = "-l" ;
   argv[m++] = g->dirs.live ;
   argv[m++] = "-b" ;
@@ -51,7 +52,8 @@ void exec_live_start_everything (unsigned int timeout, int dryrun, char const *d
   main_exec(argv) ;
 }
 
-void live_start_everything (char const *const *argv)
+static void live_start_default (char const *const *argv, int prune) gccattr_noreturn ;
+static void live_start_default (char const *const *argv, int prune)
 {
   static gol_bool const rgolb[] =
   {
@@ -73,5 +75,15 @@ void live_start_everything (char const *const *argv)
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
       strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
   }
-  exec_live_start_everything(timeout, !!(wgolb & GOLB_DRYRUN), wgola[GOLA_DEFBUNDLE]) ;
+  exec_live_start_everything(timeout, wgola[GOLA_DEFBUNDLE], (wgolb & GOLB_DRYRUN) | (!!prune << 1) ) ;
+}
+
+void live_start_everything (char const *const *argv)
+{
+  live_start_default(argv, 0) ;
+}
+
+void live_reset (char const *const *argv)
+{
+  live_start_default(argv, 1) ;
 }

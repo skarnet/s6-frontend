@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/wait.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -8,6 +9,7 @@
 #include <skalibs/buffer.h>
 #include <skalibs/envexec.h>
 #include <skalibs/cspawn.h>
+#include <skalibs/djbunix.h>
 
 #include <execline/config.h>
 
@@ -54,6 +56,25 @@ void main_exec (char const *const *argv)
   xmexec_m(argv, CLEANUP_MODIF, sizeof(CLEANUP_MODIF)) ;
 }
 
+void main_try (void (*f)(char const *const *), char const *const *argv)
+{
+  pid_t pid = fork() ;
+  if (pid == -1) strerr_diefusys(111, "fork") ;
+  if (!pid)
+  {
+    PROG = "s6-frontend (child)" ;
+    (*f)(argv) ;
+    strerr_dief(101, "can't happen: in main_try, noreturn function returned") ;
+  }
+  else
+  {
+    int wstat ;
+    pid_t r = wait_pid(pid, &wstat) ;
+    if (r == -1) strerr_diefusys(111, "waitpid") ;
+    if (WIFSIGNALED(wstat) || WEXITSTATUS(wstat)) _exit(wait_estatus(wstat)) ;
+  }
+}
+
 void main_pretty_exec (char const *const *argv)
 {
 #ifdef S6_FRONTEND_USE_UTIL_LINUX
@@ -97,7 +118,10 @@ int main (int argc, char const *const *argv)
   } ;
   static struct command_s const commands[] =
   {
+    { .s = "disable", .f = &set_disable },
+    { .s = "enable", .f = &set_enable },
     { .s = "help", .f = &main_help },
+    { .s = "kill", .f = &process_kill },
     { .s = "l", .f = &live },
     { .s = "live", .f = &live },
     { .s = "p", .f = &process },
@@ -107,6 +131,8 @@ int main (int argc, char const *const *argv)
     { .s = "repo", .f = &repository },
     { .s = "repository", .f = &repository },
     { .s = "set", .f = &set },
+    { .s = "start", .f = &live_start },
+    { .s = "stop", .f = &live_stop },
     { .s = "system", .f = &s6system },
     { .s = "version", .f = &version },
   } ;

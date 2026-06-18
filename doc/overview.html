@@ -265,8 +265,9 @@ the kind of commands that can be worked with.
   <tbody>
    <tr>
     <td> <tt>rc-service foobar start</tt> </td>
-    <td> <tt>s6 live start foobar</tt> </td>
-    <td> Starts a service in the live database. </td>
+    <td> <tt>s6 live start foobar</tt> or <tt>s6 start foobar</tt> </td>
+    <td> Starts a service in the live database. <tt>s6 start foobar</tt>
+is a shortcut. </td>
    </tr>
    <tr>
     <td> <tt>rc-service foobar status</tt> </td>
@@ -282,13 +283,15 @@ in which case it will give detailed information on its supervised instance. </td
    </tr>
    <tr>
     <td> <tt>rc-update add foobar</tt> </td>
-    <td> <tt>s6 set enable foobar</tt> </td>
-    <td> Enable service <tt>foobar</tt> in the <tt>current</tt> offline working set. </td>
+    <td> <tt>s6 set enable foobar</tt> or <tt>s6 enable foobar</tt> </td>
+    <td> Enable service <tt>foobar</tt> in the <tt>current</tt> offline working set.
+<tt>s6 enable foobar</tt> is a shortcut. </td>
    </tr>
    <tr>
     <td> <tt>rc-update del foobar</tt> </td>
-    <td> <tt>s6 set disable foobar</tt> </td>
-    <td> Disable service <tt>foobar</tt> in the <tt>current</tt> offline working set. </td>
+    <td> <tt>s6 set disable foobar</tt> or <tt>s6 disable foobar</tt> </td>
+    <td> Disable service <tt>foobar</tt> in the <tt>current</tt> offline working set.
+<tt>s6 disable foobar</tt> is a shortcut. </td>
    </tr>
    <tr>
     <td> <tt>rc-update show</tt> </td>

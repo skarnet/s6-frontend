@@ -90,5 +90,5 @@ void system_boot (char const *const *argv)
     strerr_dief1x(100, "timeout must be an unsigned integer (in milliseconds)") ;
   }
   system_init_spawn(wgola[GOLA_PREFIX]) ;
-  exec_live_start_everything(timeout, !!(wgolb & GOLB_DRYRUN), wgola[GOLA_DEFBUNDLE]) ;
+  exec_live_start_everything(timeout, wgola[GOLA_DEFBUNDLE], wgolb & GOLB_DRYRUN) ;
 }

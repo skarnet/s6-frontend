@@ -206,6 +206,41 @@ The default is <tt>default</tt>, possibly overridden by the
 <a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>. </dd>
 </dl>
 
+<h3 id="reset"> reset </h3>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live reset [ -n ] [ -t <em>timeout</em> ] [ -D <em>bundle</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 live reset</tt> brings up all the services in the default bundle
+<em>and</em> brings down all the services that are <em>not</em> in it. In
+other words, it resets the machine state to what it was right after
+booting. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
+<dd> Only print what would be done; do not actually change service states. </dd>
+
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
+<dd> If the whole change still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+
+<dt> <tt>-D <em>bundle</em></tt>, <tt>--default-bundle=<em>bundle</em></tt> </dt>
+<dd> Align to the bundle of services named <em>bundle</em> instead.
+The default is <tt>default</tt>, possibly overridden by the
+<tt>--with-default-bundle</tt> build-time configure option in
+<a href="//skarnet.org/software/s6-rc/">s6-rc</a> or
+<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>. </dd>
+</dl>
+
 <h3 id="stop-everything"> stop-everything </h3>
 
 <h4> Interface </h4>

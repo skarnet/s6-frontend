@@ -21,7 +21,7 @@
 
  /* live */
 
-extern void exec_live_start_everything (unsigned int, int, char const *) gccattr_noreturn ;
+extern void exec_live_start_everything (unsigned int, char const *, unsigned int) gccattr_noreturn ;
 
 extern void live (char const *const *) gccattr_noreturn ;
 extern void live_help (char const *const *) gccattr_noreturn ;
@@ -32,6 +32,7 @@ extern void live_status (char const *const *) gccattr_noreturn ;
 extern void live_stop (char const *const *) gccattr_noreturn ;
 
 extern void live_start_everything (char const *const *) gccattr_noreturn ;
+extern void live_reset (char const *const *) gccattr_noreturn ;
 extern void live_stop_everything (char const *const *) gccattr_noreturn ;
 
 extern void live_install (char const *const *) gccattr_noreturn ;
@@ -152,6 +153,7 @@ extern struct global_s *g ;
 
 extern void main_exec (char const *const *) gccattr_noreturn ;
 extern void main_pretty_exec (char const *const *) gccattr_noreturn ;
+extern void main_try (void (*)(char const *const *), char const *const *) ;
 extern pid_t main_spawn (char const *const *argv) ;
 
 extern void main_help (char const *const *) gccattr_noreturn ;

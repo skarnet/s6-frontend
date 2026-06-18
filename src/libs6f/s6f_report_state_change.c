@@ -1,7 +1,5 @@
 /* ISC license. */
 
-#include <string.h>
-
 #include <skalibs/prog.h>
 #include <skalibs/strerr.h>
 #include <skalibs/djbunix.h>
@@ -12,7 +10,9 @@
 
 void s6f_report_state_change (uint32_t n, unsigned char const *oldstate, unsigned char const *newstate, char const *compiled, int h)
 {
-  if (!memcmp(oldstate, newstate, n))
+  unsigned int i = 0 ;
+  for (; i < n ; i++) if ((oldstate[i] & 0x01) != (newstate[i] & 0x01)) break ;
+  if (i >= n)
   {
     if (buffer_puts(buffer_1, PROG) < 0
      || buffer_puts(buffer_1, ": info: ") < 0
@@ -51,7 +51,7 @@ void s6f_report_state_change (uint32_t n, unsigned char const *oldstate, unsigne
         strerr_diefu1sys(111, "write to stdout") ;
       for (uint32_t i = 0 ; i < n ; i++)
       {
-        if ((oldstate[i] & 1) != (newstate[i] & 1))
+        if ((oldstate[i] & 0x01) != (newstate[i] & 0x01))
         {
           if (buffer_puts(buffer_1, db.string + db.services[i].name) < 0
            || buffer_put(buffer_1, "\n", 1) < 1)
