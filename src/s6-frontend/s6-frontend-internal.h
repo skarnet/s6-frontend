@@ -26,6 +26,7 @@ extern void exec_live_start_everything (unsigned int, char const *, unsigned int
 extern void live (char const *const *) gccattr_noreturn ;
 extern void live_help (char const *const *) gccattr_noreturn ;
 
+extern void live_reload (char const *const *) gccattr_noreturn ;
 extern void live_restart (char const *const *) gccattr_noreturn ;
 extern void live_start (char const *const *) gccattr_noreturn ;
 extern void live_status (char const *const *) gccattr_noreturn ;

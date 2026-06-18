@@ -172,6 +172,42 @@ transitions. By default, <em>timeout</em> is 0, meaning infinite: the
 command can wait forever. </dd>
 </dl>
 
+<h3 id="reload"> reload </h3>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 live reload [ -n ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+</pre>
+
+<ul>
+ <li> <tt>s6 live reload <em>servicenames...</em></tt> reloads the services
+defined in the current live database and listed by name in <em>servicenames</em>. </li>
+ <li> <em>Reloading</em> means:
+  <ul>
+   <li> if the service is a longrun: sending a SIGHUP, or the signal defined in the
+service directory's <tt>down-signal</tt> file, to the process. </li>
+   <li> if the service is a oneshot: executing the <tt>reload</tt> script defined
+for it. </li>
+ <li> <tt>s6 live reload</tt> only applies to the listed services. It does not
+touch dependencies. It does not change service states: if a service is down,
+<tt>reload</tt> has no effect, and if a service is up, it is still up after
+reloading. </li>
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
+<dd> Only print what would be done; do not actually reload services. </dd>
+
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
+<dd> If a reload script still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting for it and consider the reload a failure.
+By default, <em>timeout</em> is 0, meaning infinite: the
+command can wait forever. </dd>
+</dl>
+
 <h3 id="start-everything"> start-everything </h3>
 
 <h4> Interface </h4>

@@ -1,6 +1,7 @@
 live.o
 live_help.o
 live_install.o
+live_reload.o
 live_startstop.o
 live_status.o
 live_start_everything.o
