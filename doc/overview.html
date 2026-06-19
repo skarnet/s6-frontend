@@ -303,8 +303,9 @@ changes effective, the user needs to run <tt>s6 set commit</tt> then
    <tr>
     <td> <tt>openrc sysinit &amp;&amp; openrc boot &amp;&amp; openrc default</tt> </td>
     <td> <tt>s6 system boot</tt> </td>
-    <td> The existence of the <tt>sysinit</tt> and <tt>boot</tt> runlevels are a
-historical wart that OpenRC still has to deal with; s6-frontend does not. </td>
+    <td> The <tt>sysinit</tt> and <tt>boot</tt> runlevels in OpenRC are only distinct
+for historical reasons. s6-frontend does not make the distinction, all the services it
+starts at boot time are in the <em>default bundle</em>. </td>
    </tr>
    <tr>
     <td> <tt>reboot</tt> </td>

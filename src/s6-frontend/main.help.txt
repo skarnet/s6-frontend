@@ -11,6 +11,14 @@ Commands:
   set		manipulate sets of services (offline, to later install them live)
   repository	manipulate the service repository itself
 
+Shortcuts:
+  enable	s6 set enable
+  disable	s6 set disable
+  start		s6 live start
+  stop		s6 live stop
+  kill		s6 process kill
+  apply		s6 set apply
+
 Global options:
   -h		--help			equivalent to "s6 help"
   -u		--user			override config values with XDG environment

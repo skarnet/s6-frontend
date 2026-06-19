@@ -11,9 +11,9 @@
 
 enum golb_e
 {
-  GOLB_DRYRUN = 0x02,
-  GOLB_FAIL_ON_DEPS = 0x04,
-  GOLB_PULL_DEPS = 0x08,
+  GOLB_DRYRUN = 0x01,
+  GOLB_FAIL_ON_DEPS = 0x02,
+  GOLB_PULL_DEPS = 0x04,
 } ;
 
 enum gola_e

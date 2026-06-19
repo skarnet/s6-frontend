@@ -20,6 +20,7 @@ repository_init.o
 repository_list.o
 repository_sync.o
 set.o
+set_apply.o
 set_change.o
 set_check.o
 set_commit.o

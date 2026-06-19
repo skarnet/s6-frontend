@@ -343,5 +343,62 @@ and that is fine. </dd>
 <dd> Commit the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
 </dl>
 
+<h3 id="apply"> apply </h3>
+
+<h4> Interface </h4>
+
+<pre>
+     s6 set apply [ -b ]  [ -D <em>defaultbundle</em> ] [ -h <em>fdhuser</em> ] [ -s <em>setname</em> ] [ -t <em>timeout</em> ]
+</pre>
+
+<ul>
+ <li> <tt>s6 set apply</tt> is different from other <tt>s6 set</tt> commands
+in that it does several things in succession, and <em>impacts the live state</em>
+of the machine. It does the following:
+  <ul>
+   <li> <em>Commit</em> the working set, just like <tt>s6 set commit</tt> </li>
+   <li> <em>Install</em> the working set, just like <tt>s6 live install</tt> </li>
+   <li> <em>Reset</em> the live state, just like <tt>s6 live reset</tt>, so it
+matches the prescriptions of the working set exactly. </li>
+  </ul>
+ In other words, <tt>s6 set apply</tt> immediately turns the working set
+into the current live state. It is a powerful command. </li>
+ <li> 
+</ul>
+
+<h4> Options </h4>
+
+<dl>
+<dt> <tt>-b</tt>, <tt>--block</tt> </dt>
+<dd> Block if something is currently holding the lock on the live service
+database. The default is to fail with an error message instead. </dd>
+
+<dt> -D <em>defaultbundle</em>, --default-bundle=<em>defaultbundle</em> </dt>
+<dd> The name of the bundle that holds all <tt>active</tt> and <tt>always</tt>
+services, which will be the ones running on the machine when the command ends.
+The default depends on the distribution and is probably called <tt>default</tt>. </dd>
+
+<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
+<dd> Specify the fdholder user for the compiled database built from
+the set. This must be a user name defined in the <tt>/etc/passwd</tt>
+file or whatever user database the system uses. The default is <tt>root</tt>
+and that is fine. </dd>
+
+<dt> <tt>-f <em>convfile</em></tt>, <tt>--conversion-file=<em>convfile</em></tt> </dt>
+<dd> Use <em>convfile</em> as a <a href="//skarnet.org/software/s6-rc/s6-rc-update.html#conversion">conversion file</a> for the underlying
+<a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>
+invocation. This option should
+never be necessary if the services in the stores are properly managed. </dd>
+
+<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
+<dd> Apply the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
+
+<dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
+<dd> If installing the set and resetting the state still hasn't completed after <em>timeout</em>
+milliseconds, stop waiting and don't attempt to perform the remaining
+transitions. By default, <em>timeout</em> is 0, meaning infinite: the
+command will wait until the task is complete. </dd>
+</dl>
+
 </body>
 </html>

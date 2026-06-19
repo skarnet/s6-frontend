@@ -118,6 +118,7 @@ int main (int argc, char const *const *argv)
   } ;
   static struct command_s const commands[] =
   {
+    { .s = "apply", .f = &set_apply },
     { .s = "disable", .f = &set_disable },
     { .s = "enable", .f = &set_enable },
     { .s = "help", .f = &main_help },

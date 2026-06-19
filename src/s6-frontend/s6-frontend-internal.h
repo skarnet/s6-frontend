@@ -88,6 +88,8 @@ extern void set_make_essential (char const *const *) gccattr_noreturn ;
 extern void set_check (char const *const *) gccattr_noreturn ;
 extern void set_commit (char const *const *) gccattr_noreturn ;
 
+extern void set_apply (char const *const *) gccattr_noreturn ;
+
 
  /* system */
 
