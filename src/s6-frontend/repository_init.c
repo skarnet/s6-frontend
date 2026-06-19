@@ -20,12 +20,6 @@ enum golb_e
   GOLB_UPDATE = 0x02,
 } ;
 
-enum gola_e
-{
-  GOLA_FDHUSER,
-  GOLA_N
-} ;
-
 void repository_init (char const *const *argv)
 {
   static gol_bool const rgolb[] =
@@ -33,18 +27,13 @@ void repository_init (char const *const *argv)
     { .so = 'f', .lo = "force", .clear = 0, .set = GOLB_FORCE },
     { .so = 'U', .lo = "update-stores", .clear = 0, .set = GOLB_UPDATE },
   } ;
-  static gol_arg const rgola[] =
-  {
-    { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER },
-  } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   unsigned int n = 0 ;
-  char const *wgola[GOLA_N] = { 0 } ;
   size_t len ;
   char fmtv[UINT_FMT] ;
 
-  argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+  argv += gol_argv(argv, rgolb, sizeof(rgolb) / sizeof(gol_bool), 0, 0, &wgolb, 0) ;
 
   len = strlen(g->dirs.stol) ;
   char storage[len+1] ;
@@ -64,10 +53,10 @@ void repository_init (char const *const *argv)
   newargv[m++] = g->dirs.repo ;
   if (wgolb & GOLB_FORCE) newargv[m++] = "-f" ;
   if (wgolb & GOLB_UPDATE) newargv[m++] = "-U" ;
-  if (wgola[GOLA_FDHUSER])
+  if (g->fdhuser && g->fdhuser[0])
   {
     newargv[m++] = "-h" ;
-    newargv[m++] = wgola[GOLA_FDHUSER] ;
+    newargv[m++] = g->fdhuser ;
   }
   newargv[m++] = "--" ;
   len = 0 ;

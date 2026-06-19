@@ -34,4 +34,5 @@ Global options:
   -c BOOTDB	--bootdb=BOOTDB		live database the system is booting on
 		--stmpdir=STMPDIR	root-only temporary directory
 		--storelist=LIST	list of service stores
+		--fdholder-user=USER	the s6-fdholderd user embedded in service databases
 

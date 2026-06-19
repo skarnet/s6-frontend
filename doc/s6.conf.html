@@ -99,6 +99,12 @@ The default is <tt>/usr/share/s6/sources:/etc/s6/sources</tt>
 terse (only print fatal error messages), 1 is normal (print error messages and warnings),
 over 1 is increasingly verbose (print informational messages, up to tracing and debug
 messages at level 4-5). The default is <strong>1</strong>. </dd>
+
+<dt> fdhuser </dt>
+<dd> The system user for the internal fd-holding process spawned by
+s6-rc. It must be a user defined in <tt>/etc/passwd</tt>.
+The default is <strong>root</strong> and that is fine, but distributions
+may want to set it to an unprivileged user. </dd>
 </dl>
 
 </body>

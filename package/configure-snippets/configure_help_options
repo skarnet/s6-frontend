@@ -4,4 +4,5 @@
 
   --with-store-list=LIST        list of service stores [PREFIX/share/s6/sources:SYSCONFDIR/s6/sources]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
+  --with-fdholder-user=USER     s6-fdholderd user to embed in databases [s6-svscan user]
 

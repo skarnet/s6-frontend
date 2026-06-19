@@ -72,3 +72,6 @@ echo "#define ${package_macro_name}_CONF \"$conffile\""
 
 echo "#undef ${package_macro_name}_STORELIST"
 echo "#define ${package_macro_name}_STORELIST \"$storelist\""
+
+echo "#undef ${package_macro_name}_FDHUSER"
+echo "#define ${package_macro_name}_FDHUSER \"$fdhuser\""

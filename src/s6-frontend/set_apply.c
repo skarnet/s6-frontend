@@ -17,7 +17,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_DEFBUNDLE,
-  GOLA_FDHUSER,
   GOLA_CONVFILE,
   GOLA_SET,
   GOLA_TIMEOUT,
@@ -33,7 +32,6 @@ void set_apply (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
-    { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER },
     { .so = 'f', .lo = "conversion-file", .i = GOLA_CONVFILE },
     { .so = 's', .lo = "set", .i = GOLA_SET },
     { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
@@ -71,10 +69,10 @@ void set_apply (char const *const *argv)
   newargv[m++] = g->dirs.repo ;
   newargv[m++] = "-D" ;
   newargv[m++] = wgola[GOLA_DEFBUNDLE] ;
-  if (wgola[GOLA_FDHUSER])
+  if (g->fdhuser && g->fdhuser[0])
   {
     newargv[m++] = "-h" ;
-    newargv[m++] = wgola[GOLA_FDHUSER] ;
+    newargv[m++] = g->fdhuser ;
   }
   newargv[m++] = "--" ;
   newargv[m++] = wgola[GOLA_SET] ;

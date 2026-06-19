@@ -119,6 +119,7 @@ struct global_s
 {
   unsigned int verbosity ;
   s6f_confdirs dirs ;
+  char const *fdhuser ;
   stralloc userstorage ;
   uint8_t isuser : 1 ;
   uint8_t istty : 1 ;
@@ -136,6 +137,7 @@ struct global_s
     .stmp = S6_FRONTEND_STMPDIR, \
     .stol = S6_FRONTEND_STORELIST, \
   }, \
+  .fdhuser = S6_FRONTEND_FDHUSER, \
   .userstorage = STRALLOC_ZERO, \
   .isuser = 0, \
   .istty = 0, \

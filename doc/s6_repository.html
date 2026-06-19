@@ -59,7 +59,7 @@ and usage of the <tt>s6 repository</tt> command. It is not as detailed as this p
 <h4> Interface </h4>
 
 <pre>
-     s6 repository init [ -f ] [ -U ] [ -h <em>fdhuser</em> ]
+     s6 repository init [ -f ] [ -U ]
 </pre>
 
 <ul>
@@ -85,9 +85,6 @@ if the repository seems hopelessly broken. </dd>
 of stores. This commands needs to be run when the storelist variable
 has changed. </dd>
 
-<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
-<dd> Specify the fdholder user for the reference database. This has
-no impact whatsoever and this option can safely be ignored. </dd>
 </dl>
 
 <h3 id="list"> list </h3>
@@ -154,7 +151,7 @@ change <tt>B</tt> to be unmasked or enabled as well. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 repository sync [ -h <em>fdhuser</em> ]
+     s6 repository sync
 </pre>
 
 <ul>
@@ -165,14 +162,6 @@ when the package manager of the distribution adds or removes a package
 that defines a service. Ideally it should be added to a hook defined by
 the package manager. </li>
 </ul>
-
-<h4> Options </h4>
-
-<dl>
-<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
-<dd> Specify the fdholder user for the reference database. This has
-no impact whatsoever and this option can safely be ignored. </dd>
-</dl>
 
 </body>
 </html>

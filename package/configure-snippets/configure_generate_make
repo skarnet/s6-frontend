@@ -4,6 +4,7 @@ echo "REPODIR := $repodir"
 echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
 echo "STORELIST := $storelist"
+echo "FDHUSER := $fdhuser"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"

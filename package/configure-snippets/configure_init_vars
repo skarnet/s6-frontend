@@ -6,6 +6,7 @@ stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6.conf'
 storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
 defbundle=
+fdhuser=
 
 usensss=false
 uses6li=true

@@ -6,6 +6,7 @@
     --conffile=*) conffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
+    --with-fdholder-user=*) fdhuser=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;

@@ -5,6 +5,10 @@ In 0.1.0.0
 
  - Bugfixes.
  - Documentation updates.
+ - New option: s6 -u|--user, for user services.
+ - New commands: s6 live reset, s6 apply.
+ - New shortcuts: s6 enable,disable,start,stop,kill,apply.
+ - The fdholder user is now a configuration variable.
 
 
 In 0.0.1.2

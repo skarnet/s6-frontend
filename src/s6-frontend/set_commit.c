@@ -17,7 +17,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_DEFBUNDLE,
-  GOLA_FDHUSER,
   GOLA_SET,
   GOLA_N
 } ;
@@ -32,7 +31,6 @@ void set_commit (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
-    { .so = 'h', .lo = "fdholder-user", .i = GOLA_FDHUSER },
     { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
 
@@ -59,10 +57,10 @@ void set_commit (char const *const *argv)
   newargv[m++] = wgola[GOLA_DEFBUNDLE] ;
   if (wgolb & GOLB_FORCE) newargv[m++] = "-f" ;
   if (wgolb & GOLB_KEEPOLD) newargv[m++] = "-K" ;
-  if (wgola[GOLA_FDHUSER])
+  if (g->fdhuser && g->fdhuser[0])
   {
     newargv[m++] = "-h" ;
-    newargv[m++] = wgola[GOLA_FDHUSER] ;
+    newargv[m++] = g->fdhuser ;
   }
   newargv[m++] = "--" ;
   newargv[m++] = wgola[GOLA_SET] ;

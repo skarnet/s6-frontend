@@ -11,10 +11,8 @@ Subcommands:
 s6 repository init options:
   -f		--force			Overwrite existing repository
   -U		--update-stores		Update existing repository with new stores
-  -h USER	--fdholder-user		Set USER as reference fdholder owner
 
-s6 repository sync options:
-  -h USER	--fdholder-user		Set USER as reference fdholder owner
+s6 repository sync options: none
 
 s6 repository list options: none
 

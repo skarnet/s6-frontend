@@ -22,7 +22,7 @@
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0storelist\0verbosity"
+#define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0storelist\0verbosity\0fdhuser"
 
 enum golb_e
 {
@@ -40,6 +40,7 @@ enum gola_e
   GOLA_STMPDIR,
   GOLA_STORELIST,
   GOLA_VERBOSITY,
+  GOLA_FDHUSER,
   GOLA_COLOR,
   GOLA_N
 } ;
@@ -114,6 +115,7 @@ int main (int argc, char const *const *argv)
     { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
     { .so = 0,   .lo = "storelist", .i = GOLA_STORELIST },
     { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
+    { .so = 0,   .lo = "fdholder-user", .i = GOLA_FDHUSER },
     { .so = 0,   .lo = "color", .i = GOLA_COLOR },
   } ;
   static struct command_s const commands[] =
@@ -151,6 +153,7 @@ int main (int argc, char const *const *argv)
     [GOLA_STMPDIR] = getenv("stmpdir"),
     [GOLA_STORELIST] = getenv("storelist"),
     [GOLA_VERBOSITY] = getenv("verbosity"),
+    [GOLA_FDHUSER] = getenv("fdhuser"),
     [GOLA_COLOR] = 0
   } ;
   PROG = "s6-frontend" ;
@@ -173,6 +176,7 @@ int main (int argc, char const *const *argv)
   if (wgola[GOLA_BOOTDB]) g->dirs.boot = wgola[GOLA_BOOTDB] ;
   if (wgola[GOLA_STMPDIR]) g->dirs.stmp = wgola[GOLA_STMPDIR] ;
   if (wgola[GOLA_STORELIST]) g->dirs.stol = wgola[GOLA_STORELIST] ;
+  if (wgola[GOLA_FDHUSER]) g->fdhuser = wgola[GOLA_FDHUSER] ;
 
   {
     int force_color = 0 ;

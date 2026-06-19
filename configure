@@ -30,7 +30,7 @@ Fine tuning of the installation directories:
   --repodir=DIR                 default s6-rc repository [s6-rc default: /var/lib/s6-rc/repository]
   --bootdb=LINK                 location of the bootable s6-rc compiled db [s6-rc default: /etc/s6-rc/compiled/current]
   --stmpdir=DIR                 secure location for temporary s6-frontend files [/run/s6-frontend]
-  --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6-frontend.conf]
+  --conffile=FILE               default configuration file for s6 command [SYSCONFDIR/s6.conf]
  If no --prefix option is given, by default libdir (but not dynlibdir) will be
  /usr/lib, and includedir will be /usr/include.
 
@@ -58,8 +58,9 @@ Optional features:
   --disable-s6li                do not use s6-linux-init functionality [enabled]
   --enable-util-linux           use util-linux functionality [disabled]
 
-  --with-store-list=LIST        list of service stores [PREFIX/share/s6-frontend/s6-rc/sources:SYSCONFDIR/s6-frontend/s6-rc/sources]
+  --with-store-list=LIST        list of service stores [PREFIX/share/s6/sources:SYSCONFDIR/s6/sources]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
+  --with-fdholder-user=USER     s6-fdholderd user to embed in databases [s6-svscan user]
 
 EOF
 exit 0
@@ -186,9 +187,10 @@ livedir=
 repodir=
 bootdb=
 stmpdir=/run/s6-frontend
-conffile='$sysconfdir/s6-frontend.conf'
-storelist='$prefix/share/s6-frontend/s6-rc/sources:$sysconfdir/s6-frontend/s6-rc/sources'
+conffile='$sysconfdir/s6.conf'
+storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
 defbundle=
+fdhuser=
 
 usensss=false
 uses6li=true
@@ -240,6 +242,7 @@ for arg ; do
     --conffile=*) conffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
+    --with-fdholder-user=*) fdhuser=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-s6li|--enable-s6li=yes) uses6li=true ;;
@@ -562,6 +565,7 @@ echo "REPODIR := $repodir"
 echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
 echo "STORELIST := $storelist"
+echo "FDHUSER := $fdhuser"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"
@@ -675,6 +679,9 @@ echo "#define ${package_macro_name}_CONF \"$conffile\""
 
 echo "#undef ${package_macro_name}_STORELIST"
 echo "#define ${package_macro_name}_STORELIST \"$storelist\""
+
+echo "#undef ${package_macro_name}_FDHUSER"
+echo "#define ${package_macro_name}_FDHUSER \"$fdhuser\""
 echo
 echo "#endif"
 exec 1>&3 3>&-

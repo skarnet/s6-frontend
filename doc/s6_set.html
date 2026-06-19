@@ -298,7 +298,7 @@ change <tt>B</tt> to be unmasked or enabled as well. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 set commit [ -f ] [ -K ] [ -D <em>defaultbundle</em> ] [ -h <em>fdhuser</em> ] [ -s <em>setname</em> ]
+     s6 set commit [ -f ] [ -K ] [ -D <em>defaultbundle</em> ] [ -s <em>setname</em> ]
 </pre>
 
 <ul>
@@ -333,12 +333,6 @@ services and that will be started at boot time. There is generally no reason
 to change the default, which depends on the distribution and is probably called
 <tt>default</tt>. </dd>
 
-<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
-<dd> Specify the fdholder user for the compiled database built from
-the set. This must be a user name defined in the <tt>/etc/passwd</tt>
-file or whatever user database the system uses. The default is <tt>root</tt>
-and that is fine. </dd>
-
 <dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
 <dd> Commit the set named <em>setname</em>, rather than <tt>current</tt>. </dd>
 </dl>
@@ -348,7 +342,7 @@ and that is fine. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 set apply [ -b ]  [ -D <em>defaultbundle</em> ] [ -h <em>fdhuser</em> ] [ -s <em>setname</em> ] [ -t <em>timeout</em> ]
+     s6 set apply [ -b ]  [ -D <em>defaultbundle</em> ] [ -s <em>setname</em> ] [ -t <em>timeout</em> ]
 </pre>
 
 <ul>
@@ -377,12 +371,6 @@ database. The default is to fail with an error message instead. </dd>
 <dd> The name of the bundle that holds all <tt>active</tt> and <tt>always</tt>
 services, which will be the ones running on the machine when the command ends.
 The default depends on the distribution and is probably called <tt>default</tt>. </dd>
-
-<dt> -h <em>fdhuser</em>, --fdholder-user=<em>fdhuser</em> </dt>
-<dd> Specify the fdholder user for the compiled database built from
-the set. This must be a user name defined in the <tt>/etc/passwd</tt>
-file or whatever user database the system uses. The default is <tt>root</tt>
-and that is fine. </dd>
 
 <dt> <tt>-f <em>convfile</em></tt>, <tt>--conversion-file=<em>convfile</em></tt> </dt>
 <dd> Use <em>convfile</em> as a <a href="//skarnet.org/software/s6-rc/s6-rc-update.html#conversion">conversion file</a> for the underlying

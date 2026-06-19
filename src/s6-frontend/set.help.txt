@@ -49,13 +49,11 @@ s6 set commit options:
   -f		--force				compile db even if up-to-date
   -K		--keep-old			keep old db if any, print its path to stdout
   -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
-  -h USER	--fdholder-user=USER		user for the s6-fdholderd process (default: root - it's fine)
   -s SET	--set=SET			commit set SET (default: current)
 
 s6 set apply options:
   -b		--block				block if another s6-rc is running (default: fail)
   -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
-  -h USER	--fdholder-user=USER		user for the s6-fdholderd process (default: root - it's fine)
   -f CONVFILE	--conversion-file=CONVFILE	use CONVFILE when updating the service db (default: none)
   -s SET	--set=SET			apply set SET (default: current)
   -t TIMEOUT	--timeout=TIMEOUT		fail after TIMEOUT milliseconds (default: 0 (=infinite))
