@@ -64,6 +64,7 @@ void version_export (char const *const *argv)
   (*f)("bootdb", g->dirs.scan, &sa) ;
   (*f)("stmpdir", g->dirs.stmp, &sa) ;
   (*f)("storelist", g->dirs.stol, &sa) ;
+  (*f)("fdhuser", g->fdhuser ? g->fdhuser : "", &sa) ;
   len = uint_fmt(fmt, g->verbosity) ; fmt[len++] = '\n' ;
   if (!buffer_puts(buffer_1, "verbosity=")
    || !buffer_putflush(buffer_1, fmt, len)) dieout() ;
