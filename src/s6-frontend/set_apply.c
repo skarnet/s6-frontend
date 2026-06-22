@@ -137,5 +137,5 @@ void set_apply (char const *const *argv)
   newargv[m++] = "change" ;
   newargv[m++] = wgola[GOLA_DEFBUNDLE] ;
   newargv[m++] = 0 ;
-  main_exec(argv) ;
+  main_exec(newargv) ;
 }

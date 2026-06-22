@@ -46,7 +46,7 @@ void exec_live_start_everything (unsigned int timeout, char const *defbundle, un
   argv[m++] = g->dirs.live ;
   argv[m++] = "-b" ;
   argv[m++] = "--" ;
-  argv[m++] = "start" ;
+  argv[m++] = "change" ;
   argv[m++] = defbundle ;
   argv[m++] = 0 ;
   main_exec(argv) ;
