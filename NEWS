@@ -9,6 +9,7 @@ In 0.1.0.0
  - New commands: s6 live reset, s6 apply.
  - New shortcuts: s6 enable,disable,start,stop,kill,apply.
  - The fdholder user is now a configuration variable.
+ - New option for s6 live stop: -c|--clean
 
 
 In 0.0.1.2

@@ -3,7 +3,6 @@
 #
 
 src/s6-frontend/s6-frontend-internal.h: src/include/s6-frontend/config.h src/include-local/s6f.h
-src/helpers/s6-frontend-helper-echo.o src/helpers/s6-frontend-helper-echo.lo: src/helpers/s6-frontend-helper-echo.c
 src/helpers/s6-frontend-helper-echore.o src/helpers/s6-frontend-helper-echore.lo: src/helpers/s6-frontend-helper-echore.c
 src/helpers/s6-frontend-helper-kill.o src/helpers/s6-frontend-helper-kill.lo: src/helpers/s6-frontend-helper-kill.c
 src/libs6f/s6f_confdir_open.o src/libs6f/s6f_confdir_open.lo: src/libs6f/s6f_confdir_open.c src/include-local/s6f.h
@@ -45,8 +44,6 @@ src/s6-frontend/version.o src/s6-frontend/version.lo: src/s6-frontend/version.c 
 src/s6-frontend/version_export.o src/s6-frontend/version_export.lo: src/s6-frontend/version_export.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h src/include-local/s6f.h
 src/s6-frontend/version_show.o src/s6-frontend/version_show.lo: src/s6-frontend/version_show.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h
 
-s6-frontend-helper-echo: EXTRA_LIBS :=
-s6-frontend-helper-echo: src/helpers/s6-frontend-helper-echo.o -lskarnet
 s6-frontend-helper-echore: EXTRA_LIBS :=
 s6-frontend-helper-echore: src/helpers/s6-frontend-helper-echore.o -lskarnet
 s6-frontend-helper-kill: EXTRA_LIBS :=

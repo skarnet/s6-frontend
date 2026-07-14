@@ -4,7 +4,6 @@ s6 \
 LIBEXEC_TARGETS := \
 s6-frontend \
 s6-frontend-helper-kill \
-s6-frontend-helper-echo \
 s6-frontend-helper-echore \
 
 EXTRA_TARGETS := \
