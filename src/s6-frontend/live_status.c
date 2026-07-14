@@ -55,7 +55,7 @@ static void live_status_all (int withe)
   argv[m++] = " list" ;
   argv[m++] = "" ;
   argv[m++] = "grep" ;
-  argv[m++] = " -F" ;
+  argv[m++] = "-F" ;
   argv[m++] = "/down/" ;
   argv[m++] = 0 ;
   main_pretty_exec(argv) ;
