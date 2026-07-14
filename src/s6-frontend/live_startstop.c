@@ -20,6 +20,7 @@
 enum golb_e
 {
   GOLB_DRYRUN = 0x01,
+  GOLB_CLEAN = 0x02,
 } ;
 
 enum gola_e
@@ -33,6 +34,7 @@ static unsigned int parse_options (char const *const *argv, uint64_t *wgolb, uns
   static gol_bool const rgolb[] =
   {
     { .so = 'n', .lo = "dry-run", .clear = 0, .set = GOLB_DRYRUN },
+    { .so = 'c', .lo = "clean", .clear = 0, .set = GOLB_CLEAN },
   } ;
   static gol_arg const rgola[] =
   {
@@ -48,12 +50,12 @@ static unsigned int parse_options (char const *const *argv, uint64_t *wgolb, uns
   return argc ;
 }
 
-static int run_s6rc_change (char const *const *services, unsigned int n, int h, int dryrun, unsigned int timeout, unsigned int nstate, char const *dbfn)
+static int run_s6rc_change (char const *const *services, unsigned int n, int h, uint64_t flags, unsigned int timeout, unsigned int nstate, char const *dbfn)
 {
   pid_t pid ;
   int wstat ;
   unsigned int m = 0 ;
-  char const *argv[12 + n] ;
+  char const *argv[13 + n] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
   unsigned char oldstate[nstate] ;
@@ -71,7 +73,8 @@ static int run_s6rc_change (char const *const *services, unsigned int n, int h, 
     fmtt[uint_fmt(fmtt, timeout)] = 0 ;
     argv[m++] = fmtt ;
   }
-  if (dryrun) argv[m++] = "-n1" ;
+  if (flags & GOLB_DRYRUN) argv[m++] = "-n1" ;
+  if (flags & GOLB_CLEAN) argv[m++] = "-c" ;
   argv[m++] = "-l" ;
   argv[m++] = g->dirs.live ;
   argv[m++] = "--" ;
@@ -111,7 +114,7 @@ static int live_startstop (char const *const *argv, int h)
   if (!s6rc_live_state_size(g->dirs.live, &nlong, &nshort))
     strerr_diefu2sys(111, "read state size in ", g->dirs.live) ;
 
-  return run_s6rc_change(argv, env_len(argv), h, !!(wgolb & GOLB_DRYRUN), timeout, nlong + nshort, dbfn) ;
+  return run_s6rc_change(argv, env_len(argv), h, wgolb, timeout, nlong + nshort, dbfn) ;
 }
 
 void live_start (char const *const *argv)
@@ -146,8 +149,8 @@ void live_restart (char const *const *argv)
   if (!s6rc_live_state_size(g->dirs.live, &nlong, &nshort))
     strerr_diefu2sys(111, "read state size in ", g->dirs.live) ;
 
-  e = run_s6rc_change(argv, argc, 0, !!(wgolb & GOLB_DRYRUN), timeout, nlong + nshort, dbfn) ;
+  e = run_s6rc_change(argv, argc, 0, wgolb, timeout, nlong + nshort, dbfn) ;
   if (e) _exit(e) ;
-  e = run_s6rc_change(argv, argc, 1, !!(wgolb & GOLB_DRYRUN), timeout, nlong + nshort, dbfn) ;
+  e = run_s6rc_change(argv, argc, 1, wgolb, timeout, nlong + nshort, dbfn) ;
   _exit(e) ;
 }

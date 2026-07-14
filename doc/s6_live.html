@@ -119,7 +119,7 @@ command can wait forever. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 live stop [ -n ] [ -t <em>timeout</em> ] <em>servicenames...</em>
+     s6 live stop [ -n ] [ -c ] [ -t <em>timeout</em> ] <em>servicenames...</em>
 </pre>
 
 <ul>
@@ -133,6 +133,13 @@ as well as services that depends on them. </li>
 <dl>
 <dt> <tt>-n</tt>, <tt>--dry-run</tt> </dt>
 <dd> Only print what would be done; do not actually stop services. </dd>
+
+<dt> <tt>-c</tt>, <tt>--clean</tt> </dt>
+<dd> If there are services that were <em>pulled</em>, i.e. started
+by way of the dependency engine without being explicitly listed in the
+arguments of an <tt>s6 live start</tt> command (or in the default bundle
+for the services started at boot), and the explicit services that pulled
+them have been stopped, stop the pulled services as well. </dd>
 
 <dt> <tt>-t <em>timeout</em></tt>, <tt>--timeout=<em>timeout</em></tt> </dt>
 <dd> If the whole change still hasn't completed after <em>timeout</em>
