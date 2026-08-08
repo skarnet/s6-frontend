@@ -110,9 +110,9 @@ static void live_status_some (char const *const *services, int withe)
   unsigned int m = 0 ;
   int e ;
   size_t llen = strlen(g->dirs.live) ;
-  char llivedir[llen + 3] ;
-  llivedir[0] = ' ' ; llivedir[1] = ' ' ;
-  memcpy(llivedir + 2, g->dirs.live, llen + 1) ;
+  char llivedir[llen + 2] ;
+  llivedir[0] = ' ' ;
+  memcpy(llivedir + 1, g->dirs.live, llen + 1) ;
   char const *argv[26] ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa, withe) ;
