@@ -137,7 +137,7 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = " " S6RC_EXTBINPREFIX "s6-rc" ;
   argv[m++] = " -l" ;
   argv[m++] = llivedir ;
-  argv[m++] = withe ? " -cbE" : "-cbe" ;
+  argv[m++] = withe ? " -cbE" : " -cbe" ;
   argv[m++] = " --" ;
   argv[m++] = " list" ;
   argv[m++] = "" ;
