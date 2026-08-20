@@ -61,7 +61,7 @@ void version_export (char const *const *argv)
   (*f)("scandir", g->dirs.scan, &sa) ;
   (*f)("livedir", g->dirs.live, &sa) ;
   (*f)("repodir", g->dirs.repo, &sa) ;
-  (*f)("bootdb", g->dirs.scan, &sa) ;
+  (*f)("bootdb", g->dirs.boot, &sa) ;
   (*f)("stmpdir", g->dirs.stmp, &sa) ;
   (*f)("storelist", g->dirs.stol, &sa) ;
   (*f)("fdhuser", g->fdhuser ? g->fdhuser : "", &sa) ;
