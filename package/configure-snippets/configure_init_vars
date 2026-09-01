@@ -7,6 +7,9 @@ conffile='$sysconfdir/s6.conf'
 userconffile='$sysconfdir/s6-user.conf'
 storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
 userstorelist='$prefix/share/s6/user/sources:$sysconfdir/s6/user/sources'
+usersourcesubdir=/s6/sources
+userreposubdir=/s6-rc/repository
+userbootdbsubdir=/s6-rc/compiled/current
 defbundle=
 fdhuser=
 

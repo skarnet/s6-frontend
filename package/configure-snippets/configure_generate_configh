@@ -79,5 +79,14 @@ echo "#define ${package_macro_name}_STORELIST \"$storelist\""
 echo "#undef ${package_macro_name}_USER_STORELIST"
 echo "#define ${package_macro_name}_USER_STORELIST \"$userstorelist\""
 
+echo "#undef ${package_macro_name}_USER_SOURCE_SUBDIR"
+echo "#define ${package_macro_name}_USER_SOURCE_SUBDIR \"$usersourcesubdir\""
+
+echo "#undef ${package_macro_name}_USER_REPO_SUBDIR"
+echo "#define ${package_macro_name}_USER_REPO_SUBDIR \"$userreposubdir\""
+
+echo "#undef ${package_macro_name}_USER_BOOTDB_SUBDIR"
+echo "#define ${package_macro_name}_USER_BOOTDB_SUBDIR \"$userbootdbsubdir\""
+
 echo "#undef ${package_macro_name}_FDHUSER"
 echo "#define ${package_macro_name}_FDHUSER \"$fdhuser\""

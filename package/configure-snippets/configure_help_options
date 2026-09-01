@@ -4,6 +4,9 @@
 
   --with-store-list=LIST        list of system service stores [PREFIX/share/s6/sources:SYSCONFDIR/s6/sources]
   --with-user-store-list=LIST   list of shared user service stores [PREFIX/share/s6/user/sources:SYSCONFDIR/s6/user/sources]
+  --with-user-source-subdir=DIR user source subdirectory below XDG_CONFIG_HOME [/s6/sources]
+  --with-user-repo-subdir=DIR   user repository subdirectory below XDG_STATE_HOME [/s6-rc/repository]
+  --with-user-bootdb-subdir=DIR user bootdb subdirectory below XDG_STATE_HOME [/s6-rc/compiled/current]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
   --with-fdholder-user=USER     s6-fdholderd user to embed in databases [s6-svscan user]
 

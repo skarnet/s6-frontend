@@ -10,6 +10,8 @@
 #include <skalibs/strerr.h>
 #include <skalibs/stralloc.h>
 
+#include <s6-frontend/config.h>
+
 #include "s6f.h"
 
 #define dienomem() strerr_diefu1sys(111, "allocate memory")
@@ -74,14 +76,14 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage, char const *s
   {
     if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.local/state")) dienomem() ;
   }
-  catpath(storage, statehome, "/s6-rc/repository") ;
+  catpath(storage, statehome, S6_FRONTEND_USER_REPO_SUBDIR) ;
 
   bootpos = storage->len ;
   if (!statehome)
   {
     if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.local/state")) dienomem() ;
   }
-  catpath(storage, statehome, "/s6-rc/compiled/current") ;
+  catpath(storage, statehome, S6_FRONTEND_USER_BOOTDB_SUBDIR) ;
 
   stmppos = storage->len ;
   catpath(storage, runtime, "/s6-frontend") ;
@@ -97,7 +99,7 @@ void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage, char const *s
   {
     if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.config")) dienomem() ;
   }
-  catpath(storage, confighome, "/s6/sources") ;
+  catpath(storage, confighome, S6_FRONTEND_USER_SOURCE_SUBDIR) ;
 
  /* Don't add to storage past this point. */
 

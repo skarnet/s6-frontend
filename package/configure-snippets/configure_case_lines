@@ -7,6 +7,9 @@
     --user-conffile=*) userconffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-user-store-list=*) userstorelist=${arg#*=} ;;
+    --with-user-source-subdir=*) usersourcesubdir=${arg#*=} ;;
+    --with-user-repo-subdir=*) userreposubdir=${arg#*=} ;;
+    --with-user-bootdb-subdir=*) userbootdbsubdir=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --with-fdholder-user=*) fdhuser=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;

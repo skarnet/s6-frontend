@@ -61,6 +61,9 @@ Optional features:
 
   --with-store-list=LIST        list of system service stores [PREFIX/share/s6/sources:SYSCONFDIR/s6/sources]
   --with-user-store-list=LIST   list of shared user service stores [PREFIX/share/s6/user/sources:SYSCONFDIR/s6/user/sources]
+  --with-user-source-subdir=DIR user source subdirectory below XDG_CONFIG_HOME [/s6/sources]
+  --with-user-repo-subdir=DIR   user repository subdirectory below XDG_STATE_HOME [/s6-rc/repository]
+  --with-user-bootdb-subdir=DIR user bootdb subdirectory below XDG_STATE_HOME [/s6-rc/compiled/current]
   --with-default-bundle=NAME    name of the bundle started at boot [s6-rc default: default]
   --with-fdholder-user=USER     s6-fdholderd user to embed in databases [s6-svscan user]
 
@@ -193,6 +196,9 @@ conffile='$sysconfdir/s6.conf'
 userconffile='$sysconfdir/s6-user.conf'
 storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
 userstorelist='$prefix/share/s6/user/sources:$sysconfdir/s6/user/sources'
+usersourcesubdir=/s6/sources
+userreposubdir=/s6-rc/repository
+userbootdbsubdir=/s6-rc/compiled/current
 defbundle=
 fdhuser=
 
@@ -247,6 +253,9 @@ for arg ; do
     --user-conffile=*) userconffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-user-store-list=*) userstorelist=${arg#*=} ;;
+    --with-user-source-subdir=*) usersourcesubdir=${arg#*=} ;;
+    --with-user-repo-subdir=*) userreposubdir=${arg#*=} ;;
+    --with-user-bootdb-subdir=*) userbootdbsubdir=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --with-fdholder-user=*) fdhuser=${arg#*=} ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
@@ -479,7 +488,13 @@ else
   LDFLAGS_NOSHARED="${LDFLAGS_NOSHARED}${addlibdpath}"
 fi
 
-
+for i in usersourcesubdir userreposubdir userbootdbsubdir ; do
+  eval x=\${$i}
+  case $x in
+    /*) ;;
+    *) fail "$0: $i must begin with /" ;;
+  esac
+done
 
 echo "Creating config.mak..."
 cmdline=$(quote "$0")
@@ -691,6 +706,15 @@ echo "#define ${package_macro_name}_STORELIST \"$storelist\""
 
 echo "#undef ${package_macro_name}_USER_STORELIST"
 echo "#define ${package_macro_name}_USER_STORELIST \"$userstorelist\""
+
+echo "#undef ${package_macro_name}_USER_SOURCE_SUBDIR"
+echo "#define ${package_macro_name}_USER_SOURCE_SUBDIR \"$usersourcesubdir\""
+
+echo "#undef ${package_macro_name}_USER_REPO_SUBDIR"
+echo "#define ${package_macro_name}_USER_REPO_SUBDIR \"$userreposubdir\""
+
+echo "#undef ${package_macro_name}_USER_BOOTDB_SUBDIR"
+echo "#define ${package_macro_name}_USER_BOOTDB_SUBDIR \"$userbootdbsubdir\""
 
 echo "#undef ${package_macro_name}_FDHUSER"
 echo "#define ${package_macro_name}_FDHUSER \"$fdhuser\""

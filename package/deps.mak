@@ -8,7 +8,7 @@ src/helpers/s6-frontend-helper-kill.o src/helpers/s6-frontend-helper-kill.lo: sr
 src/libs6f/s6f_confdir_open.o src/libs6f/s6f_confdir_open.lo: src/libs6f/s6f_confdir_open.c src/include-local/s6f.h
 src/libs6f/s6f_equote.o src/libs6f/s6f_equote.lo: src/libs6f/s6f_equote.c src/include-local/s6f.h
 src/libs6f/s6f_report_state_change.o src/libs6f/s6f_report_state_change.lo: src/libs6f/s6f_report_state_change.c src/include-local/s6f.h
-src/libs6f/s6f_user_get_confdirs.o src/libs6f/s6f_user_get_confdirs.lo: src/libs6f/s6f_user_get_confdirs.c src/include-local/s6f.h
+src/libs6f/s6f_user_get_confdirs.o src/libs6f/s6f_user_get_confdirs.lo: src/libs6f/s6f_user_get_confdirs.c src/include/s6-frontend/config.h src/include-local/s6f.h
 src/s6-frontend/live.o src/s6-frontend/live.lo: src/s6-frontend/live.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/live_install.o src/s6-frontend/live_install.lo: src/s6-frontend/live_install.c src/s6-frontend/s6-frontend-internal.h
 src/s6-frontend/live_reload.o src/s6-frontend/live_reload.lo: src/s6-frontend/live_reload.c src/s6-frontend/s6-frontend-internal.h src/include/s6-frontend/config.h

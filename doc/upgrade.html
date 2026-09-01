@@ -26,7 +26,8 @@
 file, <tt>/etc/s6-user.conf</tt> by default. </li>
  <li> User service sources moved to <tt>$XDG_CONFIG_HOME/s6/sources</tt>.
 The user repository and compiled boot database moved under
-<tt>$XDG_STATE_HOME/s6-rc</tt>. Existing experimental user repositories at the
+<tt>$XDG_STATE_HOME/s6-rc</tt>. These relative paths are now build-time
+configurable for distributions. Existing experimental user repositories at the
 old locations are not migrated automatically. </li>
 </ul>
 

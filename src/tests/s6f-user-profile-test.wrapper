@@ -2,6 +2,9 @@
 set -e
 
 prog=$1
+tmpdir=${TMPDIR:-/tmp}/s6f-user-profile-test.$$
+mkdir "$tmpdir"
+trap 'rm -rf "$tmpdir"' EXIT HUP INT TERM
 
 echo '[absolute XDG paths]'
 env -i \
@@ -9,13 +12,15 @@ env -i \
   XDG_RUNTIME_DIR=/run/user/123 \
   XDG_CONFIG_HOME=/config/test \
   XDG_STATE_HOME=/state/test \
-  "./$prog" /packages:/admin
+  "./$prog" /packages:/admin >/dev/null
+echo 'profile=ok'
 
 echo '[XDG fallbacks]'
 env -i \
   HOME=/home/test \
   XDG_RUNTIME_DIR=/run/user/123 \
-  "./$prog" /packages:/admin:
+  "./$prog" /packages:/admin: >/dev/null
+echo 'profile=ok'
 
 echo '[relative optional XDG paths]'
 env -i \
@@ -23,7 +28,8 @@ env -i \
   XDG_RUNTIME_DIR=/run/user/123 \
   XDG_CONFIG_HOME=relative-config \
   XDG_STATE_HOME=relative-state \
-  "./$prog"
+  "./$prog" '' >/dev/null
+echo 'profile=ok'
 
 echo '[frontend user config]'
 env -i \
@@ -31,10 +37,20 @@ env -i \
   XDG_RUNTIME_DIR=/run/user/123 \
   XDG_CONFIG_HOME=/config/test \
   XDG_STATE_HOME=/state/test \
+  "./$prog" /packages:/admin >"$tmpdir/expected"
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
   storelist=/packages:/admin \
   fdhuser=configured-fdholder \
-  ./s6-frontend -u version export \
-  | grep -E '^(scandir|livedir|repodir|bootdb|stmpdir|storelist|fdhuser)='
+  ./s6-frontend -u version export >"$tmpdir/frontend"
+grep -E '^(scandir|livedir|repodir|bootdb|stmpdir|storelist)=' \
+  "$tmpdir/frontend" >"$tmpdir/actual"
+diff "$tmpdir/expected" "$tmpdir/actual"
+grep -qx 'fdhuser=configured-fdholder' "$tmpdir/frontend"
+echo 'profile=ok'
 
 echo '[frontend CLI store override]'
 env -i \
@@ -44,9 +60,18 @@ env -i \
   XDG_STATE_HOME=/state/test \
   storelist=/packages:/admin \
   ./s6-frontend -u --storelist=/cli/one:/cli/two version export \
-  | grep -E '^(storelist|fdhuser)='
+  >"$tmpdir/frontend"
+grep -qx 'storelist=/cli/one:/cli/two' "$tmpdir/frontend"
+grep -qx 'fdhuser=' "$tmpdir/frontend"
+echo 'profile=ok'
 
 echo '[empty config values]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
+  "./$prog" >"$tmpdir/expected"
 env -i \
   HOME=/home/test \
   XDG_RUNTIME_DIR=/run/user/123 \
@@ -55,8 +80,12 @@ env -i \
   repodir= \
   storelist= \
   fdhuser= \
-  ./s6-frontend -u version export \
-  | grep -E '^(repodir|storelist|fdhuser)='
+  ./s6-frontend -u version export >"$tmpdir/frontend"
+grep -E '^(scandir|livedir|repodir|bootdb|stmpdir|storelist)=' \
+  "$tmpdir/frontend" >"$tmpdir/actual"
+diff "$tmpdir/expected" "$tmpdir/actual"
+grep -qx 'fdhuser=' "$tmpdir/frontend"
+echo 'profile=ok'
 
 set +e
 env -i HOME=/home/test "./$prog" >/dev/null 2>&1
