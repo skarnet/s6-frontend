@@ -68,10 +68,14 @@ of its various exit codes.
 <ul>
  <li> s6 reads the <code>S6_CONF</code> environment variable
 containing the absolute path to the
-<a href="s6.conf.html">configuration file</a> for the s6 command. </li>
- <li> If this variable is unset, the default is <tt>/etc/s6.conf</tt>,
+<a href="s6.conf.html">configuration file</a> for the s6 command. When set,
+this file is used in both system and user mode. </li>
+ <li> If this variable is unset, system mode uses <tt>/etc/s6.conf</tt>,
 possibly overridden by the <tt>--conffile</tt> build-time configure option to
 s6-frontend. </li>
+ <li> If this variable is unset and <tt>-u</tt> is given, user mode uses
+<tt>/etc/s6-user.conf</tt>, possibly overridden by the
+<tt>--user-conffile</tt> build-time configure option. </li>
 </ul>
 
 <h2 id="options"> Global options </h2>
@@ -130,11 +134,11 @@ setting. Also, for pretty-printing of columns, it is recommended to
 have built s6-frontend with util-linux support. </dd>
 
  <dt> <tt>-u</tt>, <tt>--user</tt> </dt>
- <dd> Override the variables defined in the configuration file with values
-built from XDG environment variables. This option only works if the XDG
-environment variables are present in the environment. This option is
-useful to address user services. You can see what values are used by
-running <tt>s6 -u version export</tt>. </dd>
+ <dd> Select the user-service policy profile. s6 loads the user configuration
+file instead of the system configuration file, derives account-specific paths
+from the XDG environment, and uses an empty fdholder user by default.
+<tt>XDG_RUNTIME_DIR</tt> must be set to an absolute path. You can see the
+resolved profile by running <tt>s6 -u version export</tt>. </dd>
 </dl>
 
 
@@ -239,7 +243,7 @@ The details are available <a href="s6_system.html">here</a>.
 
 <ul>
  <li> <tt>s6</tt> does not perform real operations itself. Instead, after
-finding the path to its <a href="s6.conf.html">configuration file</a>
+selecting the system or user <a href="s6.conf.html">configuration file</a>
 <em>conf</em>, it rewrites itself into <code>envfile -I <em>conf</em> -- s6-frontend
 <em>global_options...</em> <em>command</em> <em>subcommand</em> <em>subcommand_options...</em> <em>args...</em></code>
   <ul>

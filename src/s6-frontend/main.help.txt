@@ -21,12 +21,12 @@ Shortcuts:
 
 Global options:
   -h		--help			equivalent to "s6 help"
-  -u		--user			override config values with XDG environment
+  -u		--user			use the user config profile and XDG paths
 
 		--color=yes|no|auto	display fancy or boring-but-parsable text.
 					auto is the default: fancy if in a terminal.
 
- These options override the values set in s6-frontend.conf:
+ These options override the values set in the selected config file:
   -v V		--verbosity=V		verbosity (0 is terse, 1 is normal/default, more is verbose)
   -s SCANDIR	--scandir=SCANDIR	where s6-svscan is running
   -l LIVEDIR	--livedir=LIVEDIR	s6-rc live directory

@@ -1,0 +1,71 @@
+#!/bin/sh
+set -e
+
+prog=$1
+
+echo '[absolute XDG paths]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
+  "./$prog" /packages:/admin
+
+echo '[XDG fallbacks]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  "./$prog" /packages:/admin:
+
+echo '[relative optional XDG paths]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=relative-config \
+  XDG_STATE_HOME=relative-state \
+  "./$prog"
+
+echo '[frontend user config]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
+  storelist=/packages:/admin \
+  fdhuser=configured-fdholder \
+  ./s6-frontend -u version export \
+  | grep -E '^(scandir|livedir|repodir|bootdb|stmpdir|storelist|fdhuser)='
+
+echo '[frontend CLI store override]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
+  storelist=/packages:/admin \
+  ./s6-frontend -u --storelist=/cli/one:/cli/two version export \
+  | grep -E '^(storelist|fdhuser)='
+
+echo '[empty config values]'
+env -i \
+  HOME=/home/test \
+  XDG_RUNTIME_DIR=/run/user/123 \
+  XDG_CONFIG_HOME=/config/test \
+  XDG_STATE_HOME=/state/test \
+  repodir= \
+  storelist= \
+  fdhuser= \
+  ./s6-frontend -u version export \
+  | grep -E '^(repodir|storelist|fdhuser)='
+
+set +e
+env -i HOME=/home/test "./$prog" >/dev/null 2>&1
+status=$?
+set -e
+echo "missing-runtime-status=$status"
+
+set +e
+env -i HOME=/home/test XDG_RUNTIME_DIR=relative "./$prog" >/dev/null 2>&1
+status=$?
+set -e
+echo "relative-runtime-status=$status"

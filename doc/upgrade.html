@@ -19,6 +19,17 @@
 
 <h1> What has changed in s6-frontend </h1>
 
+<h2> in the next release </h2>
+
+<ul>
+ <li> <tt>s6 -u</tt> now selects a separate machine-wide user configuration
+file, <tt>/etc/s6-user.conf</tt> by default. </li>
+ <li> User service sources moved to <tt>$XDG_CONFIG_HOME/s6/sources</tt>.
+The user repository and compiled boot database moved under
+<tt>$XDG_STATE_HOME/s6-rc</tt>. Existing experimental user repositories at the
+old locations are not migrated automatically. </li>
+</ul>
+
 <h2> in 0.1.0.0 </h2>
 
 <ul>

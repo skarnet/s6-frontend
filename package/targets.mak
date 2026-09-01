@@ -1,6 +1,11 @@
 BIN_TARGETS := \
 s6 \
 
+TEST_BINS := \
+s6f-user-profile-test \
+
+tests: s6-frontend
+
 LIBEXEC_TARGETS := \
 s6-frontend \
 s6-frontend-helper-kill \

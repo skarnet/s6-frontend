@@ -17,6 +17,7 @@
 #include <s6-rc/config.h>
 
 #include "s6f.h"
+#include "s6f-main-options.h"
 #include "s6-frontend-internal.h"
 
 #define USAGE "s6 [ generic options ] command [ command options ] command_arguments... Type \"s6 help\" for details."
@@ -24,28 +25,13 @@
 
 #define CLEANUP_MODIF "scandir\0livedir\0repodir\0bootdb\0stmpdir\0storelist\0verbosity\0fdhuser"
 
-enum golb_e
-{
-  GOLB_HELP = 0x01,
-  GOLB_VERSION = 0x02,
-  GOLB_USER = 0x04,
-} ;
-
-enum gola_e
-{
-  GOLA_SCANDIR,
-  GOLA_LIVEDIR,
-  GOLA_REPODIR,
-  GOLA_BOOTDB,
-  GOLA_STMPDIR,
-  GOLA_STORELIST,
-  GOLA_VERBOSITY,
-  GOLA_FDHUSER,
-  GOLA_COLOR,
-  GOLA_N
-} ;
-
 struct global_s *g ;
+
+static char const *getenv_nonempty (char const *name)
+{
+  char const *s = getenv(name) ;
+  return s && *s ? s : 0 ;
+}
 
 pid_t main_spawn (char const *const *argv)
 {
@@ -101,23 +87,6 @@ void main_pretty_exec (char const *const *argv)
 
 int main (int argc, char const *const *argv)
 {
-  static gol_bool const rgolb[] =
-  {
-    { .so = 'h', .lo = "help", .clear = 0, .set = GOLB_HELP },
-    { .so = 'u', .lo = "user", .clear = 0, .set = GOLB_USER },
-  } ;
-  static gol_arg const rgola[] =
-  {
-    { .so = 's', .lo = "scandir", .i = GOLA_SCANDIR },
-    { .so = 'l', .lo = "livedir", .i = GOLA_LIVEDIR },
-    { .so = 'r', .lo = "repodir", .i = GOLA_REPODIR },
-    { .so = 'c', .lo = "bootdb", .i = GOLA_BOOTDB },
-    { .so = 0,   .lo = "stmpdir", .i = GOLA_STMPDIR },
-    { .so = 0,   .lo = "storelist", .i = GOLA_STORELIST },
-    { .so = 'v', .lo = "verbosity", .i = GOLA_VERBOSITY },
-    { .so = 0,   .lo = "fdholder-user", .i = GOLA_FDHUSER },
-    { .so = 0,   .lo = "color", .i = GOLA_COLOR },
-  } ;
   static struct command_s const commands[] =
   {
     { .s = "apply", .f = &set_apply },
@@ -144,56 +113,65 @@ int main (int argc, char const *const *argv)
   uint64_t wgolb = 0 ;
   unsigned int golc ;
   struct command_s *cmd ;
-  char const *wgola[GOLA_N] =
+  char const *confstorelist = getenv_nonempty("storelist") ;
+  int storelistfromcli ;
+  char const *wgola[S6F_GOLA_N] =
   {
-    [GOLA_SCANDIR] = getenv("scandir"),
-    [GOLA_LIVEDIR] = getenv("livedir"),
-    [GOLA_REPODIR] = getenv("repodir"),
-    [GOLA_BOOTDB] = getenv("bootdb"),
-    [GOLA_STMPDIR] = getenv("stmpdir"),
-    [GOLA_STORELIST] = getenv("storelist"),
-    [GOLA_VERBOSITY] = getenv("verbosity"),
-    [GOLA_FDHUSER] = getenv("fdhuser"),
-    [GOLA_COLOR] = 0
+    [S6F_GOLA_SCANDIR] = getenv_nonempty("scandir"),
+    [S6F_GOLA_LIVEDIR] = getenv_nonempty("livedir"),
+    [S6F_GOLA_REPODIR] = getenv_nonempty("repodir"),
+    [S6F_GOLA_BOOTDB] = getenv_nonempty("bootdb"),
+    [S6F_GOLA_STMPDIR] = getenv_nonempty("stmpdir"),
+    [S6F_GOLA_STORELIST] = confstorelist,
+    [S6F_GOLA_VERBOSITY] = getenv_nonempty("verbosity"),
+    [S6F_GOLA_FDHUSER] = getenv_nonempty("fdhuser"),
+    [S6F_GOLA_COLOR] = 0
   } ;
   PROG = "s6-frontend" ;
   g = &globals_in_the_stack ;
 
-  golc = GOL_main(argc, argv, rgolb, rgola, &wgolb, wgola) ;
+  golc = GOL_main(argc, argv, s6f_main_rgolb, s6f_main_rgola, &wgolb, wgola) ;
   argc -= golc ; argv += golc ;
+  storelistfromcli = wgola[S6F_GOLA_STORELIST] != confstorelist ;
 
-  if (wgola[GOLA_VERBOSITY] && !uint0_scan(wgola[GOLA_VERBOSITY], &g->verbosity))
+  if (wgola[S6F_GOLA_VERBOSITY] && !uint0_scan(wgola[S6F_GOLA_VERBOSITY], &g->verbosity))
     strerr_dief1x(100, "verbosity must be an unsigned integer") ;
 
-  if (wgolb & GOLB_HELP)  { main_help(argv) ; _exit(0) ; }
+  if (wgolb & S6F_GOLB_HELP)  { main_help(argv) ; _exit(0) ; }
 
-  g->isuser = !!(wgolb & GOLB_USER) ;
-  if (g->isuser) s6f_user_get_confdirs(&g->dirs, &g->userstorage) ;
+  g->isuser = !!(wgolb & S6F_GOLB_USER) ;
+  if (g->isuser)
+  {
+    s6f_user_get_confdirs(&g->dirs, &g->userstorage,
+      confstorelist ? confstorelist : S6_FRONTEND_USER_STORELIST) ;
+    g->fdhuser = "" ;
+  }
 
-  if (wgola[GOLA_SCANDIR]) g->dirs.scan = wgola[GOLA_SCANDIR] ;
-  if (wgola[GOLA_LIVEDIR]) g->dirs.live = wgola[GOLA_LIVEDIR] ;
-  if (wgola[GOLA_REPODIR]) g->dirs.repo = wgola[GOLA_REPODIR] ;
-  if (wgola[GOLA_BOOTDB]) g->dirs.boot = wgola[GOLA_BOOTDB] ;
-  if (wgola[GOLA_STMPDIR]) g->dirs.stmp = wgola[GOLA_STMPDIR] ;
-  if (wgola[GOLA_STORELIST]) g->dirs.stol = wgola[GOLA_STORELIST] ;
-  if (wgola[GOLA_FDHUSER]) g->fdhuser = wgola[GOLA_FDHUSER] ;
+  if (wgola[S6F_GOLA_SCANDIR]) g->dirs.scan = wgola[S6F_GOLA_SCANDIR] ;
+  if (wgola[S6F_GOLA_LIVEDIR]) g->dirs.live = wgola[S6F_GOLA_LIVEDIR] ;
+  if (wgola[S6F_GOLA_REPODIR]) g->dirs.repo = wgola[S6F_GOLA_REPODIR] ;
+  if (wgola[S6F_GOLA_BOOTDB]) g->dirs.boot = wgola[S6F_GOLA_BOOTDB] ;
+  if (wgola[S6F_GOLA_STMPDIR]) g->dirs.stmp = wgola[S6F_GOLA_STMPDIR] ;
+  if (wgola[S6F_GOLA_STORELIST] && (!g->isuser || storelistfromcli))
+    g->dirs.stol = wgola[S6F_GOLA_STORELIST] ;
+  if (wgola[S6F_GOLA_FDHUSER]) g->fdhuser = wgola[S6F_GOLA_FDHUSER] ;
 
   {
     int force_color = 0 ;
     g->istty = isatty(1) ;
-    if (wgola[GOLA_COLOR])
+    if (wgola[S6F_GOLA_COLOR])
     {
-      if (!strcmp(wgola[GOLA_COLOR], "yes"))
+      if (!strcmp(wgola[S6F_GOLA_COLOR], "yes"))
       {
         force_color = 1 ;
         g->color = 1 ;
       }
-      else if (!strcmp(wgola[GOLA_COLOR], "no"))
+      else if (!strcmp(wgola[S6F_GOLA_COLOR], "no"))
       {
         force_color = 1 ;
         g->color = 0 ;
       }
-      else if (strcmp(wgola[GOLA_COLOR], "auto"))
+      else if (strcmp(wgola[S6F_GOLA_COLOR], "auto"))
         strerr_dief1x(100, "--color value must be yes, no, or auto") ;
     }
     if (!force_color) g->color = g->istty ;

@@ -14,74 +14,92 @@
 
 #define dienomem() strerr_diefu1sys(111, "allocate memory")
 
-void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage)
+static int isabsolutepath (char const *s)
+{
+  return s && s[0] == '/' ;
+}
+
+static void catpath (stralloc *sa, char const *base, char const *suffix)
+{
+  if ((base && !stralloc_cats(sa, base))
+   || !stralloc_cats(sa, suffix)
+   || !stralloc_0(sa)) dienomem() ;
+}
+
+void s6f_user_get_confdirs (s6f_confdirs *dirs, stralloc *storage, char const *sharedstores)
 {
   size_t scanpos, livepos, repopos, bootpos, stmppos, stolpos ;
   size_t homelen = 0 ;
   struct passwd *pw = 0 ;
-  char const *home = 0 ;
-  char const *datahome = getenv("XDG_DATA_HOME") ;
-  char const *confighome = getenv("XDG_DATA_HOME") ;
+  char const *home = getenv("HOME") ;
+  char const *confighome = getenv("XDG_CONFIG_HOME") ;
+  char const *statehome = getenv("XDG_STATE_HOME") ;
   char const *runtime = getenv("XDG_RUNTIME_DIR") ;
-  if (!runtime) strerr_dienotset(100, "XDG_RUNTIME_DIR") ;
 
-  if (!datahome || !confighome)
+  if (!runtime || !*runtime) strerr_dienotset(100, "XDG_RUNTIME_DIR") ;
+  if (!isabsolutepath(runtime)) strerr_dief1x(100, "XDG_RUNTIME_DIR must be an absolute path") ;
+  if (!isabsolutepath(confighome)) confighome = 0 ;
+  if (!isabsolutepath(statehome)) statehome = 0 ;
+
+  if ((!confighome || !statehome) && !isabsolutepath(home))
   {
-    home = getenv("HOME") ;
-    if (!home)
+    uid_t uid = getuid() ;
+    errno = 0 ;
+    pw = getpwuid(uid) ;
+    if (!pw)
     {
-      uid_t uid = getuid() ;
-      errno = 0 ;
-      pw = getpwuid(uid) ;
-      if (!pw)
-      {
-        char fmt[UID_FMT] ;
-        fmt[uid_fmt(fmt, uid)] = 0 ;
-        if (errno) strerr_diefu2sys(111, "getpwuid for user ", fmt) ;
-        else strerr_diefu3x(100, "getpwuid for user ", fmt, ": uid not found in passwd database") ;
-      }
-      homelen = strlen(pw->pw_dir) ;
+      char fmt[UID_FMT] ;
+      fmt[uid_fmt(fmt, uid)] = 0 ;
+      if (errno) strerr_diefu2sys(111, "getpwuid for user ", fmt) ;
+      else strerr_diefu3x(100, "getpwuid for user ", fmt, ": uid not found in passwd database") ;
     }
+    if (!isabsolutepath(pw->pw_dir)) strerr_dief1x(100, "home directory must be an absolute path") ;
+    homelen = strlen(pw->pw_dir) ;
   }
   char homeinstack[homelen + 1] ;
   if (homelen)
   {
-    memcpy(homeinstack, pw->pw_dir, homelen) ;
-    homeinstack[homelen] = 0 ;
+    memcpy(homeinstack, pw->pw_dir, homelen + 1) ;
     home = homeinstack ;
   }
-  
+
   scanpos = storage->len ;
-  if (!stralloc_cats(storage, runtime)
-   || !stralloc_cats(storage, "/service")
-   || !stralloc_0(storage)) dienomem() ;
+  catpath(storage, runtime, "/service") ;
 
   livepos = storage->len ;
-  if (!stralloc_cats(storage, runtime)
-   || !stralloc_cats(storage, "/s6-rc")
-   || !stralloc_0(storage)) dienomem() ;
+  catpath(storage, runtime, "/s6-rc") ;
 
   repopos = storage->len ;
-  if (!(datahome ? stralloc_cats(storage, datahome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.local/share"))
-   || !stralloc_cats(storage, "/s6-frontend/repository")
-   || !stralloc_0(storage)) dienomem() ;
-  
+  if (!statehome)
+  {
+    if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.local/state")) dienomem() ;
+  }
+  catpath(storage, statehome, "/s6-rc/repository") ;
+
   bootpos = storage->len ;
-  if (!(confighome ? stralloc_cats(storage, confighome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.config"))
-   || !stralloc_cats(storage, "/s6-rc/compiled/current")
-   || !stralloc_0(storage)) dienomem() ;
+  if (!statehome)
+  {
+    if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.local/state")) dienomem() ;
+  }
+  catpath(storage, statehome, "/s6-rc/compiled/current") ;
 
   stmppos = storage->len ;
-  if (!stralloc_cats(storage, runtime)
-   || !stralloc_cats(storage, "/s6-frontend")
-   || !stralloc_0(storage)) dienomem() ;
+  catpath(storage, runtime, "/s6-frontend") ;
 
   stolpos = storage->len ;
-  if (!(datahome ? stralloc_cats(storage, datahome) : stralloc_cats(storage, home) && stralloc_cats(storage, "/.local/share"))
-   || !stralloc_cats(storage, "/s6-frontend/s6-rc/sources")
-   || !stralloc_0(storage)) dienomem() ;
+  if (sharedstores && *sharedstores)
+  {
+    size_t n = strlen(sharedstores) ;
+    if (!stralloc_catb(storage, sharedstores, n)
+     || (sharedstores[n - 1] != ':' && !stralloc_catb(storage, ":", 1))) dienomem() ;
+  }
+  if (!confighome)
+  {
+    if (!stralloc_cats(storage, home) || !stralloc_cats(storage, "/.config")) dienomem() ;
+  }
+  catpath(storage, confighome, "/s6/sources") ;
 
- /* Don't add to storage past this point */
+ /* Don't add to storage past this point. */
 
   dirs->scan = storage->s + scanpos ;
   dirs->live = storage->s + livepos ;

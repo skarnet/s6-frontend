@@ -4,8 +4,8 @@
     <meta name="color-scheme" content="dark light" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>s6-frontend: the s6.conf configuration file</title>
-    <meta name="Description" content="s6-frontend: the s6.conf configuration file" />
+    <title>s6-frontend: configuration files</title>
+    <meta name="Description" content="s6-frontend: system and user configuration files" />
     <meta name="Keywords" content="s6.conf s6-frontend configuration file execline variable" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
@@ -17,16 +17,16 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>/etc/s6.conf</tt> configuration file </h1>
+<h1> The s6 configuration files </h1>
 
 <h2 id="goal"> Goal and usage </h2>
 
 <p>
- <tt>/etc/s6.conf</tt> is a configuration file provided by the
-distribution, or written by the system administrator, defining various
-settings for the <a href="s6.html">s6</a> commands, as well as the default
-policies of an s6-based system (i.e. where various directories and files
-are located).
+ <tt>/etc/s6.conf</tt> and <tt>/etc/s6-user.conf</tt> are configuration files
+provided by the distribution, or written by the system administrator, defining
+settings for the <a href="s6.html">s6</a> commands and the path policies for
+system and user services respectively. Their paths can be changed at build time
+with <tt>--conffile</tt> and <tt>--user-conffile</tt>.
 </p>
 
 <p>
@@ -40,13 +40,39 @@ what the full path to the <em>foobar</em> service directory is.
 <h2 id="description"> Description </h2>
 
 <p>
-The <tt>/etc/s6.conf</tt> file follows the
+Both files follow the
 <a href="//skarnet.org/software/execline/envfile.html#syntax">envfile syntax</a>:
-simple <code>key = value</code> lines, comments permitted.
+simple <code>key = value</code> lines, comments permitted. Without <tt>-u</tt>,
+s6 loads the system file. With <tt>-u</tt>, it loads the user file instead.
+The <tt>S6_CONF</tt> environment variable overrides the selected filename.
 </p>
 
 <p>
- If a value is left empty, the compiled-in default is used.
+ If a value is left empty, the compiled-in or XDG-derived default for the
+selected profile is used. Command-line options override values from the
+selected file.
+</p>
+
+<h3 id="userdefaults"> User profile defaults </h3>
+
+<p>
+ In user mode, the default paths are:
+</p>
+
+<dl>
+<dt> scandir </dt><dd> <tt>$XDG_RUNTIME_DIR/service</tt> </dd>
+<dt> livedir </dt><dd> <tt>$XDG_RUNTIME_DIR/s6-rc</tt> </dd>
+<dt> repodir </dt><dd> <tt>$XDG_STATE_HOME/s6-rc/repository</tt> </dd>
+<dt> bootdb </dt><dd> <tt>$XDG_STATE_HOME/s6-rc/compiled/current</tt> </dd>
+<dt> stmpdir </dt><dd> <tt>$XDG_RUNTIME_DIR/s6-frontend</tt> </dd>
+<dt> personal store </dt><dd> <tt>$XDG_CONFIG_HOME/s6/sources</tt> </dd>
+</dl>
+
+<p>
+ <tt>XDG_CONFIG_HOME</tt> defaults to <tt>$HOME/.config</tt> and
+<tt>XDG_STATE_HOME</tt> defaults to <tt>$HOME/.local/state</tt>. Relative XDG
+paths are ignored in favour of these defaults. <tt>XDG_RUNTIME_DIR</tt> has no
+fallback and must be set to an absolute path.
 </p>
 
 <p>
@@ -90,9 +116,15 @@ The default is <tt>/run/s6-frontend</tt> (possibly overridden by the <tt>--stmpd
 <dd> A colon-separated (<tt>:</tt>) list of directories containing the
 <a href="//skarnet.org/software/s6-rc/repodefs.html#store">stores</a> of s6-rc service
 definition directories.
-The default is <tt>/usr/share/s6/sources:/etc/s6/sources</tt>
-(possibly overridden by the <tt>--storelist</tt> build-time configure option to
-<a href="//skarnet.org/software/s6-frontend/">s6-frontend</a>). </dd>
+The system default is <tt>/usr/share/s6/sources:/etc/s6/sources</tt>
+(possibly overridden by the <tt>--with-store-list</tt> build-time configure
+option). In the machine-wide user configuration, this value is the shared
+package and administrator store prefix; s6 appends the personal XDG store.
+The shared default is
+<tt>/usr/share/s6/user/sources:/etc/s6/user/sources</tt>, possibly overridden
+by <tt>--with-user-store-list</tt>. An explicit command-line
+<tt>--storelist</tt> is a complete replacement and does not append the personal
+store. </dd>
 
 <dt> verbosity </dt>
 <dd> The default verbosity for <a href="s6.html">s6</a> and its invoked commands. 0 is
@@ -103,8 +135,9 @@ messages at level 4-5). The default is <strong>1</strong>. </dd>
 <dt> fdhuser </dt>
 <dd> The system user for the internal fd-holding process spawned by
 s6-rc. It must be a user defined in <tt>/etc/passwd</tt>.
-The default is <strong>root</strong> and that is fine, but distributions
-may want to set it to an unprivileged user. </dd>
+The system default is <strong>root</strong> and that is fine, but distributions
+may want to set it to an unprivileged user. The user-profile default is empty,
+so the fdholder runs as the invoking user. </dd>
 </dl>
 
 </body>

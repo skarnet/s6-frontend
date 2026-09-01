@@ -4,7 +4,9 @@ repodir=
 bootdb=
 stmpdir=/run/s6-frontend
 conffile='$sysconfdir/s6.conf'
+userconffile='$sysconfdir/s6-user.conf'
 storelist='$prefix/share/s6/sources:$sysconfdir/s6/sources'
+userstorelist='$prefix/share/s6/user/sources:$sysconfdir/s6/user/sources'
 defbundle=
 fdhuser=
 

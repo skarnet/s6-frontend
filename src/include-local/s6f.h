@@ -12,17 +12,17 @@ struct s6f_confdirs_s
 {
   char const *scan ;  /* $XDG_RUNTIME_DIR/service */
   char const *live ;  /* $XDG_RUNTIME_DIR/s6-rc */
-  char const *repo ;  /* $XDG_DATA_HOME/s6-frontend/repository */
-  char const *boot ;  /* $XDG_CONFIG_HOME/s6-rc/compiled/current */
+  char const *repo ;  /* $XDG_STATE_HOME/s6-rc/repository */
+  char const *boot ;  /* $XDG_STATE_HOME/s6-rc/compiled/current */
   char const *stmp ;  /* $XDG_RUNTIME_DIR/s6-frontend */
-  char const *stol ;  /* $XDG_CONFIG_HOME/s6-rc/sources */
+  char const *stol ;  /* shared stores:$XDG_CONFIG_HOME/s6/sources */
 } ;
 
 extern int s6f_confdir_open (char const *, int) ;
 
 extern void s6f_report_state_change (uint32_t, unsigned char const *, unsigned char const *, char const *, int) ;
 
-extern void s6f_user_get_confdirs (s6f_confdirs *, stralloc *) ;
+extern void s6f_user_get_confdirs (s6f_confdirs *, stralloc *, char const *) ;
 
 extern size_t s6f_equote_space (char const *const *, unsigned int, char const *) ;
 extern unsigned int s6f_equote (char const **, char const *const *, unsigned int, char const *, char *) ;

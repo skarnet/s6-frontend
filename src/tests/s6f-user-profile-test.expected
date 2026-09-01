@@ -1,0 +1,38 @@
+[absolute XDG paths]
+scandir=/run/user/123/service
+livedir=/run/user/123/s6-rc
+repodir=/state/test/s6-rc/repository
+bootdb=/state/test/s6-rc/compiled/current
+stmpdir=/run/user/123/s6-frontend
+storelist=/packages:/admin:/config/test/s6/sources
+[XDG fallbacks]
+scandir=/run/user/123/service
+livedir=/run/user/123/s6-rc
+repodir=/home/test/.local/state/s6-rc/repository
+bootdb=/home/test/.local/state/s6-rc/compiled/current
+stmpdir=/run/user/123/s6-frontend
+storelist=/packages:/admin:/home/test/.config/s6/sources
+[relative optional XDG paths]
+scandir=/run/user/123/service
+livedir=/run/user/123/s6-rc
+repodir=/home/test/.local/state/s6-rc/repository
+bootdb=/home/test/.local/state/s6-rc/compiled/current
+stmpdir=/run/user/123/s6-frontend
+storelist=/home/test/.config/s6/sources
+[frontend user config]
+scandir=/run/user/123/service
+livedir=/run/user/123/s6-rc
+repodir=/state/test/s6-rc/repository
+bootdb=/state/test/s6-rc/compiled/current
+stmpdir=/run/user/123/s6-frontend
+storelist=/packages:/admin:/config/test/s6/sources
+fdhuser=configured-fdholder
+[frontend CLI store override]
+storelist=/cli/one:/cli/two
+fdhuser=
+[empty config values]
+repodir=/state/test/s6-rc/repository
+storelist=/usr/share/s6/user/sources:/etc/s6/user/sources:/config/test/s6/sources
+fdhuser=
+missing-runtime-status=100
+relative-runtime-status=100
