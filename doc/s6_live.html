@@ -196,6 +196,7 @@ defined in the current live database and listed by name in <em>servicenames</em>
 service directory's <tt>down-signal</tt> file, to the process. </li>
    <li> if the service is a oneshot: executing the <tt>reload</tt> script defined
 for it. </li>
+  </ul> </li>
  <li> <tt>s6 live reload</tt> only applies to the listed services. It does not
 touch dependencies. It does not change service states: if a service is down,
 <tt>reload</tt> has no effect, and if a service is up, it is still up after
