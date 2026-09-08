@@ -38,14 +38,26 @@ users should call <a href="s6.html">s6</a> instead.
 </p>
 
 <ul>
- <li> <a href="s6.html">s6</a> gets the name of its configuration file from the
-<tt>S6_CONF</tt> environment variable, or from the compiled-in default if
-this variable is unset. Normally this default is <tt>/etc/s6.conf</tt>. </li>
+ <li> <a href="s6.html">s6</a> reads its configuration file at
+<tt>/etc/s6.conf</tt> by default, overridable by the admin at build time
+via the <tt>--conffile</tt> configure option, also overridable by the user
+at run time via the <tt>S6_CONF</tt> environment variable.
+  <ul>
+   <li> If <a href="s6.html">s6</a> is run with the <tt>--user</tt> option,
+it looks for <tt>/etc/s6-user.conf</tt> instead, overridable by the admin at
+build time via the <tt>--userconffile</tt> configure option, also overridable
+by the user at run time via the <tt>S6_USER_CONF</tt> environment variable. </li>
+  </ul> </li>
  <li> This configuration file (let's call it <em>conf</em>) contains
 <a href="s6.conf.html">variable definitions</a> that set the default for
 all the parts of the s6 system. </li>
  <li> <a href="s6.html">s6</a> rewrites itself into
-<code>envfile -I <em>conf</em> -- s6-frontend <em>args...</em></code> </li>
+<code>envfile -I <em>conf</em> -- s6-frontend <em>args...</em></code>
+  <ul>
+   <li> If the <tt>--user</tt> flag has been given, some text transformation
+<a href="s6.conf.html#userservices">is first performed on the file</a> to substitute
+the relevant XDG variables. </li>
+  </ul> </li>
  <li> The <a href="//skarnet.org/software/execline/envfile.html">envfile</a> program
 reads and parses <em>conf</em>, and then runs <a href="s6-frontend.html">s6-frontend</a>
 with the additional environment variables defined in <em>conf</em>.

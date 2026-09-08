@@ -5,6 +5,8 @@ echo "BOOTDB := $bootdb"
 echo "STMPDIR := $stmpdir"
 echo "STORELIST := $storelist"
 echo "FDHUSER := $fdhuser"
+echo "CONFFILE := $conffile"
+echo "USERCONFFILE := $userconffile"
 
 if $usensss ; then
   echo "LIBNSSS := -lnsss"

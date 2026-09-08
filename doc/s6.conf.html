@@ -37,6 +37,15 @@ are located).
 what the full path to the <em>foobar</em> service directory is.
 </p>
 
+<h3> Location </h3>
+
+<p>
+The global <tt>/etc/s6.conf</tt> path for the configuration variable can be
+overridden by the admin at build time via the <tt>--conffile</tt> configure
+option, and by the user at <a href="s6.html">s6</a> run time via the
+<tt>S6_CONF</tt> environment variable.
+</p>
+
 <h2 id="description"> Description </h2>
 
 <p>
@@ -106,6 +115,44 @@ s6-rc. It must be a user defined in <tt>/etc/passwd</tt>.
 The default is <strong>root</strong> and that is fine, but distributions
 may want to set it to an unprivileged user. </dd>
 </dl>
+
+<h2 id="userservices"> User services </h2>
+
+<p>
+  If <a href="s6.html">s6</a> is invoked with the <tt>--user</tt> flag,
+the <tt>/etc/s6-user.conf</tt> file is used instead, with the same
+syntax and the same variables, but additionally, the following
+environment variables, if present, are substituted:
+</p>
+
+<ul>
+ <li> <tt>XDG_RUNTIME_DIR</tt> </li>
+ <li> <tt>XDG_DATA_HOME</tt> </li>
+ <li> <tt>XDG_CONFIG_HOME</tt> </li>
+ <li> <tt>XDG_STATE_HOME</tt> </li>
+ <li> <tt>XDG_CACHE_HOME</tt> </li>
+</ul>
+
+<p>
+ That means that a global <tt>/etc/s6-user.conf</tt> file can for instance declare
+</p>
+
+<pre>
+ scandir=${XDG_RUNTIME_DIR}/service
+</pre>
+
+<p>
+and the correct location for the <tt>scandir</tt> will be obtained, for every user.
+</p>
+
+<h3> Location </h3>
+
+<p>
+The global <tt>/etc/s6-user.conf</tt> path for the configuration variable can be
+overridden by the admin at build time via the <tt>--userconffile</tt> configure
+option, and by the user at <a href="s6.html">s6</a> run time via the
+<tt>S6_USER_CONF</tt> environment variable.
+</p>
 
 </body>
 </html>

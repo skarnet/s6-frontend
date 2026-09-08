@@ -4,6 +4,7 @@
     --bootdb=*) bootdb=${arg#*=} ;;
     --stmpdir=*) stmpdir=${arg#*=} ;;
     --conffile=*) conffile=${arg#*=} ;;
+    --userconffile=*) userconffile=${arg#*=} ;;
     --with-store-list=*) storelist=${arg#*=} ;;
     --with-default-bundle=*) defbundle=${arg#*=} ;;
     --with-fdholder-user=*) fdhuser=${arg#*=} ;;
