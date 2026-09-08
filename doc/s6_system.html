@@ -70,12 +70,10 @@ two lines at the beginning of <tt>/etc/inittab</tt>:
     <ul>
      <li> The first line should be a command that runs and respawns
 <a href="//skarnet.org/software/s6/s6-svscan.html">s6-svscan</a>,
-ideally with a catch-all logger. This could be something like
-<tt>::respawn:/usr/lib/s6/s6-svscanboot</tt>, with <tt>/usr/lib/s6/s6-svscanboot</tt>
-being similar to the script used
-<a href="https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/main/s6/s6-svscanboot?ref_type=heads">in
-Alpine Linux</a> to start an instance of s6-svscan supervising its own
-catch-all logger. </li>
+ideally with a catch-all logger: the
+<a href="//skarnet.org/software/s6/s6-svscanboot.html">s6-svscanboot</a>
+program is suitable for this, and the inittab line could e.g. be:
+<tt>::respawn:/usr/bin/s6-svscanboot /run/service</tt> </li>
      <li> The second line should be <tt>::wait:/usr/bin/s6 system boot</tt>. </li>
      <li> For complete safety, there should be a synchronization mechanism so
 that the second line never starts before s6-svscan is ready. A quick and (very) dirty
