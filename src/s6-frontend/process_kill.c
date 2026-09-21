@@ -1,5 +1,8 @@
 /* ISC license. */
 
+/* For SIGWINCH */
+#include <skalibs/nonposix.h>
+
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
