@@ -138,8 +138,8 @@ int main (int argc, char const *const *argv)
         newargv[m++] = " -e" ;
         newargv[m++] = sa.s + xdgpos[i] ;
       }
+      newargv[m++] = "" ;  /* end of the pipeline block */
     }
-    newargv[m++] = "" ;
     newargv[m++] = EXECLINE_EXTBINPREFIX "envfile" ;
     newargv[m++] = "-I" ;
     newargv[m++] = "--" ;
