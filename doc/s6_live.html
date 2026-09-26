@@ -67,12 +67,23 @@ and usage of the <tt>s6 live</tt> command. It is not as detailed as this page.
 for every s6-rc service listed in <em>servicenames</em>. If <em>servicenames</em>
 is empty, then it prints a line for all the services present in the
 current live database. </li>
- <li> Every line is: the name of the service, a slash character (<tt>/</tt>),
-then <tt>up</tt> or <tt>down</tt> depending on the current state of the service.
- <li> If the output is a terminal or you have specified <tt>--color=yes</tt>
+ <li> Every line is a series of fields.
+  <ul>
+   <li> The fields are normally separated by a slash character (<tt>/</tt>). </li>
+   <li> But if the output is a terminal or you have specified <tt>--color=yes</tt>
 in the generic s6 options, and s6-frontend is built with util-linux support,
-then the output is pretty-printed instead of having a slash separate the name
-of the service from its state. </li>
+then the output is pretty-printed, and the fields are displayed in columns instead. </li>
+  </ul> </li>
+ <li> The currently displayed fields are:
+  <ul>
+   <li> The name of the service </li>
+   <li> The type of the service (<tt>longrun</tt> or <tt>oneshot</tt>) </li>
+   <li> Whether the service is marked as essential (<tt>essential</tt>) or not (blank) </li>
+   <li> The state of the service (<tt>up</tt> or <tt>down</tt>) </li>
+   <li> If the service is up: whether it has been explicitly brought up by the
+user or by being listed in the default bundle (<tt>explicit</tt>), or it has been pulled
+by the dependency engine because an explicit service depended on it (<tt>pulled</tt>). </li>
+  </ul> </li>
 </ul>
 
 <h4> Options </h4>
