@@ -42,7 +42,7 @@ void set_check (char const *const *argv)
   char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
   unsigned int m = 0 ;
   char const *newargv[11] ;
-  char fmtv[UINT_FMT] = " " ;
+  char fmtv[UINT_FMT] ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 

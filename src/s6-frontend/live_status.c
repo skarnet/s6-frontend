@@ -30,14 +30,17 @@ static void live_status_all (int withe)
 {
   unsigned int m = 0 ;
   size_t llen = strlen(g->dirs.live) ;
-  char const *argv[23] ;
+  char const *argv[27] ;
   char llivedir[llen + 3] ;
+  char fmtv[UINT_FMT + 2] = "  " ;
   llivedir[0] = ' ' ; llivedir[1] = ' ' ;
   memcpy(llivedir + 2, g->dirs.live, llen + 1) ;
-
+  fmtv[2 + uint_fmt(fmtv + 2, g->verbosity)] = 0 ;
   argv[m++] = EXECLINE_EXTBINPREFIX "if" ;
   argv[m++] = " " EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = "  " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = "  -v" ;
+  argv[m++] = fmtv ;
   argv[m++] = "  -l" ;
   argv[m++] = llivedir ;
   argv[m++] = withe ? "  -cbE" : "  -cbe" ;
@@ -49,6 +52,8 @@ static void live_status_all (int withe)
   argv[m++] = "" ;
   argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = " " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = " -v" ;
+  argv[m++] = fmtv + 1 ;
   argv[m++] = " -l" ;
   argv[m++] = llivedir + 1 ;
   argv[m++] = withe ? " -cbE" : " -cbe" ;
@@ -110,10 +115,12 @@ static void live_status_some (char const *const *services, int withe)
   unsigned int m = 0 ;
   int e ;
   size_t llen = strlen(g->dirs.live) ;
+  char const *argv[28] ;
   char llivedir[llen + 2] ;
+  char fmtv[UINT_FMT + 1] = " " ;
   llivedir[0] = ' ' ;
   memcpy(llivedir + 1, g->dirs.live, llen + 1) ;
-  char const *argv[26] ;
+  fmtv[1 + uint_fmt(fmtv + 1, g->verbosity)] = 0 ;
   if (!stralloc_catb(&sa, " ", 1)) dienomem() ;
   e = get_atomics(services, env_len(services), &sa, withe) ;
   if (e) _exit(e) ;
@@ -135,6 +142,8 @@ static void live_status_some (char const *const *services, int withe)
   argv[m++] = "4" ;
   argv[m++] = EXECLINE_EXTBINPREFIX "pipeline" ;
   argv[m++] = " " S6RC_EXTBINPREFIX "s6-rc" ;
+  argv[m++] = " -v" ;
+  argv[m++] = fmtv ;
   argv[m++] = " -l" ;
   argv[m++] = llivedir ;
   argv[m++] = withe ? " -cbE" : " -cbe" ;
