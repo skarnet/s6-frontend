@@ -36,13 +36,18 @@ void set_commit (char const *const *argv)
 
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
+  size_t slen = strlen(g->dirs.scan) ;
   char const *wgola[GOLA_N] = { 0 } ;
   char const *newargv[14] ;
   char fmtv[UINT_FMT] ;
+  char catchall[slen + 15] ;
 
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
   wgola[GOLA_SET] = "current" ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+
+  memcpy(catchall, g->dirs.scan, slen) ;
+  memcpy(catchall + slen, "/s6-svscan-log", 15) ;
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-commit" ;
   if (g->verbosity != 1)
@@ -62,6 +67,8 @@ void set_commit (char const *const *argv)
     newargv[m++] = "-h" ;
     newargv[m++] = g->fdhuser ;
   }
+  newargv[m++] = "-L" ;
+  newargv[m++] = catchall ;
   newargv[m++] = "--" ;
   newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;

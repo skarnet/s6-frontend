@@ -42,9 +42,11 @@ void set_apply (char const *const *argv)
   int wstat ;
   pid_t pid ;
   char const *wgola[GOLA_N] = { 0 } ;
-  char const *newargv[15] ;
+  size_t slen = strlen(g->dirs.scan) ;
+  char const *newargv[17] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
+  char catchall[slen + 15] ;
 
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
   wgola[GOLA_SET] = "current" ;
@@ -56,6 +58,9 @@ void set_apply (char const *const *argv)
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
       strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
   }
+
+  memcpy(catchall, g->dirs.scan, slen) ;
+  memcpy(catchall + slen, "/s6-svscan-log", 15) ;
 
  /* set commit */
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-commit" ;
@@ -74,6 +79,8 @@ void set_apply (char const *const *argv)
     newargv[m++] = "-h" ;
     newargv[m++] = g->fdhuser ;
   }
+  newargv[m++] = "-L" ;
+  newargv[m++] = catchall ;
   newargv[m++] = "--" ;
   newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
