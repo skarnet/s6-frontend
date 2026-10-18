@@ -41,7 +41,7 @@ void live_install (char const *const *argv)
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   char const *wgola[GOLA_N] = { 0 } ;
-  char const *newargv[18] ;
+  char const *newargv[19] ;
   char fmtv[UINT_FMT] ;
   wgola[GOLA_SET] = "current" ;
 
@@ -69,7 +69,11 @@ void live_install (char const *const *argv)
     newargv[m++] = "-f" ;
     newargv[m++] = wgola[GOLA_CONVFILE] ;
   }
-  if (wgolb & GOLB_INIT) newargv[m++] = "--no-update" ;
+  if (wgolb & GOLB_INIT)
+  {
+    newargv[m++] = "--no-update" ;
+    newargv[m++] = "--no-snapshot" ;
+  }
   newargv[m++] = "--" ;
   newargv[m++] = wgola[GOLA_SET] ;
   newargv[m++] = 0 ;
