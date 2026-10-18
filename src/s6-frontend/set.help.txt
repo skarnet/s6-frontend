@@ -2,31 +2,31 @@ Usage: s6 set subcommand [ options ] [ arguments... ]
 
 Subcommands:
   help		this message
-  copy		copy a set to another name (default name is "current")
+  copy		copy a set to another name
   delete	delete one or more sets
-  list		list services in the working set
-  status	list services in the working set with their rx
-  enable	enable services
-  disable	disable services
-  mask		mask services (hide them from the db entirely)
-  unmask	unmask services (equivalent to "disable")
-  check		check working set and fix inconsistencies
-  commit	commit working set (can then be installed)
-  apply		make working set live: commit + live install + live reset
+  list		list services in a set
+  status	list named services in the current set with their rx
+  enable	enable services in the current set
+  disable	disable services in the current set
+  mask		mask services (hide them from the db entirely) in the current set
+  unmask	unmask services (equivalent to "disable") in the current set
+  check		check a set and fix inconsistencies
+  commit	commit a set
+  apply		make a set live: commit + live install + live reset
 
 
 s6 set copy options:
   -f		--force				overwrite named set if existing
 
-s6 set delete options: none
+s6 set delete options: none, takes a list of set names as arguments
 
-s6 set list options:
-  -s SET	--set=SET			show services in set SET (default: current)
+s6 set list options: none, takes a set name as an optional argument (default: current)
 
 s6 set status options:
   -E		--with-essentials		show all services, even essential ones (default)
   -e		--without-essentials		don't show essential services
   -s SET	--set=SET			show services in set SET (default: current)
+Takes a list of services to see the status of as optional arguments (default: all services)
 
 s6 set enable|disable|mask|unmask options:
   -f		--ignore-dependencies		only change listed services
@@ -36,6 +36,7 @@ s6 set enable|disable|mask|unmask options:
   -P		--no-pull-dependencies		warn on unlisted dependencies (default)
   -p		--pull-dependencies		apply the rx change to unlisted dependencies as well
   -s SET	--set=SET			change services in set SET (default: current)
+Takes a list of services as mandatory arguments.
 
 s6 set check options:
   -E		--no-force-essentials		do not allow manual changes to essential services (default)
@@ -43,18 +44,18 @@ s6 set check options:
   -F		--fix				try to fix inconsistencies automatically
   -d		--down				fix by disabling or masking services if necessary (default)
   -u		--up				fix by enabling services if necessary
-  -s SET	--set=SET			check set SET (default: current)
+Takes a set name as an optional argument (default: current)
 
 s6 set commit options:
   -f		--force				compile db even if up-to-date
   -K		--keep-old			keep old db if any, print its path to stdout
   -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
-  -s SET	--set=SET			commit set SET (default: current)
+Takes a set name as an optional argument (default: current)
 
 s6 set apply options:
   -b		--block				block if another s6-rc is running (default: fail)
   -D BUN	--default-bundle=BUN		name of the bundle containing enabled+essential services
   -f CONVFILE	--conversion-file=CONVFILE	use CONVFILE when updating the service db (default: none)
-  -s SET	--set=SET			apply set SET (default: current)
   -t TIMEOUT	--timeout=TIMEOUT		fail after TIMEOUT milliseconds (default: 0 (=infinite))
+Takes a set name as an optional argument (default: current)
 

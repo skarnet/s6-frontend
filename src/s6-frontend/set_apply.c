@@ -18,7 +18,6 @@ enum gola_e
 {
   GOLA_DEFBUNDLE,
   GOLA_CONVFILE,
-  GOLA_SET,
   GOLA_TIMEOUT,
   GOLA_N
 } ;
@@ -33,7 +32,6 @@ void set_apply (char const *const *argv)
   {
     { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
     { .so = 'f', .lo = "conversion-file", .i = GOLA_CONVFILE },
-    { .so = 's', .lo = "set", .i = GOLA_SET },
     { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
   } ;
   uint64_t wgolb = 0 ;
@@ -43,13 +41,13 @@ void set_apply (char const *const *argv)
   pid_t pid ;
   char const *wgola[GOLA_N] = { 0 } ;
   size_t slen = strlen(g->dirs.scan) ;
+  char const *set ;
   char const *newargv[17] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
   char catchall[slen + 15] ;
 
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
-  wgola[GOLA_SET] = "current" ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
@@ -58,6 +56,10 @@ void set_apply (char const *const *argv)
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
       strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
   }
+
+  set = *argv ? *argv : "current" ;
+  if (set[0] == '.' || strchr(set, '/') || strchr(set, '\n'))
+      strerr_dief(100, "invalid set name: ", set) ;
 
   memcpy(catchall, g->dirs.scan, slen) ;
   memcpy(catchall + slen, "/s6-svscan-log", 15) ;
@@ -82,7 +84,7 @@ void set_apply (char const *const *argv)
   newargv[m++] = "-L" ;
   newargv[m++] = catchall ;
   newargv[m++] = "--" ;
-  newargv[m++] = wgola[GOLA_SET] ;
+  newargv[m++] = set ;
   newargv[m++] = 0 ;
 
   pid = main_spawn(newargv) ;
@@ -113,7 +115,7 @@ void set_apply (char const *const *argv)
     newargv[m++] = wgola[GOLA_CONVFILE] ;
   }
   newargv[m++] = "--" ;
-  newargv[m++] = wgola[GOLA_SET] ;
+  newargv[m++] = set ;
   newargv[m++] = 0 ;
 
   pid = main_spawn(newargv) ;

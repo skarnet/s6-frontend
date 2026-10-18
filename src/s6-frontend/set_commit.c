@@ -3,6 +3,7 @@
 #include <skalibs/uint64.h>
 #include <skalibs/types.h>
 #include <skalibs/gol.h>
+#include <skalibs/strerr.h>
 
 #include <s6-rc/config.h>
 
@@ -17,7 +18,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_DEFBUNDLE,
-  GOLA_SET,
   GOLA_N
 } ;
 
@@ -31,20 +31,23 @@ void set_commit (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'D', .lo = "default-bundle", .i = GOLA_DEFBUNDLE },
-    { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
 
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   size_t slen = strlen(g->dirs.scan) ;
   char const *wgola[GOLA_N] = { 0 } ;
+  char const *set ;
   char const *newargv[14] ;
   char fmtv[UINT_FMT] ;
   char catchall[slen + 15] ;
 
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
-  wgola[GOLA_SET] = "current" ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+
+  set = *argv ? *argv : "current" ;
+  if (set[0] == '.' || strchr(set, '/') || strchr(set, '\n'))
+      strerr_dief(100, "invalid set name: ", set) ;
 
   memcpy(catchall, g->dirs.scan, slen) ;
   memcpy(catchall + slen, "/s6-svscan-log", 15) ;
@@ -70,7 +73,7 @@ void set_commit (char const *const *argv)
   newargv[m++] = "-L" ;
   newargv[m++] = catchall ;
   newargv[m++] = "--" ;
-  newargv[m++] = wgola[GOLA_SET] ;
+  newargv[m++] = set ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }
