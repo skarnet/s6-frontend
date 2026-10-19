@@ -4,6 +4,13 @@ In 0.2.0.0
 ----------
 
  - Bugfixes.
+ - Syntax improvements for s6 apply, s6 set *, s6 live install
+ - Better s6 --user management, with /etc/s6-user.conf and
+XDG variable support
+ - Committed sets now hold the catch-all logger fifo.
+ - Committed sets are snapshotted for transparent upgrades.
+(Store changes still break the feature, but it's better than
+nothing. More robustness is planned for the future.)
 
 
 In 0.1.0.0
