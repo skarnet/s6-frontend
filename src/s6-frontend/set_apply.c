@@ -44,7 +44,7 @@ void set_apply (char const *const *argv)
   pid_t pid ;
   char const *wgola[GOLA_N] = { 0 } ;
   size_t slen = strlen(g->dirs.scan) ;
-  char const *set ;
+  char const *set = "current" ;
   char const *newargv[16] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
@@ -54,15 +54,18 @@ void set_apply (char const *const *argv)
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
+  if (argv[0])
+  {
+    if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n'))
+      strerr_dief(100, "invalid set name: ", argv[0]) ;
+    set = argv[0] ;
+  }
+
   if (wgola[GOLA_TIMEOUT])
   {
     if (!uint0_scan(wgola[GOLA_TIMEOUT], &timeout))
       strerr_dief1x(100, "timeout must be an integer (milliseconds)") ;
   }
-
-  set = *argv ? *argv : "current" ;
-  if (set[0] == '.' || strchr(set, '/') || strchr(set, '\n'))
-      strerr_dief(100, "invalid set name: ", set) ;
 
   memcpy(catchall, g->dirs.scan, slen) ;
   memcpy(catchall + slen, "/s6-svscan-log", 15) ;

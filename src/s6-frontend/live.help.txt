@@ -26,6 +26,7 @@ s6 live install options:
   -E		--no-force-essentials	keep obsolete essential services up
   -f FILE	--conversion-file=FILE	use a conversion file from current to new set
 		--init			install the initial db. DO NOT USE WHEN LIVE.
+Takes a set name as an optional argument (default: current)
 
 s6 live start-everything options:
   -n		--dry-run		only show what would be done, don't do it

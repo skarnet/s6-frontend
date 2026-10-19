@@ -25,15 +25,18 @@ void set_list (char const *const *argv)
   } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
-  char const *set ;
+  char const *set = "current" ;
   char const *newargv[10] ;
   char fmtv[UINT_FMT] ;
 
   argv += gol_argv(argv, rgolb, sizeof(rgolb)/sizeof(gol_bool), 0, 0, &wgolb, 0) ;
 
-  set = *argv ? *argv : "current" ;
-  if (set[0] == '.' || strchr(set, '/') || strchr(set, '\n'))
-      strerr_dief(100, "invalid set name: ", set) ;
+  if (argv[0])
+  {
+    if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n'))
+      strerr_dief(100, "invalid set name: ", argv[0]) ;
+    set = argv[0] ;
+  }
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-status" ;
   fmtv[uint_fmt(fmtv, g->verbosity)] = 0 ;

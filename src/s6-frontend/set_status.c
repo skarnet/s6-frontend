@@ -34,10 +34,11 @@ void set_status (char const *const *argv)
     { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
   uint64_t wgolb = 0 ;
-  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
+  char const *wgola[GOLA_N] = { 0 } ;
   unsigned int m = 0 ;
   unsigned int argc ;
   char fmtv[UINT_FMT] = " " ;
+  wgola[GOLA_SET] = "current" ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
   argc = env_len(argv) ;

@@ -39,10 +39,11 @@ static void set_change (char const *const *argv, char const *newrx, char const *
     { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
   uint64_t wgolb = 0 ;
-  char const *wgola[GOLA_N] = { [GOLA_SET] = "current" } ;
+  char const *wgola[GOLA_N] = { 0 } ;
   unsigned int m = 0 ;
-
   unsigned int argc ;
+  wgola[GOLA_SET] = "current" ;
+
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
   if (!*argv) strerr_die(100, "usage: ", "s6 set ", cmd, " [ --dry-run ] [ --fail-on-dependencies | --pull-dependencies ] [ --set=setname ] services...") ;

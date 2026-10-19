@@ -40,7 +40,7 @@ void set_commit (char const *const *argv)
   unsigned int m = 0 ;
   size_t slen = strlen(g->dirs.scan) ;
   char const *wgola[GOLA_N] = { 0 } ;
-  char const *set ;
+  char const *set = "current" ;
   char const *newargv[17] ;
   char fmtv[UINT_FMT] ;
   char catchall[slen + 15] ;
@@ -48,9 +48,12 @@ void set_commit (char const *const *argv)
   wgola[GOLA_DEFBUNDLE] = S6_FRONTEND_DEFBUNDLE ;
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
 
-  set = *argv ? *argv : "current" ;
-  if (set[0] == '.' || strchr(set, '/') || strchr(set, '\n'))
-      strerr_dief(100, "invalid set name: ", set) ;
+  if (argv[0])
+  {
+    if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n'))
+      strerr_dief(100, "invalid set name: ", argv[0]) ;
+    set = argv[0] ;
+  }
 
   memcpy(catchall, g->dirs.scan, slen) ;
   memcpy(catchall + slen, "/s6-svscan-log", 15) ;

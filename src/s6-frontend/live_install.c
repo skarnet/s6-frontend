@@ -20,7 +20,6 @@ enum golb_e
 enum gola_e
 {
   GOLA_CONVFILE,
-  GOLA_SET,
   GOLA_N
 } ;
 
@@ -39,16 +38,22 @@ void live_install (char const *const *argv)
   static gol_arg const rgola[] =
   {
     { .so = 'f', .lo = "conversion-file", .i = GOLA_CONVFILE },
-    { .so = 's', .lo = "set", .i = GOLA_SET },
   } ;
   uint64_t wgolb = 0 ;
   unsigned int m = 0 ;
   char const *wgola[GOLA_N] = { 0 } ;
+  char const *set = "current" ;
   char const *newargv[19] ;
   char fmtv[UINT_FMT] ;
-  wgola[GOLA_SET] = "current" ;
 
   argv += GOL_argv(argv, rgolb, rgola, &wgolb, wgola) ;
+
+  if (argv[0])
+  {
+    if (argv[0][0] == '.' || strchr(argv[0], '/') || strchr(argv[0], '\n'))
+      strerr_dief(100, "invalid set name: ", argv[0]) ;
+    set = argv[0] ;
+  }
 
   newargv[m++] = S6RC_EXTBINPREFIX "s6-rc-set-install" ;
   if (g->verbosity != 1)
@@ -82,7 +87,7 @@ void live_install (char const *const *argv)
     newargv[m++] = "--no-snapshot" ;
   }
   newargv[m++] = "--" ;
-  newargv[m++] = wgola[GOLA_SET] ;
+  newargv[m++] = set ;
   newargv[m++] = 0 ;
   main_exec(newargv) ;
 }
