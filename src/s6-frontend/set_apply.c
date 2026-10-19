@@ -12,6 +12,7 @@
 enum golb_e
 {
   GOLB_BLOCK = 0x01,
+  GOLB_NOSNAP = 0x02,
 } ;
 
 enum gola_e
@@ -27,6 +28,8 @@ void set_apply (char const *const *argv)
   static gol_bool const rgolb[] =
   {
     { .so = 'b', .lo = "block", .clear = 0, .set = GOLB_BLOCK },
+    { .so = 0, .lo = "snapshot", .clear = GOLB_NOSNAP, .set = 0 },
+    { .so = 0, .lo = "no-snapshot", .clear = 0, .set = GOLB_NOSNAP },
   } ;
   static gol_arg const rgola[] =
   {
@@ -42,7 +45,7 @@ void set_apply (char const *const *argv)
   char const *wgola[GOLA_N] = { 0 } ;
   size_t slen = strlen(g->dirs.scan) ;
   char const *set ;
-  char const *newargv[17] ;
+  char const *newargv[16] ;
   char fmtv[UINT_FMT] ;
   char fmtt[UINT_FMT] ;
   char catchall[slen + 15] ;
@@ -83,6 +86,7 @@ void set_apply (char const *const *argv)
   }
   newargv[m++] = "-L" ;
   newargv[m++] = catchall ;
+  if (wgolb & GOLB_NOSNAP) newargv[m++] = "--no-snapshot" ;
   newargv[m++] = "--" ;
   newargv[m++] = set ;
   newargv[m++] = 0 ;
@@ -114,6 +118,7 @@ void set_apply (char const *const *argv)
     newargv[m++] = "-f" ;
     newargv[m++] = wgola[GOLA_CONVFILE] ;
   }
+  if (wgolb & GOLB_NOSNAP) newargv[m++] = "--no-snapshot" ;
   newargv[m++] = "--" ;
   newargv[m++] = set ;
   newargv[m++] = 0 ;

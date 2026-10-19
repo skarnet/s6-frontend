@@ -14,6 +14,7 @@ enum golb_e
   GOLB_KEEPOLD = 0x02,
   GOLB_INIT = 0x04,
   GOLB_NOFORCEESSENTIALS = 0x08,
+  GOLB_NOSNAP = 0x10,
 } ;
 
 enum gola_e
@@ -32,6 +33,8 @@ void live_install (char const *const *argv)
     { .so = 0, .lo = "init", .clear = 0, .set = GOLB_INIT },
     { .so = 'e', .lo = "force-essentials", .clear = GOLB_NOFORCEESSENTIALS, .set = 0 },
     { .so = 'E', .lo = "no-force-essentials", .clear = 0, .set = GOLB_NOFORCEESSENTIALS },
+    { .so = 0, .lo = "snapshot", .clear = GOLB_NOSNAP, .set = 0 },
+    { .so = 0, .lo = "no-snapshot", .clear = 0, .set = GOLB_NOSNAP },
   } ;
   static gol_arg const rgola[] =
   {
@@ -72,6 +75,10 @@ void live_install (char const *const *argv)
   if (wgolb & GOLB_INIT)
   {
     newargv[m++] = "--no-update" ;
+    newargv[m++] = "--no-snapshot" ;
+  }
+  else if (wgolb & GOLB_NOSNAP)
+  {
     newargv[m++] = "--no-snapshot" ;
   }
   newargv[m++] = "--" ;
