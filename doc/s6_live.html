@@ -341,7 +341,7 @@ command can wait forever. </dd>
 <h4> Interface </h4>
 
 <pre>
-     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ] [ -s <em>setname</em> ] [ --init ]
+     s6 live install [ -b ] [ -K ] [ -f <em>convfile</em> ] [ --init ] [ <em>setname</em> ]
 </pre>
 
 <ul>
@@ -352,6 +352,8 @@ live service database. </li>
  <li> The state of services defined in the old live database is preserved as
 much as possible, though services that are not defined in the new set are
 stopped before the live database is replaced. </li>
+ <li> If a <em>setname</em> is provided, it is installed instead of
+<tt>current</tt>. </li>
 </ul>
 
 <h4> Options </h4>
@@ -370,9 +372,6 @@ Instead, print its path to stdout. </dd>
 <a href="//skarnet.org/software/s6-rc/s6-rc-update.html">s6-rc-update</a>
 invocation. This option should
 never be necessary if the services in the stores are properly managed. </dd>
-
-<dt> <tt>-s <em>setname</em></tt>, <tt>--set=<em>setname</em></tt> </dt>
-<dd> Install the compiled set named <em>setname</em>. Default is <strong><tt>current</tt></strong>. </dd>
 
 <dt> <tt>--init</tt> </dt>
 <dd>
