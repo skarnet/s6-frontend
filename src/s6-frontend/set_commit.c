@@ -13,6 +13,7 @@ enum golb_e
 {
   GOLB_FORCE = 0x01,
   GOLB_KEEPOLD = 0x02,
+  GOLB_NOSNAP = 0x04,
 } ;
 
 enum gola_e
@@ -27,6 +28,8 @@ void set_commit (char const *const *argv)
   {
     { .so = 'f', .lo = "force", .clear = 0, .set = GOLB_FORCE },
     { .so = 'K', .lo = "keep-old", .clear = 0, .set = GOLB_KEEPOLD },
+    { .so = 0, .lo = "snapshot", .clear = GOLB_NOSNAP, .set = 0 },
+    { .so = 0, .lo = "no-snapshot", .clear = 0, .set = GOLB_NOSNAP },
   } ;
   static gol_arg const rgola[] =
   {
@@ -38,7 +41,7 @@ void set_commit (char const *const *argv)
   size_t slen = strlen(g->dirs.scan) ;
   char const *wgola[GOLA_N] = { 0 } ;
   char const *set ;
-  char const *newargv[14] ;
+  char const *newargv[17] ;
   char fmtv[UINT_FMT] ;
   char catchall[slen + 15] ;
 
@@ -65,6 +68,7 @@ void set_commit (char const *const *argv)
   newargv[m++] = wgola[GOLA_DEFBUNDLE] ;
   if (wgolb & GOLB_FORCE) newargv[m++] = "-f" ;
   if (wgolb & GOLB_KEEPOLD) newargv[m++] = "-K" ;
+  if (wgolb & GOLB_NOSNAP) newargv[m++] = "--no-snapshot" ;
   if (g->fdhuser && g->fdhuser[0])
   {
     newargv[m++] = "-h" ;
